@@ -43,6 +43,13 @@
 #define NUMBUTTONS  4
 #define DISTANCEINTERVAL    300
 
+#define RIGHTSERVO      700
+#define LEFTSERVO       2500
+#define MIDDLESERVO     1500
+
+#define SERVOTIME       1000
+
+
 #define     FORWARD             2
 #define     BACKWARD            1
 #define     STOP                0
@@ -238,6 +245,10 @@ void autoConnectWifi();
  */
 void aliveAutoTask(_delay_t *aliveAutoTime);
 
+void do100ms();
+
+void doTimeout();
+
 /* END Function prototypes ---------------------------------------------------*/
 
 
@@ -269,15 +280,13 @@ _sButton myButton[NUMBUTTONS];
 
 _delay_t    generalTime;
 
-Timer myTimer;
-
 _sSensor irSensor[3];
 
 _sServo miServo;
 
 _uWord myWord;
 
-//_eModes carMode
+_eModes carMode;
 
 _sTx wifiTx;
 
@@ -287,6 +296,13 @@ uint8_t wifiBuffRx[RXBUFSIZE];
 
 uint8_t wifiBuffTx[TXBUFSIZE];
 
+Timer myTimer;
+
+Timer distanceTimer; //distance timer
+
+Ticker timerGral;
+
+Timeout triggerTimer;
 
 /* END Global variables ------------------------------------------------------*/
 
@@ -352,7 +368,6 @@ void serialTask(_sRx *dataRx, _sTx *dataTx, uint8_t source)
 
 }
 
-
 void onRxData()
 {
     while(PC.readable()){
@@ -390,7 +405,6 @@ uint8_t putByteOnTx(_sTx *dataTx, uint8_t byte)
     dataTx->chk ^= byte;
     return dataTx->chk;
 }
-
 
 uint8_t putStrOntx(_sTx *dataTx, const char *str)
 {
@@ -485,7 +499,6 @@ void decodeHeader(_sRx *dataRx)
         dataRx->indexR &= dataRx->mask;
     }
 }
-
 
 void decodeCommand(_sRx *dataRx, _sTx *dataTx)
 {
@@ -621,15 +634,12 @@ void decodeCommand(_sRx *dataRx, _sTx *dataTx)
 
 }
 
-
-
 void distanceTask(_delay_t *medicionTime, int32_t *triggerTime){
-
     if(delayRead(medicionTime)){
         MEDIRDISTANCIA=true; 
         trigger.write(false);
     }
-        /******************** MEDICIÓN DE DISTANCIA NON-BLOCKING ********************/
+    /******************** MEDICIÓN DE DISTANCIA NON-BLOCKING ********************/
     if (MEDIRDISTANCIA){
         if((myTimer.read_us()-*triggerTime)>=10){
             *triggerTime=myTimer.read_us();
@@ -667,7 +677,6 @@ void speedTask(){
     } 
 }
 
-
 void irSensorsTask(){
     static int32_t timeSensors=0;
     //static uint8_t index=0;
@@ -681,7 +690,6 @@ void irSensorsTask(){
 
 }
 
-
 void speedCountLeft(void){
     countLeftValue++;
 }
@@ -691,15 +699,28 @@ void speedCountRight(void){
 }
 
 void distanceInitMeasurement(void){
-    initialValue=myTimer.read_us();
+    initialValue=distanceTimer.read_us();
 }
 
 void distanceMeasurement(void){
-    finalValue=myTimer.read_us();
+    finalValue=distanceTimer.read_us();
     if (finalValue>=initialValue)
         distanceValue=finalValue-initialValue;
     else
        distanceValue=finalValue-initialValue+0xFFFFFFFF;
+}
+
+
+void doTimeout()
+{
+    distanceTimer.reset();
+    trigger.write(0);   // Prendemos o apagamos la salida
+}
+
+void do100ms() 
+{
+    trigger.write(1);
+    triggerTimer.attach_us(&doTimeout,10);
 }
 
 
@@ -768,17 +789,17 @@ int main()
     uint16_t    mask = 0x000A;
     _delay_t    hearbeatTime;
     _delay_t    debounceTime;
-    _delay_t    medicionTime;
+    //_delay_t    medicionTime;
     _delay_t    servoTime;
     _delay_t    aliveAutoTime;
  
-    int32_t    triggerTime;
+    //int32_t    triggerTime;
    /* SERVO DEFUALT VALUES*/
-    miServo.X2=2500;
-    miServo.X1=800;
+    miServo.X2=LEFTSERVO;
+    miServo.X1=RIGHTSERVO;
     miServo.Y2=90;
     miServo.Y1=-90;
-    miServo.intervalValue=1000;
+    miServo.intervalValue=MIDDLESERVO;
     /* FIN SERVO DEFAULT VALUES*/
 /* END Local variables -------------------------------------------------------*/
 
@@ -786,6 +807,7 @@ int main()
 /* User code -----------------------------------------------------------------*/
     PC.baud(115200);
     myTimer.start();
+    distanceTimer.start();
     speedMLeft.period_ms(25);
     speedMRight.period_ms(25);
     servo.period_ms(20);
@@ -804,7 +826,9 @@ int main()
 
      /********** FIN - attach de interrupciones ********/
 
-    miServo.currentValue=1500;
+    //timerGral.attach_us(&do100ms, 300000);  //ticker que se ejecuta cada 100 ms
+
+    miServo.currentValue=MIDDLESERVO;
     
     servo.pulsewidth_us(miServo.currentValue);
 
@@ -815,9 +839,11 @@ int main()
     delayConfig(&hearbeatTime, HEARBEATIME);
     delayConfig(&debounceTime, DEBOUNCE);
     delayConfig(&generalTime,GENERALTIME);
-    delayConfig(&medicionTime,DISTANCEINTERVAL);
+    //delayConfig(&medicionTime,DISTANCEINTERVAL);
     delayConfig(&servoTime,miServo.intervalValue);
     delayConfig(&aliveAutoTime, ALIVEAUTOINTERVAL);
+
+    timerGral.attach_us(&do100ms, 100000); 
 
     startButon(myButton, NUMBUTTONS);
     
@@ -825,15 +851,14 @@ int main()
     
     autoConnectWifi();
 
-
     //dirijo el servo a los lados
-    servo.pulsewidth_us(800);
-    wait_ms(3000);
-    servo.pulsewidth_us(2500);
-    wait_ms(3000);
+    servo.pulsewidth_us(RIGHTSERVO);
+    wait_ms(SERVOTIME);
+    servo.pulsewidth_us(LEFTSERVO);
+    wait_ms(SERVOTIME);
     //dirijo el servo al centro
-    servo.pulsewidth_us(1500);
-    wait_ms(3000);
+    servo.pulsewidth_us(MIDDLESERVO);
+    wait_ms(SERVOTIME);
 
 
     while(1){
@@ -842,13 +867,13 @@ int main()
         serialTask((_sRx *)&dataRx,&dataTx, SERIE);
         serialTask(&wifiRx,&wifiTx, WIFI);
         buttonTask(&debounceTime,myButton, pulsadores.read());
-        distanceTask(&medicionTime,&triggerTime);
+        //distanceTask(&medicionTime,&triggerTime);
         speedTask();
         irSensorsTask();
         servoTask(&servoTime,&miServo.intervalValue);
         aliveAutoTask(&aliveAutoTime);
 
-        /*
+        
         switch(carMode){
             case IDLE:
 
@@ -863,12 +888,11 @@ int main()
 
             break;
         }
-        */
+        
     }
 
 /* END User code -------------------------------------------------------------*/
 }
-
 
 
 
