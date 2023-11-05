@@ -670,13 +670,13 @@ void speedTask(){
 
 void irSensorsTask(){
     static int32_t timeSensors=0;
-    static uint8_t index=0;
+    //static uint8_t index=0;
     #define INTERVALO 10
     if ((myTimer.read_ms()-timeSensors)>=INTERVALO){
         timeSensors=myTimer.read_ms(); 
-        irSensor[index].currentValue=irLeft.read_u16();
-        irSensor[index].currentValue=irCenter.read_u16();
-        irSensor[index].currentValue=irRight.read_u16();
+        irSensor[0].currentValue=irLeft.read_u16();
+        irSensor[1].currentValue=irCenter.read_u16();
+        irSensor[2].currentValue=irRight.read_u16();
     } 
 
 }
@@ -774,8 +774,8 @@ int main()
  
     int32_t    triggerTime;
    /* SERVO DEFUALT VALUES*/
-    miServo.X2=2000;
-    miServo.X1=1000;
+    miServo.X2=2500;
+    miServo.X1=800;
     miServo.Y2=90;
     miServo.Y1=-90;
     miServo.intervalValue=1000;
@@ -819,12 +819,22 @@ int main()
     delayConfig(&servoTime,miServo.intervalValue);
     delayConfig(&aliveAutoTime, ALIVEAUTOINTERVAL);
 
-    //delayConfig(&timeGlobal, GENERALTIME );
     startButon(myButton, NUMBUTTONS);
     
     myWifi.initTask();
     
     autoConnectWifi();
+
+
+    //dirijo el servo a los lados
+    servo.pulsewidth_us(800);
+    wait_ms(3000);
+    servo.pulsewidth_us(2500);
+    wait_ms(3000);
+    //dirijo el servo al centro
+    servo.pulsewidth_us(1500);
+    wait_ms(3000);
+
 
     while(1){
         myWifi.taskWifi();
@@ -858,5 +868,12 @@ int main()
 
 /* END User code -------------------------------------------------------------*/
 }
+
+
+
+
+
+
+
 
 
