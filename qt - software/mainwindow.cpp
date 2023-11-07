@@ -7,8 +7,15 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     timer1 = new QTimer(this);
-    timer2 = new QTimer(this);
+    timer2 = new QTimer(this); //Utilizado para la transmision de datos
+    timer3 = new QTimer(this); //Utilizado para el radar
+    timer4 = new QTimer(this); //Utilizado para pedir la distancia
+    timer5 = new QTimer(this); //Utilizado para mover el servo
 
+    //dibujo
+    QPaintBox1 = new QPaintBox(0,0,ui->widget); //el padre es el widget
+
+    //comunicacion
     QSerialPort1=new QSerialPort(this);
     QUdpSocket1 = new QUdpSocket(this);
 
@@ -20,6 +27,9 @@ MainWindow::MainWindow(QWidget *parent)
 
     connect(timer1,&QTimer::timeout,this,&MainWindow::timeOut);
     connect(timer2,&QTimer::timeout,this,&MainWindow::getData);
+    connect(timer3,&QTimer::timeout,this,&MainWindow::radar);
+    connect(timer4,&QTimer::timeout,this,&MainWindow::onTimer4);
+    connect(timer5,&QTimer::timeout,this,&MainWindow::onTimer5);
 
     //connects de udp
     connect(QUdpSocket1,&QUdpSocket::readyRead,this,&MainWindow::OnUdpRxData);
@@ -45,7 +55,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->pushButton_sendSerial->setEnabled(false);
 
     timer1->start(100);
-    timer2->start(500);
+    timer2->start(500); //timer encargado del envio de datos cada 500ms
 
 }
 
@@ -206,6 +216,14 @@ void MainWindow::decodeData(uint8_t *datosRx, uint8_t source){
         w.ui8[2] = datosRx[4];
         w.ui8[3] = datosRx[5];
         str = QString().number(w.ui32/58);
+
+        //distancia a utilizar en el radar
+        distance = w.ui32/58;
+        if(distance>50 || distance<4){
+                distance = 0;
+        }
+
+        //mostramos datos
         ui->label_distance_data->setText(str+ "cm");
         ui->plainTextEdit->appendPlainText("DISTANCIA: "+QString().number(w.ui32/58)+ "cm");
         break;
@@ -684,12 +702,6 @@ void MainWindow::getData(){
     uint8_t cmd, buf[24];
     int n;
 
-    cmd=GETDISTANCE;
-    n = 1;
-    buf[0] = cmd;
-    sendSerial(buf,n);
-    sendUdp(buf,n);
-
     cmd=GETANALOGSENSORS;
     n=1; //bytes de la longitud del
     buf[0] = cmd;
@@ -756,12 +768,10 @@ void MainWindow::on_pushButton_sendSerial_clicked()
 
 }
 
-
 void MainWindow::on_pushButton_clean_clicked()
 {
     ui->plainTextEdit->clear();
 }
-
 
 void MainWindow::on_pushButton_connectUdp_clicked()
 {
@@ -801,9 +811,198 @@ void MainWindow::on_pushButton_connectUdp_clicked()
     }
 }
 
-
 void MainWindow::on_pushButton_sendUdp_clicked()
 {
+
+}
+
+
+void MainWindow::on_pushButton_actRadar_clicked()
+{
+    if(ui->pushButton_actRadar->text()=="ACTIVATE"){
+        servoAngle = 90; //configuramos el angulo de inicio
+        angle = -180;
+
+        ui->pushButton_actRadar->setText("DEACTIVATE");
+        radarLine = false;
+        servoDir = false;
+        firExe = true;
+
+        //movemos el servo a la posicion inicial mediante conexion serial
+        uint8_t cmd, buf[24];
+        int n;
+        cmd = SETSERVOANGLE;
+        n = 2;
+        buf[0] = cmd;
+        buf[1] = servoAngle;
+        sendSerial(buf,n);
+
+        //activamos los timers
+        timer3->start(10);
+        timer4->start(40);
+        timer5->start(50);
+
+    } else{
+        timer3->stop();
+        timer4->stop();
+        timer5->stop();
+        ui->pushButton_actRadar->setText("ACTIVATE");
+    }
+}
+
+void MainWindow::radar(){
+    //variable local
+    QPainter paint(QPaintBox1->getCanvas());
+
+    QTime myTime;
+    myTime = QTime::currentTime();
+
+    QPen pen;
+    QBrush brush; //
+
+    ui->widget->setAttribute(Qt::WA_TranslucentBackground);
+
+    pen.setWidth(2);
+    brush.setStyle(Qt::SolidPattern);
+
+    if(firExe){
+        firExe=false;
+        //pintamos el fondo
+        pen.setColor(QColor::fromRgb(0, 70, 0));
+        paint.setPen(pen);
+        brush.setColor(QColor::fromRgb(0, 70, 0));
+        paint.setBrush(brush);
+        paint.resetTransform();
+        paint.save();
+        paint.translate(-ui->widget->width()/2,-ui->widget->height()/2);
+        paint.drawEllipse(0,0,ui->widget->width()*2,ui->widget->height()*2);
+        paint.restore();
+        paint.save();
+    }
+    //circunferencia mas externa
+    brush.setStyle(Qt::NoBrush);
+    pen.setColor(QColor::fromRgb(0, 220, 0));
+    paint.setPen(pen);
+    brush.setColor(QColor::fromRgb(0, 220, 0));
+    paint.setBrush(brush);
+    paint.drawEllipse(0,0,ui->widget->width(),ui->widget->width());
+
+    //circunferencia que le sigue en tamaño
+    paint.save();
+    paint.translate(ui->widget->width()/8,ui->widget->height()/4);//ui->widget->height(),ui->widget->height());
+    paint.drawEllipse(0,0,ui->widget->width()*3/4,ui->widget->width()*3/4);
+    paint.restore();
+    paint.save();
+
+    //siguente circunferencia
+    paint.save();
+    paint.translate(ui->widget->width()/4,ui->widget->height()/2);//ui->widget->height(),ui->widget->height());
+    paint.drawEllipse(0,0,ui->widget->width()/2,ui->widget->width()/2);
+    paint.restore();
+    paint.save();
+
+    //circunferencia mas pequeña
+    paint.save();
+    paint.translate(ui->widget->width()*3/8,ui->widget->height()*3/4);//ui->widget->height(),ui->widget->height());
+    paint.drawEllipse(0,0,ui->widget->width()/4,ui->widget->width()/4);
+    paint.restore();
+    paint.save();
+
+    pen.setColor(QColor::fromRgb(0, 180, 0));
+    pen.setWidth(0);
+    paint.setPen(pen);
+
+    paint.save();
+    paint.translate(ui->widget->width()/2,ui->widget->height());
+
+    for(int i=1;i<=60;i++){
+        paint.rotate(30);
+        if(i%5==0){
+            paint.drawLine(0,0,ui->widget->width(),0);
+        }
+    }
+
+    paint.restore();
+    paint.save();
+
+    /*
+    //calculamos el angulo
+    if(radarLine==0){
+        angle++;
+        if(angle==0)
+            radarLine=!radarLine;
+    }
+    if(radarLine!=0){
+        angle--;
+        if(angle==-180)
+            radarLine=!radarLine;
+    }
+*/
+    //dibujamos las lineas
+    pen.setWidth(4);
+
+    pen.setColor(QColor::fromRgb(0, 255, 0));
+    paint.setPen(pen);
+
+
+    paint.save();
+    paint.translate(ui->widget->width()/2,ui->widget->height());
+    paint.rotate(angle);
+    paint.drawLine(0,0,ui->widget->width(),0);
+    paint.restore();
+    paint.save();
+
+    pen.setColor(QColor::fromRgb(0, 10, 0));
+    paint.setPen(pen);
+
+    paint.save();
+    paint.translate(ui->widget->width()/2,ui->widget->height());
+    paint.rotate(angle);
+    paint.drawLine(0,0,distance*10,0);
+    paint.restore();
+    paint.save();
+
+    QPaintBox1->update();
+}
+
+void MainWindow::onTimer4(){
+    uint8_t cmd, buf[24];
+
+    int n;
+    cmd = GETDISTANCE;
+    n = 1;
+    buf[0] = cmd;
+    sendSerial(buf,n);
+}
+
+void MainWindow::onTimer5(){
+
+    uint8_t cmd, buf[24];
+    int n;
+
+
+    if(servoAngle == 90){
+        servoDir=false;
+    }
+    if(servoAngle == -90){
+        servoDir=true;
+    }
+
+    if(servoDir){
+        servoAngle++;
+        angle--;
+    } else{
+        servoAngle--;
+        angle++;
+    }
+    //(servoDir == true)? servoAngle++ : servoAngle--;
+
+    cmd = SETSERVOANGLE;
+    n = 2;
+    buf[0] = cmd;
+    buf[1] = servoAngle;
+    sendSerial(buf,n);
+
 
 }
 

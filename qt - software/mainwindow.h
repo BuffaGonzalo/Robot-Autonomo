@@ -8,8 +8,9 @@
 #include <QLabel>
 #include <QInputDialog>
 #include <QTimer>
+#include <QTime>
 #include <QSerialPortInfo>
-
+#include <qpaintbox.h>
 
 
 QT_BEGIN_NAMESPACE
@@ -67,21 +68,55 @@ private slots:
 
     bool eventFilter(QObject *watched, QEvent *event);
 
+    void on_pushButton_actRadar_clicked();
+
+    /**
+     * @brief radar - Funcion encargada de dibujar el radar en pantalla
+     *
+     */
+    void radar();
+
+    /**
+     * @brief onTimer4 - Funcion encargada de obtener distancia para el radar
+     */
+
+    void onTimer4();
+
+    /**
+     * @brief onTimer5 - Funcion encargada de mover el servo
+     */
+
+    void onTimer5();
 
 
 private:
     Ui::MainWindow *ui;
     QSerialPort *QSerialPort1;
-
+    QPaintBox *QPaintBox1;
     QLabel *estadoSerial;
+
+    //timers
     QTimer  *timer1;
     QTimer  *timer2;
+    QTimer  *timer3;
+    QTimer  *timer4;
+    QTimer  *timer5;
 
+    //variables comunicacion udp
     QUdpSocket *QUdpSocket1;
     QHostAddress RemoteAddress;
     quint16 RemotePort;
     QHostAddress clientAddress;
     int puertoremoto;
+
+    //otras
+    bool radarLine; //bool utilzado pra controlar el valor de la aguja del radar
+    bool firExe; //bool utilizado para dibujar el fondo del radar
+    bool servoDir; //bool utilizado para modificar el sentido de giro del servo
+    int contadorAlive=0;
+    int angle;
+    int32_t servoAngle; //variable utilizada para controlar el angulo del servo en la animacion
+    uint32_t distance;
 
     typedef enum{
         START,
@@ -141,8 +176,5 @@ private:
     }_udat;
 
     _udat myWord;
-
-    int contadorAlive=0;
-
 };
 #endif // MAINWINDOW_H
