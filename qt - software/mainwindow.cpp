@@ -824,7 +824,6 @@ void MainWindow::on_pushButton_actRadar_clicked()
         angle = -180;
 
         ui->pushButton_actRadar->setText("DEACTIVATE");
-        radarLine = false;
         servoDir = false;
         firExe = true;
 
@@ -868,6 +867,8 @@ void MainWindow::radar(){
     if(firExe){
         firExe=false;
         //pintamos el fondo
+        paint.setOpacity(1);
+        paint.opacity();
         pen.setColor(QColor::fromRgb(0, 70, 0));
         paint.setPen(pen);
         brush.setColor(QColor::fromRgb(0, 70, 0));
@@ -879,6 +880,10 @@ void MainWindow::radar(){
         paint.restore();
         paint.save();
     }
+
+    paint.setOpacity(1);
+    paint.opacity();
+
     //circunferencia mas externa
     brush.setStyle(Qt::NoBrush);
     pen.setColor(QColor::fromRgb(0, 220, 0));
@@ -925,25 +930,13 @@ void MainWindow::radar(){
     paint.restore();
     paint.save();
 
-    /*
-    //calculamos el angulo
-    if(radarLine==0){
-        angle++;
-        if(angle==0)
-            radarLine=!radarLine;
-    }
-    if(radarLine!=0){
-        angle--;
-        if(angle==-180)
-            radarLine=!radarLine;
-    }
-*/
     //dibujamos las lineas
     pen.setWidth(4);
 
     pen.setColor(QColor::fromRgb(0, 255, 0));
     paint.setPen(pen);
-
+    paint.setOpacity(0.1);
+    paint.opacity();
 
     paint.save();
     paint.translate(ui->widget->width()/2,ui->widget->height());
@@ -952,8 +945,10 @@ void MainWindow::radar(){
     paint.restore();
     paint.save();
 
-    pen.setColor(QColor::fromRgb(0, 10, 0));
+    pen.setColor(QColor::fromRgb(0, 100, 0));
     paint.setPen(pen);
+    paint.setOpacity(0.2);
+    paint.opacity();
 
     paint.save();
     paint.translate(ui->widget->width()/2,ui->widget->height());
@@ -995,8 +990,8 @@ void MainWindow::onTimer5(){
         servoAngle--;
         angle++;
     }
-    //(servoDir == true)? servoAngle++ : servoAngle--;
 
+    //enviamos el comando con el angulo
     cmd = SETSERVOANGLE;
     n = 2;
     buf[0] = cmd;
