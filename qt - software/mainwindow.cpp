@@ -933,7 +933,7 @@ void MainWindow::radar(){
     //dibujamos las lineas
     pen.setWidth(4);
 
-    pen.setColor(QColor::fromRgb(0, 255, 0));
+    pen.setColor(QColor::fromRgb(0, 150, 0));
     paint.setPen(pen);
     paint.setOpacity(0.1);
     paint.opacity();
@@ -945,7 +945,7 @@ void MainWindow::radar(){
     paint.restore();
     paint.save();
 
-    pen.setColor(QColor::fromRgb(0, 100, 0));
+    pen.setColor(QColor::fromRgb(0, 150, 0));
     paint.setPen(pen);
     paint.setOpacity(0.2);
     paint.opacity();
