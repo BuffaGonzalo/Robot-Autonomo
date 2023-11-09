@@ -47,8 +47,15 @@
 #define LEFTSERVO       2500
 #define MIDDLESERVO     1500
 
+#define MOTORTIME       200
 #define SERVOTIME       1000
 
+#define MAXSPEED        12500
+#define MEDSPEED        10000
+#define MINSPEED        7500
+#define NOSPEED         0
+
+#define INTERVALO 10
 
 #define     FORWARD             2
 #define     BACKWARD            1
@@ -92,13 +99,13 @@ InterruptIn speedLeft(PB_9);//!<Sensor de Horquilla para medir velocidad
 
 InterruptIn speedRight(PB_8);//!<Sensor de Horquilla para medir velocidad
 
-BusOut  dirMLeft(PB_14,PB_15);//!< Pines para determinara la dirección de giro del motor
+BusOut  dirMRight(PB_14,PB_15);//!< Pines para determinara la dirección de giro del motor
 
-BusOut  dirMRight(PB_6,PB_7);//!< Pines para determinara la dirección de giro del motor
+BusOut  dirMLeft(PB_6,PB_7);//!< Pines para determinara la dirección de giro del motor
 
-PwmOut  speedMLeft(PB_1);//!< Pin de habilitación del giro del motor, se usa para controlar velocidad del mismo
+PwmOut  speedMRight(PB_1);//!< Pin de habilitación del giro del motor, se usa para controlar velocidad del mismo
 
-PwmOut  speedMRight(PB_0);//!< Pin de habilitación del giro del motor, se usa para controlar velocidad del mismo
+PwmOut  speedMLeft(PB_0);//!< Pin de habilitación del giro del motor, se usa para controlar velocidad del mismo
 
 
 
@@ -240,14 +247,31 @@ void distanceMeasurement(void);
 void autoConnectWifi();
 
 /**
- * @brief envía de manera automática el alive
+ * @brief Envía de manera automática el alive
  * 
  */
 void aliveAutoTask(_delay_t *aliveAutoTime);
 
+/**
+ * @brief Función encargada de medir la distancia
+*/
 void do100ms();
 
+/**
+ * @brief Función encargada de calcular el tiempo
+*/
 void doTimeout();
+
+/**
+ * @brief Función encargada de mover hacia adelante el robot
+*/
+void move(uint32_t leftSpeed, uint32_t rightSpeed, uint8_t leftMotor, uint8_t rightMotor);
+
+/**
+ * @brief Función utilizada en el modo de seguir linea
+*/
+void lineFollower();
+
 
 /* END Function prototypes ---------------------------------------------------*/
 
@@ -256,6 +280,9 @@ void doTimeout();
 
 const char firmware[] = "EX100923v01\n";
 
+//mascaras
+const uint8_t irMask = 0x01;
+
 volatile _sRx dataRx;
 
 volatile uint32_t countLeftValue, countRightValue;
@@ -263,6 +290,12 @@ volatile uint32_t countLeftValue, countRightValue;
 volatile int32_t  initialValue, finalValue, distanceValue;
 
 uint32_t speedleftValue, speedRightValue;
+
+//uint32_t whiteValue = 9000;
+
+uint32_t blackValue = 4000;
+
+uint8_t irSensorValue = 0;
 
 _sTx dataTx;
 
@@ -295,6 +328,12 @@ _sRx wifiRx;
 uint8_t wifiBuffRx[RXBUFSIZE];
 
 uint8_t wifiBuffTx[TXBUFSIZE];
+
+int32_t timeSpeed=0; //variable utilizada para 
+
+int32_t timeFollowLine = 0; //variable utilizada para realizar la lectura cada 10ms de los datos
+
+//timers, timeout y tickers
 
 Timer myTimer;
 
@@ -558,7 +597,7 @@ void decodeCommand(_sRx *dataRx, _sTx *dataTx)
             else
                 dirMLeft.write(BACKWARD);
             auxSpeed=(abs(motorSpeed))*250;
-            speedMLeft.pulsewidth_us(auxSpeed);
+            speedMLeft.pulsewidth_us(auxSpeed-3000);
             myWord.ui8[0]=getByteFromRx(dataRx,1,0);
             myWord.ui8[1]=getByteFromRx(dataRx,1,0);
             myWord.ui8[2]=getByteFromRx(dataRx,1,0);
@@ -666,7 +705,6 @@ void servoTask(_delay_t *servoTime, uint32_t*intervalServo){
 }
 
 void speedTask(){
-    static int32_t timeSpeed=0;
     #define INTERVAL 1000
     if ((myTimer.read_ms()-timeSpeed)>=INTERVAL){
             timeSpeed=myTimer.read_ms();       
@@ -680,7 +718,6 @@ void speedTask(){
 void irSensorsTask(){
     static int32_t timeSensors=0;
     //static uint8_t index=0;
-    #define INTERVALO 10
     if ((myTimer.read_ms()-timeSensors)>=INTERVALO){
         timeSensors=myTimer.read_ms(); 
         irSensor[0].currentValue=irLeft.read_u16();
@@ -710,7 +747,6 @@ void distanceMeasurement(void){
        distanceValue=finalValue-initialValue+0xFFFFFFFF;
 }
 
-
 void doTimeout()
 {
     distanceTimer.reset();
@@ -723,6 +759,76 @@ void do100ms()
     triggerTimer.attach_us(&doTimeout,10);
 }
 
+void move(uint32_t leftSpeed, uint32_t rightSpeed, uint8_t leftMotor, uint8_t rightMotor){
+    //definimos el modo
+    dirMLeft.write(leftMotor);
+    dirMRight.write(rightMotor);
+    
+    //asignamos la velocidad
+    speedMLeft.pulsewidth_us(leftSpeed);
+    speedMRight.pulsewidth_us (rightSpeed);
+}
+
+void lineFollower(){
+    static uint8_t lastIrValue = 0;
+
+    if((myTimer.read_ms()-timeFollowLine)>=INTERVALO){
+        timeFollowLine=myTimer.read_ms();
+        irSensorValue = 0;
+
+        for(int i=0; i<3;i++){
+            if(irSensor[i].currentValue<blackValue){ //si el color es blanco, color > 9000
+                irSensorValue = irSensorValue | (irMask << i);
+            }
+        }
+        //esperar un tiempo de 500ms o 100ms luego de encontrar la linea para empezar a analizar si encuentro la linea 
+
+        switch(irSensorValue){
+            case 1: //sensor de la izquierda
+                move(MINSPEED, MAXSPEED, FORWARD, FORWARD); //aumentamos la velocidad del motor izquierdo
+            break;
+            case 2: //adelante
+                move(MAXSPEED, MAXSPEED, FORWARD, FORWARD);
+            break;
+            case 3: 
+                move(MINSPEED, MEDSPEED, FORWARD, FORWARD);
+            break;
+            case 4: //sensor de la derecha
+                move(MAXSPEED, MEDSPEED, FORWARD, FORWARD);
+            break;
+            case 6:
+                move(MEDSPEED, MINSPEED, FORWARD, FORWARD);
+            break;
+            default:
+                if(lastIrValue == 4)
+                    move(MAXSPEED, MEDSPEED, FORWARD, BACKWARD);
+                else if(lastIrValue == 1)
+                    move(MEDSPEED, MAXSPEED, BACKWARD, FORWARD);
+                else{
+                    move(MINSPEED,MINSPEED,FORWARD,BACKWARD);
+                }
+            break;
+
+            lastIrValue = irSensorValue;
+        }
+    }
+
+    
+
+
+/*
+
+    if(irSensor[0].currentValue > blackValue && irSensor[1].currentValue < whiteValue && irSensor[2].currentValue < whiteValue){
+        move(MINSPEED, STOP, FORWARD); //velocidad, motor izquierdo, motor derecho
+    }else if(irSensor[0].currentValue < whiteValue && irSensor[1].currentValue > blackValue && irSensor[2].currentValue < whiteValue){
+        move(MINSPEED, FORWARD, FORWARD); //velocidad, motor izquierdo, motor derecho
+    } else if (irSensor[0].currentValue > whiteValue && irSensor[1].currentValue > whiteValue && irSensor[2].currentValue > whiteValue){
+        move(CRUISESPEED, FORWARD, FORWARD); //velocidad, motor izquierdo, motor derecho
+    } else if(irSensor[0].currentValue < whiteValue && irSensor[1].currentValue < whiteValue && irSensor[2].currentValue > blackValue){
+        move(MINSPEED, FORWARD, STOP); //velocidad, motor izquierdo, motor derecho
+    }
+*/
+}
 
 
 /**********************************AUTO CONNECT WIF*********************/
@@ -826,10 +932,10 @@ int main()
 
      /********** FIN - attach de interrupciones ********/
 
-    //timerGral.attach_us(&do100ms, 300000);  //ticker que se ejecuta cada 100 ms
-
     miServo.currentValue=MIDDLESERVO;
     
+    carMode = MODE1;
+
     servo.pulsewidth_us(miServo.currentValue);
 
     speedMLeft.pulsewidth_us(0);
@@ -860,6 +966,11 @@ int main()
     servo.pulsewidth_us(MIDDLESERVO);
     wait_ms(SERVOTIME);
 
+    move(MINSPEED, MINSPEED, FORWARD, FORWARD);
+    wait_ms(MOTORTIME);
+    move(MINSPEED, MINSPEED, BACKWARD, BACKWARD);
+    wait_ms(MOTORTIME);
+    move(NOSPEED, NOSPEED, STOP, STOP);
 
     while(1){
         myWifi.taskWifi();
@@ -879,7 +990,7 @@ int main()
 
             break;
             case MODE1:
-
+                lineFollower();
             break;
             case MODE2:
 
