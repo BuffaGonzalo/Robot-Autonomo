@@ -110,7 +110,6 @@ private:
     int puertoremoto;
 
     //otras
-    bool radarLine; //bool utilzado pra controlar el valor de la aguja del radar
     bool firExe; //bool utilizado para dibujar el fondo del radar
     bool servoDir; //bool utilizado para modificar el sentido de giro del servo
     int contadorAlive=0;
