@@ -152,6 +152,14 @@ typedef enum{
     UNKNOWN = 0xFF
 }_eCmd;
 
+typedef enum{
+    IDLE,
+    MODE1,
+    MODE2,
+    MODE3
+} _eModes;
+
+
 
 /* END typedef ---------------------------------------------------------------*/
 

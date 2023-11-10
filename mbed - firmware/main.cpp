@@ -50,9 +50,10 @@
 #define MOTORTIME       200
 #define SERVOTIME       1000
 
-#define MAXSPEED        12500
-#define MEDSPEED        10000
-#define MINSPEED        7500
+#define MAXSPEED        12000
+#define MEDSPEED        8000
+#define MINSPEED        6000
+#define TURNSPEED       6000
 #define NOSPEED         0
 
 #define INTERVALO 10
@@ -770,47 +771,65 @@ void move(uint32_t leftSpeed, uint32_t rightSpeed, uint8_t leftMotor, uint8_t ri
 }
 
 void lineFollower(){
-    static uint8_t lastIrValue = 0;
+    static uint8_t irValue = 0;
+    static uint8_t lastIrValue;
+    bool updValue = false;
 
     if((myTimer.read_ms()-timeFollowLine)>=INTERVALO){
         timeFollowLine=myTimer.read_ms();
-        irSensorValue = 0;
+        
+
+        //comprobamos el valor de los sensores
 
         for(int i=0; i<3;i++){
             if(irSensor[i].currentValue<blackValue){ //si el color es blanco, color > 9000
-                irSensorValue = irSensorValue | (irMask << i);
+                irValue = irValue | (irMask << i);
             }
+        }
+
+        //actualizamos si hay un valor que es negro 
+        
+        if(irValue != 0){
+            updValue = true;
+            irSensorValue = 0; //acemos 0 el valor para que no se solapen valores de la or bitwise
+        } else{
+            updValue = false;
+        }
+        
+        for(int i=0; i<3;i++){
+            if((irSensor[i].currentValue<blackValue)&&(updValue)){ //si el color es negro y el valor no es 0 actualizamos
+                irSensorValue = irSensorValue | (irMask << i);
+            } 
         }
         //esperar un tiempo de 500ms o 100ms luego de encontrar la linea para empezar a analizar si encuentro la linea 
 
         switch(irSensorValue){
             case 1: //sensor de la izquierda
-                move(MINSPEED, MAXSPEED, FORWARD, FORWARD); //aumentamos la velocidad del motor izquierdo
+                move(MINSPEED, MEDSPEED, BACKWARD, FORWARD); //aumentamos la velocidad del motor izquierdo
+            case 3: 
+                move(MINSPEED, MINSPEED, BACKWARD, FORWARD); //aumentamos la velocidad del motor izquierdo
             break;
             case 2: //adelante
-                move(MAXSPEED, MAXSPEED, FORWARD, FORWARD);
-            break;
-            case 3: 
-                move(MINSPEED, MEDSPEED, FORWARD, FORWARD);
+                move(MEDSPEED, MEDSPEED, FORWARD, FORWARD);
             break;
             case 4: //sensor de la derecha
-                move(MAXSPEED, MEDSPEED, FORWARD, FORWARD);
+                move(MEDSPEED, MINSPEED, FORWARD, BACKWARD);
+            case 6: 
+                move(MINSPEED, MINSPEED, FORWARD, BACKWARD);
             break;
-            case 6:
-                move(MEDSPEED, MINSPEED, FORWARD, FORWARD);
+            case 7:
+                move(MEDSPEED, MEDSPEED, FORWARD, FORWARD);
             break;
             default:
-                if(lastIrValue == 4)
-                    move(MAXSPEED, MEDSPEED, FORWARD, BACKWARD);
-                else if(lastIrValue == 1)
-                    move(MEDSPEED, MAXSPEED, BACKWARD, FORWARD);
-                else{
-                    move(MINSPEED,MINSPEED,FORWARD,BACKWARD);
-                }
+                if(lastIrValue == 1 || lastIrValue == 3)
+                    move(TURNSPEED, TURNSPEED, BACKWARD, FORWARD);
+                else
+                    move(TURNSPEED, TURNSPEED, FORWARD, BACKWARD);
             break;
-
-            lastIrValue = irSensorValue;
         }
+
+        if((lastIrValue != irSensorValue) && (irSensorValue!=0))
+            lastIrValue = irSensorValue;
     }
 
     
