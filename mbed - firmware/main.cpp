@@ -36,6 +36,7 @@
  */
 typedef void(*ptrFunc)(void *param);
 
+//ENUMERACIONES
 typedef enum{
     BUTTON_DOWN,
     BUTTON_UP,
@@ -52,6 +53,7 @@ typedef enum{
     NO_EVENT
 }_eEvent;
 
+//ESTRUCTURAS
 typedef struct
 {
     _eButtonState   currentState;
@@ -73,8 +75,8 @@ typedef struct
 #define DISTANCEINTERVAL    300
 #define MASK 0x01
 
-#define RIGHTSERVO      700
-#define LEFTSERVO       2500
+//#define RIGHTSERVO      700
+//#define LEFTSERVO       2500
 #define MIDDLESERVO     1500
 
 #define MOTORTIME       200
@@ -334,7 +336,7 @@ const char firmware[] = "EX100923v01\n";
 //MASCARAS
 const uint8_t irMask = 0x01;
 
-uint32_t heartBeatMask[] = {0x55555555,0x1,0x5,0x15};
+uint32_t heartBeatMask[] = {0x55555555, 0x1, 0x2010080, 0x5F, 0x5, 0x28140A00, 0x15F, 0x15, 0x2A150A08, 0x55F}; //IDLE, MODO1, MODO1(1-5), MODO1ON, MODO2, MODO2(1-5), MODO2ON, MODO3, MODO3(1-5), MODO3ON
 
 //BANDERAS
 _uFlag  flags;
@@ -373,9 +375,13 @@ volatile int32_t  initialValue, finalValue, distanceValue;
 
 uint32_t speedleftValue, speedRightValue;
 
-//uint32_t whiteValue = 9000;
+uint32_t whiteValue = 9000;
 
 uint32_t blackValue = 4000;
+
+uint32_t minMsServo = 700;
+
+uint32_t maxMsServo = 2500;
 
 uint8_t irSensorValue = 0;
 
@@ -420,13 +426,10 @@ Wifi myWifi(wifiBuffRx, &wifiRx.indexW, RXBUFSIZE);
 void hearbeatTask(_delay_t *heartBeatTime, uint8_t index)
 {
     static uint8_t times=0;
-
     if(delayRead(heartBeatTime)){
         HEARTBEAT = (~heartBeatMask[index] & (1<<times));
-
         times++;
         times &= 31; //control de times
-        //sec &= -(sec<16);
     }
 }
 
@@ -873,8 +876,8 @@ uint8_t updateMefTask(_sButton *button){
         break;
         case BUTTON_FALLING:
             if(button->stateInput==PRESSED){
-                    button->currentState=BUTTON_DOWN;
-                    button->timePressed=myTimer.read_ms();
+                button->currentState=BUTTON_DOWN;
+                button->timePressed=myTimer.read_ms();
             }else{
                 button->currentState=BUTTON_UP;
             }
@@ -885,9 +888,9 @@ uint8_t updateMefTask(_sButton *button){
         break;
         case BUTTON_RISING:
             if(button->stateInput==NOT_PRESSED){
-                action=true;
                 button->currentState=BUTTON_UP;
                 button->timeDiff = myTimer.read_ms() - button->timePressed;
+                action=true;
             }else{
                 button->currentState=BUTTON_DOWN;
             }
@@ -1020,8 +1023,8 @@ int main()
     _delay_t    aliveAutoTime;
 
     //VALORES DEL SERVO
-    miServo.X2=LEFTSERVO;
-    miServo.X1=RIGHTSERVO;
+    miServo.X2=maxMsServo;
+    miServo.X1=minMsServo;
     miServo.Y2=90;
     miServo.Y1=-90;
     miServo.intervalValue=MIDDLESERVO;
@@ -1074,9 +1077,9 @@ int main()
 
     //MOVIMIENTOS PREVIOS
     //SERVO A LOS LADOS
-    servo.pulsewidth_us(RIGHTSERVO);
+    servo.pulsewidth_us(maxMsServo);
     wait_ms(SERVOTIME);
-    servo.pulsewidth_us(LEFTSERVO);
+    servo.pulsewidth_us(minMsServo);
     wait_ms(SERVOTIME);
     //SERVO AL CENTRO
     servo.pulsewidth_us(MIDDLESERVO);
@@ -1118,43 +1121,96 @@ int main()
         switch(carMode){
             case IDLE:
                 if(updateMefTask(myButton) && (myButton[0].timeDiff >= 100) && (myButton[0].timeDiff < 1000)){
-                    carMode = MODE1;
-                    heartBeatIndex=1;
+                    carMode = PREMODE1;       
+                    heartBeatIndex = PREMODE1;             
                 }
             break;
-            case MODE1:
+            case PREMODE1:
                 if(updateMefTask(myButton)){
-                    if((myButton[0].timeDiff >= 100) && (myButton[0].timeDiff < 1000)){
-                        carMode = MODE2;
-                        heartBeatIndex=2;
+                    if((myButton[0].timeDiff >= 100) && (myButton[0].timeDiff < 1000)){ //cambia de modo
+                        carMode = PREMODE2;
+                        heartBeatIndex = PREMODE2;  
                         move(NOSPEED, NOSPEED, STOP, STOP);
-                    } else if((myButton[0].timeDiff >= 1000) && (myButton[0].timeDiff <= 5000)){
-                        //heartBeatIndex=1;
+                    } else if((myButton[0].timeDiff < 3000)){ //reinicio de modo
+                        heartBeatIndex=PREMODE1;
                     }
                 }
+                if((myTimer.read_ms() - myButton[0].timePressed >= 1000) && (myTimer.read_ms() - myButton[0].timePressed <= 3000)){ //ejecucion de modo
+                    heartBeatIndex = EXEMODE1;
+                    if(updateMefTask(myButton))
+                        carMode = ONMODE1;
+                }
+                if(myTimer.read_ms() - myButton[0].timePressed > 3000)
+                    heartBeatIndex = PREMODE1;
+            break;
+            case EXEMODE1:
+            break;
+            case ONMODE1:
+                if(updateMefTask(myButton) && myButton[0].timeDiff >= 3000){ //salir ejecucion
+                    carMode=PREMODE1;
+                    heartBeatIndex=PREMODE1;
+                    move(NOSPEED, NOSPEED, STOP, STOP); 
+                }
+                heartBeatIndex = ONMODE1;
                 lineFollower();
             break;
-            case MODE2:
+            case PREMODE2:
                 if(updateMefTask(myButton)){
-                    if((myButton[0].timeDiff >= 100) && (myButton[0].timeDiff < 1000)){
-                        carMode = MODE3;
-                        heartBeatIndex=3;
+                    if((myButton[0].timeDiff >= 100) && (myButton[0].timeDiff < 1000)){ //cambia de modo
+                        carMode = PREMODE3; 
+                        heartBeatIndex = PREMODE3; 
                         move(NOSPEED, NOSPEED, STOP, STOP);
-                    } else if(updateMefTask(myButton) && (myButton[0].timeDiff >= 1000) && (myButton[0].timeDiff <= 5000)){
-                       //heartBeatIndex=1;
+                    } else if((myButton[0].timeDiff < 3000)){ //reinicio de modo
+                        heartBeatIndex = PREMODE2;
                     }
                 }
+                if((myTimer.read_ms() - myButton[0].timePressed >= 1000) && (myTimer.read_ms() - myButton[0].timePressed <= 3000)){ //ejecucion de modo
+                    heartBeatIndex = EXEMODE2;
+                    if(updateMefTask(myButton))
+                        carMode = ONMODE2;
+                }
+                if(myTimer.read_ms() - myButton[0].timePressed > 3000)
+                    heartBeatIndex = PREMODE2;
             break;
-            case MODE3:
+            case EXEMODE2:
+            break;
+            case ONMODE2:
+                if(updateMefTask(myButton) && (myButton[0].timeDiff >= 3000)){ //salir ejecucion
+                    carMode = PREMODE2;
+                    heartBeatIndex = PREMODE2;
+                    move(NOSPEED, NOSPEED, STOP, STOP);
+                    
+                }
+                heartBeatIndex = ONMODE2;
+
+            break;
+            case PREMODE3:
                 if(updateMefTask(myButton)){
-                    if((myButton[0].timeDiff >= 100) && (myButton[0].timeDiff < 1000)){
+                    if((myButton[0].timeDiff >= 100) && (myButton[0].timeDiff < 1000)){ //cambia de modo
                         carMode = IDLE;
-                        heartBeatIndex=0;
+                        heartBeatIndex = IDLE; 
                         move(NOSPEED, NOSPEED, STOP, STOP);
-                    } else if(updateMefTask(myButton) && (myButton[0].timeDiff >= 1000) && (myButton[0].timeDiff <= 5000)){
-                        //heartBeatIndex=1;
+                    } else if((myButton[0].timeDiff < 3000)){ //reinicio de modo
+                        heartBeatIndex=PREMODE3;
                     }
                 }
+                if((myTimer.read_ms() - myButton[0].timePressed >= 1000) && (myTimer.read_ms() - myButton[0].timePressed <= 3000)){ //ejecucion de modo
+                    heartBeatIndex = EXEMODE3;
+                    if(updateMefTask(myButton))
+                        carMode = ONMODE3;
+                }
+                if(myTimer.read_ms() - myButton[0].timePressed > 3000)
+                    heartBeatIndex = PREMODE3;
+            break;
+            case EXEMODE3:
+            break;
+            case ONMODE3:
+                if(updateMefTask(myButton) && (myButton[0].timeDiff >= 3000)){ //salir ejecucion
+                    carMode=PREMODE3;
+                    heartBeatIndex=PREMODE3;
+                    move(NOSPEED, NOSPEED, STOP, STOP);
+                }
+                heartBeatIndex = ONMODE3;
             break;
         }
         //HEARTBEAT 
