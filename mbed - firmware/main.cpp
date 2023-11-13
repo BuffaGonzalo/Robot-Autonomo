@@ -24,7 +24,6 @@
 #include "mbed.h"
 #include "util.h"
 #include "myDelay.h"
-//#include "debounce.h"
 #include "config.h"
 #include "wifi.h"
 /* END Includes --------------------------------------------------------------*/
@@ -72,6 +71,7 @@ typedef struct
 #define GENERALTIME 10
 #define NUMBUTTONS  1
 #define DISTANCEINTERVAL    300
+#define MASK 0x01
 
 #define RIGHTSERVO      700
 #define LEFTSERVO       2500
@@ -112,7 +112,7 @@ typedef struct
 
 //BusIn   pulsadores(PA_4,PA_5,PA_6,PA_7);//!< Botonnes de la placa
 
-DigitalOut LED(PC_13);//!< Led de Hearbeat
+DigitalOut HEARTBEAT(PC_13);//!< Led de Hearbeat
 
 DigitalIn BUTTON(PA_4);
 
@@ -148,14 +148,14 @@ PwmOut  speedMLeft(PB_0);//!< Pin de habilitación del giro del motor, se usa pa
 
 /* Function prototypes -------------------------------------------------------*/
 
-//CONTROL HEARTBEAT
+//HEARTBEAT
 /**
  * @brief Hearbeat, indica el funcionamiento del sistema
  * 
- * @param timeHearbeat Variable para el intervalo de tiempo
+ * @param timeHeartbeat Variable para el intervalo de tiempo
  * @param mask Secuencia de encendido/apagado del led de Hearbeat
  */
-void hearbeatTask(_delay_t *timeHearbeat, uint16_t mask);
+void hearbeatTask(_delay_t *timeHeartbeat, uint8_t index);
 
 //CONEXION SERIAL - WIFI
 /**
@@ -166,54 +166,6 @@ void hearbeatTask(_delay_t *timeHearbeat, uint16_t mask);
  * @param source Identifica la fuente desde donde se enviaron los datos
  */
 void serialTask(_sRx *dataRx, _sTx *dataTx, uint8_t source);
-
-/**
- * @brief Función para realizar la autoconexión de los datos de Wifi
- * 
- */
-void autoConnectWifi();
-
-/**
- * @brief Envía de manera automática el alive
- * 
- */
-void aliveAutoTask(_delay_t *aliveAutoTime);
-
-//SENSORES
-
-
-
-
-/**
- * @brief Rutina oara medir distancia
- * 
- * @param medicionTime variable que contiene el intervalo de medición de distancia
- * @param triggerTime Variable que contiene el valor de tiempo del Trigger
- */
-void distanceTask(_delay_t *medicionTime, int32_t *triggerTime);
-
-
-/**
- * @brief Rutina para realizar la verificación de mocimiento del servo
- * en caso de que no se mueva envia la respuesta automática a la PC
- * 
- * @param servoTime almacena el tiempo del timer
- * @param intervalServo posee el tiempo del ointervalo para responder en función del ángulo a mover
- */
-void servoTask(_delay_t *servoTime, uint32_t *intervalServo);
-
-/**
- * @brief Rutina para medir la velocidad
- * 
- */
-void speedTask();
-
-/**
- * @brief Rutina para hacer la medición de los sensores IR
- * 
- */
-void irSensorsTask();
-
 
 /**
  * @brief Recepción de datos por el puerto serie
@@ -266,6 +218,48 @@ void decodeHeader(_sRx *dataRx);
  */
 void decodeCommand(_sRx *dataRx, _sTx *dataTx);
 
+/**
+ * @brief Función para realizar la autoconexión de los datos de Wifi
+ * 
+ */
+void autoConnectWifi();
+
+/**
+ * @brief Envía de manera automática el alive
+ * 
+ */
+void aliveAutoTask(_delay_t *aliveAutoTime);
+
+//SENSORES
+
+/**
+ * @brief Rutina oara medir distancia
+ * 
+ * @param medicionTime variable que contiene el intervalo de medición de distancia
+ * @param triggerTime Variable que contiene el valor de tiempo del Trigger
+ */
+void distanceTask(_delay_t *medicionTime, int32_t *triggerTime);
+
+/**
+ * @brief Rutina para realizar la verificación de mocimiento del servo
+ * en caso de que no se mueva envia la respuesta automática a la PC
+ * 
+ * @param servoTime almacena el tiempo del timer
+ * @param intervalServo posee el tiempo del ointervalo para responder en función del ángulo a mover
+ */
+void servoTask(_delay_t *servoTime, uint32_t *intervalServo);
+
+/**
+ * @brief Rutina para medir la velocidad
+ * 
+ */
+void speedTask();
+
+/**
+ * @brief Rutina para hacer la medición de los sensores IR
+ * 
+ */
+void irSensorsTask();
 
 /**
  * @brief Función del Sensor de Horquilla Izquierdo
@@ -290,7 +284,6 @@ void distanceInitMeasurement(void);
  * en el pin de eco
  */
 void distanceMeasurement(void);
-
 
 /**
  * @brief Función encargada de medir la distancia
@@ -318,28 +311,61 @@ uint8_t updateMefTask(_sButton *button);
 
 void buttonTask(void *param);
 
+//MOVIMIENTO
 /**
  * @brief Función encargada de mover hacia adelante el robot
 */
 void move(uint32_t leftSpeed, uint32_t rightSpeed, uint8_t leftMotor, uint8_t rightMotor);
 
+//MODOS
 /**
  * @brief Función utilizada en el modo de seguir linea
 */
 void lineFollower();
-
 
 /* END Function prototypes ---------------------------------------------------*/
 
 
 /* Global variables ----------------------------------------------------------*/
 
+//VALOR FIRMWARE
 const char firmware[] = "EX100923v01\n";
 
-//mascaras
+//MASCARAS
 const uint8_t irMask = 0x01;
 
+uint32_t heartBeatMask[] = {0x55555555,0x1,0x5,0x15};
+
+//BANDERAS
+_uFlag  flags;
+
+//COMUNICACION SERIAL - WIFI
+_uWord myWord;
+
+_sTx dataTx;
+
+wifiData myWifiData;
+
 volatile _sRx dataRx;
+
+volatile uint8_t buffRx[RXBUFSIZE];
+
+uint8_t buffTx[TXBUFSIZE];
+
+uint8_t globalIndex, index2;
+
+//VARIABLES SENSORES
+_sSensor irSensor[3];
+
+_sServo miServo;
+
+_sTx wifiTx;
+
+_sRx wifiRx;
+
+uint8_t wifiBuffRx[RXBUFSIZE];
+
+uint8_t wifiBuffTx[TXBUFSIZE];
 
 volatile uint32_t countLeftValue, countRightValue;
 
@@ -353,45 +379,17 @@ uint32_t blackValue = 4000;
 
 uint8_t irSensorValue = 0;
 
-_sTx dataTx;
-
-wifiData myWifiData;
-
-volatile uint8_t buffRx[RXBUFSIZE];
-
-uint8_t buffTx[TXBUFSIZE];
-
-uint8_t globalIndex, index2;
-
-_uFlag  flags;
-
-_sButton myButton[NUMBUTTONS];
-
-_delay_t generalTime;
-
-_sSensor irSensor[3];
-
-_sServo miServo;
-
-_uWord myWord;
-
-_eModes carMode;
-
-_sTx wifiTx;
-
-_sRx wifiRx;
-
-uint8_t wifiBuffRx[RXBUFSIZE];
-
-uint8_t wifiBuffTx[TXBUFSIZE];
-
 int32_t timeSpeed=0; //variable utilizada para 
 
 int32_t timeFollowLine = 0; //variable utilizada para realizar la lectura cada 10ms de los datos
 
 int32_t timeToDebounce = 0;
 
-//timers, timeout y tickers
+_sButton myButton[NUMBUTTONS];
+
+//VARIABLES DE TIEMPO - TIMEOUTS, TIMERS, TICKERS
+
+_delay_t generalTime;
 
 Timer myTimer;
 
@@ -401,11 +399,16 @@ Ticker timerGral;
 
 Timeout triggerTimer;
 
+//MODOS DEL AUTO
+_eModes carMode;
+
+//HEARTBEAT
+uint8_t heartBeatIndex = 0;
+
 /* END Global variables ------------------------------------------------------*/
 
 
 /* Function prototypes user code ----------------------------------------------*/
-
 
 /**
  * @brief Instanciación de la clase Wifi, le paso como parametros el buffer de recepción, el indice de 
@@ -413,17 +416,21 @@ Timeout triggerTimer;
  */
 Wifi myWifi(wifiBuffRx, &wifiRx.indexW, RXBUFSIZE);
 
-
-void hearbeatTask(_delay_t *timeHearbeat, uint16_t mask)
+//HEARTBEAT
+void hearbeatTask(_delay_t *heartBeatTime, uint8_t index)
 {
-    static uint8_t sec=0;
-    if(delayRead(timeHearbeat)){
-        LED = (~mask & (1<<sec));
-        sec++;
-        sec &= -(sec<16);
+    static uint8_t times=0;
+
+    if(delayRead(heartBeatTime)){
+        HEARTBEAT = (~heartBeatMask[index] & (1<<times));
+
+        times++;
+        times &= 31; //control de times
+        //sec &= -(sec<16);
     }
 }
 
+//CONEXION SERIAL - WIFI
 void serialTask(_sRx *dataRx, _sTx *dataTx, uint8_t source)
 {
     if(dataRx->isComannd){
@@ -735,6 +742,32 @@ void decodeCommand(_sRx *dataRx, _sTx *dataTx)
 
 }
 
+void autoConnectWifi(){
+    #ifdef AUTOCONNECTWIFI
+        memcpy(&myWifiData.cwmode, dataCwmode, sizeof(myWifiData.cwmode));
+        memcpy(&myWifiData.cwdhcp,dataCwdhcp, sizeof(myWifiData.cwdhcp) );
+        memcpy(&myWifiData.cwjap,dataCwjap, sizeof(myWifiData.cwjap) );
+        memcpy(&myWifiData.cipmux,dataCipmux, sizeof(myWifiData.cipmux) );
+        memcpy(&myWifiData.cipstart,dataCipstart, sizeof(myWifiData.cipstart) );
+        memcpy(&myWifiData.cipmode,dataCipmode, sizeof(myWifiData.cipmode) );
+        memcpy(&myWifiData.cipsend,dataCipsend, sizeof(myWifiData.cipsend) );
+        myWifi.configWifi(&myWifiData);
+    #endif
+}
+
+void aliveAutoTask(_delay_t *aliveAutoTime)
+{
+    if(myWifi.isWifiReady()){
+        if(delayRead(aliveAutoTime))
+        {
+            putHeaderOnTx(&wifiTx, ALIVE, 2);
+            putByteOnTx(&wifiTx, ACK );
+            putByteOnTx(&wifiTx, wifiTx.chk);
+        }
+    }
+}
+
+//SENSORES
 void distanceTask(_delay_t *medicionTime, int32_t *triggerTime){
     if(delayRead(medicionTime)){
         MEDIRDISTANCIA=true; 
@@ -821,6 +854,7 @@ void do100ms()
     triggerTimer.attach_us(&doTimeout,10);
 }
 
+//BOTONES
 void startButton(_sButton *button, ptrFunc buttonFunc){
     button->currentState = BUTTON_UP;
     button->stateInput = NO_EVENT;
@@ -875,8 +909,7 @@ void buttonTask(void *param){
     indice &=LIMIT;
 }
 
-//MOVIMIENTO Y MODOS
-
+//MOVIMIENTO
 void move(uint32_t leftSpeed, uint32_t rightSpeed, uint8_t leftMotor, uint8_t rightMotor){
     //definimos el modo
     dirMLeft.write(leftMotor);
@@ -887,6 +920,7 @@ void move(uint32_t leftSpeed, uint32_t rightSpeed, uint8_t leftMotor, uint8_t ri
     speedMRight.pulsewidth_us (rightSpeed);
 }
 
+//MODOS
 void lineFollower(){
     static uint8_t irValue = 0;
     static uint8_t lastIrValue;
@@ -947,44 +981,11 @@ void lineFollower(){
     }
 }
 
-
-/**********************************AUTO CONNECT WIF*********************/
-
-void autoConnectWifi(){
-    #ifdef AUTOCONNECTWIFI
-        memcpy(&myWifiData.cwmode, dataCwmode, sizeof(myWifiData.cwmode));
-        memcpy(&myWifiData.cwdhcp,dataCwdhcp, sizeof(myWifiData.cwdhcp) );
-        memcpy(&myWifiData.cwjap,dataCwjap, sizeof(myWifiData.cwjap) );
-        memcpy(&myWifiData.cipmux,dataCipmux, sizeof(myWifiData.cipmux) );
-        memcpy(&myWifiData.cipstart,dataCipstart, sizeof(myWifiData.cipstart) );
-        memcpy(&myWifiData.cipmode,dataCipmode, sizeof(myWifiData.cipmode) );
-        memcpy(&myWifiData.cipsend,dataCipsend, sizeof(myWifiData.cipsend) );
-        myWifi.configWifi(&myWifiData);
-    #endif
-}
-
-
-void aliveAutoTask(_delay_t *aliveAutoTime)
-{
-    if(myWifi.isWifiReady()){
-        if(delayRead(aliveAutoTime))
-        {
-            putHeaderOnTx(&wifiTx, ALIVE, 2);
-            putByteOnTx(&wifiTx, ACK );
-            putByteOnTx(&wifiTx, wifiTx.chk);
-        }
-    }
-}
-
 /* END Function prototypes user code ------------------------------------------*/
-
-
-
 
 int main()
 {
-
-
+    //INICIALIZAMOS VARIABLES
     dataRx.buff = (uint8_t *)buffRx;
     dataRx.indexR = 0;
     dataRx.indexW = 0;
@@ -1009,27 +1010,27 @@ int main()
 
     RESETFLAGS = 0;
 
-
-
 /* Local variables -----------------------------------------------------------*/
-  
-  
-  
-    uint16_t    mask = 0x000A;
-    _delay_t    hearbeatTime;
+
+    //DECLARAMOS VARIABLES
+    //uint16_t    mask = 0x000A;
+    _delay_t    heartBeatTime;
     _delay_t    debounceTime;
-    //_delay_t    medicionTime;
     _delay_t    servoTime;
     _delay_t    aliveAutoTime;
- 
-    //int32_t    triggerTime;
-   /* SERVO DEFUALT VALUES*/
+
+    //VALORES DEL SERVO
     miServo.X2=LEFTSERVO;
     miServo.X1=RIGHTSERVO;
     miServo.Y2=90;
     miServo.Y1=-90;
     miServo.intervalValue=MIDDLESERVO;
-    /* FIN SERVO DEFAULT VALUES*/
+    //FIN VALORES SERVO
+
+    miServo.currentValue=MIDDLESERVO;
+    carMode = IDLE;
+    servo.pulsewidth_us(miServo.currentValue);
+
 /* END Local variables -------------------------------------------------------*/
 
 
@@ -1042,8 +1043,10 @@ int main()
     servo.period_ms(20);
     trigger.write(false);
 
-   /********** attach de interrupciones ********/
+    //INICIO DE ATTACH INSTRUCCIONES
     PC.attach(&onRxData, SerialBase::IrqType::RxIrq);
+
+    timerGral.attach_us(&do100ms, 100000); 
 
     speedLeft.rise(&speedCountLeft);
 
@@ -1053,45 +1056,33 @@ int main()
 
     hecho.fall(&distanceMeasurement);
 
-     /********** FIN - attach de interrupciones ********/
+    //FIN DE LOS ATTACH INSTRUCCIONES
 
-    miServo.currentValue=MIDDLESERVO;
-    
-    carMode = IDLE;
-
-    servo.pulsewidth_us(miServo.currentValue);
-
-    speedMLeft.pulsewidth_us(0);
-    
-    speedMRight.pulsewidth_us(0);
-
-    delayConfig(&hearbeatTime, HEARBEATIME);
+    //CONFIGURAMOS TEMPORIZADORES
+    delayConfig(&heartBeatTime, HEARBEATIME);
     delayConfig(&debounceTime, DEBOUNCE);
     delayConfig(&generalTime,GENERALTIME);
-    //delayConfig(&medicionTime,DISTANCEINTERVAL);
     delayConfig(&servoTime,miServo.intervalValue);
     delayConfig(&aliveAutoTime, ALIVEAUTOINTERVAL);
 
-    timerGral.attach_us(&do100ms, 100000); 
-
-    //startButon(myButton, NUMBUTTONS);
+    //INICIALIZAMOS BOTONES
     startButton(&myButton[0], buttonTask);
-
-
-
-    myWifi.initTask();
     
+    //CONEXION WIFI
+    myWifi.initTask();
     autoConnectWifi();
 
-    //dirijo el servo a los lados
+    //MOVIMIENTOS PREVIOS
+    //SERVO A LOS LADOS
     servo.pulsewidth_us(RIGHTSERVO);
     wait_ms(SERVOTIME);
     servo.pulsewidth_us(LEFTSERVO);
     wait_ms(SERVOTIME);
-    //dirijo el servo al centro
+    //SERVO AL CENTRO
     servo.pulsewidth_us(MIDDLESERVO);
     wait_ms(SERVOTIME);
 
+    //MOVEMOS LAS RUEDAS
     move(MINSPEED, MINSPEED, FORWARD, FORWARD);
     wait_ms(MOTORTIME);
     move(MINSPEED, MINSPEED, BACKWARD, BACKWARD);
@@ -1100,22 +1091,18 @@ int main()
 
 
     while(1){
-
+        //CONEXIONES SERIAL Y WIFI
         myWifi.taskWifi();
-
-        hearbeatTask(&hearbeatTime, mask); //ejecutamos la secuencia del heartbeat
-
         serialTask((_sRx *)&dataRx,&dataTx, SERIE); //serialTask -> conexion serial
         serialTask(&wifiRx,&wifiTx, WIFI); //serialTask -> conexion wifi
 
-
-        //distanceTask(&medicionTime,&triggerTime);
+        //MEDICIONES DE SENSORES
         speedTask();
         irSensorsTask();
         servoTask(&servoTime,&miServo.intervalValue);
         aliveAutoTask(&aliveAutoTime);
 
-        //buttonTask(&debounceTime, myButton, BUTTON.read());
+        //ACTUALIZAMOS EL ESTADO DE LOS PULSADORES
         if((myTimer.read_ms()-timeToDebounce)>DEBOUNCE){
             timeToDebounce=myTimer.read_ms();
 
@@ -1127,55 +1114,52 @@ int main()
             }
         }
 
-
-
+        //MODOS DEL AUTO
         switch(carMode){
             case IDLE:
-                if(updateMefTask(myButton) && (myButton[0].timeDiff >= 100) && (myButton[0].timeDiff <= 1000)){
+                if(updateMefTask(myButton) && (myButton[0].timeDiff >= 100) && (myButton[0].timeDiff < 1000)){
                     carMode = MODE1;
+                    heartBeatIndex=1;
                 }
-
-
-            /*
-                if((myButton[0].currentState == BUTTON_DOWN) && (myButton[0].timeDiff >= 100) && (myButton[0].timeDiff <= 1000)){
-                    carMode = MODE1;
-                }
-                */
             break;
             case MODE1:
-            /*
-                if((myButton[0].currentState == BUTTON_DOWN) && (myButton[0].timeDiff >= 100) && (myButton[0].timeDiff <= 1000)){
-                    carMode = IDLE;
-                    move(NOSPEED, NOSPEED, STOP, STOP);
+                if(updateMefTask(myButton)){
+                    if((myButton[0].timeDiff >= 100) && (myButton[0].timeDiff < 1000)){
+                        carMode = MODE2;
+                        heartBeatIndex=2;
+                        move(NOSPEED, NOSPEED, STOP, STOP);
+                    } else if((myButton[0].timeDiff >= 1000) && (myButton[0].timeDiff <= 5000)){
+                        //heartBeatIndex=1;
+                    }
                 }
-                */
-
-                if(updateMefTask(myButton) && (myButton[0].timeDiff >= 100) && (myButton[0].timeDiff <= 1000)){
-                    carMode = IDLE;
-                    move(NOSPEED, NOSPEED, STOP, STOP);
-                }
-
-
                 lineFollower();
             break;
             case MODE2:
-            /*
-                if(myButton[0].currentState == BUTTON_DOWN){
-                    carMode = MODE3;
+                if(updateMefTask(myButton)){
+                    if((myButton[0].timeDiff >= 100) && (myButton[0].timeDiff < 1000)){
+                        carMode = MODE3;
+                        heartBeatIndex=3;
+                        move(NOSPEED, NOSPEED, STOP, STOP);
+                    } else if(updateMefTask(myButton) && (myButton[0].timeDiff >= 1000) && (myButton[0].timeDiff <= 5000)){
+                       //heartBeatIndex=1;
+                    }
                 }
-*/
             break;
             case MODE3:
-            /*
-                if(myButton[0].currentState == BUTTON_DOWN){
-                    carMode = IDLE;
+                if(updateMefTask(myButton)){
+                    if((myButton[0].timeDiff >= 100) && (myButton[0].timeDiff < 1000)){
+                        carMode = IDLE;
+                        heartBeatIndex=0;
+                        move(NOSPEED, NOSPEED, STOP, STOP);
+                    } else if(updateMefTask(myButton) && (myButton[0].timeDiff >= 1000) && (myButton[0].timeDiff <= 5000)){
+                        //heartBeatIndex=1;
+                    }
                 }
-*/
             break;
-        }   
+        }
+        //HEARTBEAT 
+        hearbeatTask(&heartBeatTime, heartBeatIndex); //ejecutamos la secuencia del heartbeat   
     }
-
-
 
 /* END User code -------------------------------------------------------------*/
 }
