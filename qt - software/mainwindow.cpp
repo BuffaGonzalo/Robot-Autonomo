@@ -45,6 +45,9 @@ MainWindow::MainWindow(QWidget *parent)
     ui->comboBox_CMD->addItem("VELOCIDAD", 0xA4);
     ui->comboBox_CMD->addItem("SWITCHS", 0x12);
     ui->comboBox_CMD->addItem("LEDS", 0x10);
+    ui->comboBox_CMD->addItem("CONFIGSERVO", 0xA5);
+    ui->comboBox_CMD->addItem("CONFIGBLACK", 0xA6);
+    ui->comboBox_CMD->addItem("CONFIGWHITE", 0xA7);
 
     //inicializamos
     estadoProtocolo=START;
@@ -55,7 +58,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->pushButton_sendSerial->setEnabled(false);
 
     timer1->start(100);
-    timer2->start(500); //timer encargado del envio de datos cada 500ms
+    //timer2->start(500); //timer encargado del envio de datos cada 500ms
 
 }
 
@@ -314,6 +317,35 @@ void MainWindow::decodeData(uint8_t *datosRx, uint8_t source){
             str = str + "LOW";
         ui->plainTextEdit->appendPlainText(str);
         break;
+    case SETBLACKCOLOR:
+        w.ui8[0] = datosRx[2];
+        w.ui8[1] = datosRx[3];
+
+        strOut = QString("%1").arg(w.i32 & 0xFFFF, 4, 10, QChar('0')); //con el 0xFFFF utilizamos solamente los 16 bits mas significativos
+        ui->label_black_ir_data->setText(strOut);
+        break;
+    case SETWHITECOLOR:
+        w.ui8[0] = datosRx[2];
+        w.ui8[1] = datosRx[3];
+
+        strOut = QString("%1").arg(w.i32 & 0xFFFF, 4, 10, QChar('0')); //con el 0xFFFF utilizamos solamente los 16 bits mas significativos
+        ui->label_white_ir_data->setText(strOut);
+        break;
+    case SETSERVOLIMITS:
+        w.ui8[0] = datosRx[2];
+        w.ui8[1] = datosRx[3];
+        w.ui8[2] = datosRx[4];
+        w.ui8[3] = datosRx[5];
+
+        ui->plainTextEdit->appendPlainText("TEST");
+
+        strOut = QString("%1").arg(w.i16[0], 4, 10, QChar('0')); //con el 0xFFFF utilizamos solamente los 16 bits mas significativos
+        ui->label_min_servo_data->setText(strOut);
+
+        strOut = QString("%1").arg(w.i16[1], 4, 10, QChar('0')); //con el 0xFFFF utilizamos solamente los 16 bits mas significativos
+        ui->label_max_servo_data->setText(strOut);
+
+        break;
     default:
         str = str + "Comando DESCONOCIDO!!!!";
         ui->plainTextEdit->appendPlainText(str);
@@ -375,12 +407,35 @@ void MainWindow::sendDataSerial(){
         //falta implementar el envío del valor de seteo
         dato[NBYTES]=0x02;
         break;
+    case SETBLACKCOLOR:
+    case SETWHITECOLOR:
+        dato[indice++]=cmdId;
+        dato[NBYTES]=0x02;
+    break;
+    case SETSERVOLIMITS:
+        dato[indice++]=cmdId;
+
+        w.i32 = QInputDialog::getInt(this, "Configuracion Servo", "MinMs:", 0, 700, 1500, 1, &ok);
+        if(!ok)
+            break;
+        dato[indice++] = w.ui8[0];
+        dato[indice++] = w.ui8[1];
+
+        w.ui32 = QInputDialog::getInt(this, "Configuracion Servo", "MaxMs:", 0, 1500, 2500, 1, &ok);
+        if(!ok)
+            break;
+        dato[indice++] = w.ui8[0];
+        dato[indice++] = w.ui8[1];
+
+        dato[NBYTES]=0x06;
+    break;
     default:
         return;
     }
+
     for(int a=0 ;a<indice;a++)
-        chk^=dato[a];
-    dato[indice]=chk;
+        chk^=dato[a]; //calculamos el checksum
+    dato[indice]=chk; //colocamos el checksum en la ultima posicion
 
     if(QSerialPort1->isWritable()){
         QSerialPort1->write(reinterpret_cast<char *>(dato),dato[NBYTES]+PAYLOAD);
@@ -394,6 +449,7 @@ void MainWindow::sendDataSerial(){
     }
 
     uint16_t valor=dato[NBYTES]+PAYLOAD;
+    ui->plainTextEdit->appendPlainText("***COMANDO NUEVO***");
     ui->plainTextEdit->appendPlainText("INDICE ** " +QString().number(indice,10) + " **" );
     ui->plainTextEdit->appendPlainText("NUMERO DE DATOS ** " +QString().number(valor,10) + " **" );
     ui->plainTextEdit->appendPlainText("CHECKSUM ** " +QString().number(chk,16) + " **" );
@@ -670,9 +726,16 @@ void MainWindow::sendDataUDP(){
         dato[indice++]=cmdId;
         dato[NBYTES]=0x02;
         break;
-    default:
-        ;
+    case SETBLACKCOLOR:
+    case SETWHITECOLOR:
 
+        break;
+    case SETSERVOLIMITS:
+
+        break;
+    default:
+        return;
+    break;
     }
 
     puerto=ui->lineEdit_device_port->text().toInt();

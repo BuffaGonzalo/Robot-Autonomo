@@ -572,7 +572,7 @@
      <string>CLEAN</string>
     </property>
    </widget>
-   <widget class="QLabel" name="label_right_ir_2">
+   <widget class="QLabel" name="label_max_servo">
     <property name="geometry">
      <rect>
       <x>590</x>
@@ -590,7 +590,7 @@
      <string>MAX MS SERVO</string>
     </property>
    </widget>
-   <widget class="QLabel" name="label_right_ir_3">
+   <widget class="QLabel" name="label_min_servo">
     <property name="geometry">
      <rect>
       <x>590</x>
@@ -608,7 +608,7 @@
      <string>MIN MS SERVO</string>
     </property>
    </widget>
-   <widget class="QLabel" name="label_right_ir_4">
+   <widget class="QLabel" name="label_black_ir">
     <property name="geometry">
      <rect>
       <x>590</x>
@@ -626,7 +626,7 @@
      <string>IR BLACK</string>
     </property>
    </widget>
-   <widget class="QLabel" name="label_right_ir_5">
+   <widget class="QLabel" name="label_white_ir">
     <property name="geometry">
      <rect>
       <x>590</x>
@@ -644,7 +644,7 @@
      <string>IR WHITE</string>
     </property>
    </widget>
-   <widget class="QLabel" name="label_right_ir_6">
+   <widget class="QLabel" name="label_black_ir_data">
     <property name="geometry">
      <rect>
       <x>590</x>
@@ -662,7 +662,7 @@
      <string>IR DATA </string>
     </property>
    </widget>
-   <widget class="QLabel" name="label_right_ir_7">
+   <widget class="QLabel" name="label_white_ir_data">
     <property name="geometry">
      <rect>
       <x>590</x>
@@ -680,7 +680,7 @@
      <string>IR DATA </string>
     </property>
    </widget>
-   <widget class="QLabel" name="label_right_ir_8">
+   <widget class="QLabel" name="label_min_servo_data">
     <property name="geometry">
      <rect>
       <x>590</x>
@@ -698,7 +698,7 @@
      <string>SERVO DATA</string>
     </property>
    </widget>
-   <widget class="QLabel" name="label_right_ir_9">
+   <widget class="QLabel" name="label_max_servo_data">
     <property name="geometry">
      <rect>
       <x>590</x>

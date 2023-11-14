@@ -152,11 +152,20 @@ typedef enum{
     UNKNOWN = 0xFF
 }_eCmd;
 
+/**
+ * @brief Enumeracion utilizada para los modos del auto y del heartbeat
+*/
 typedef enum{
     IDLE,
-    MODE1,
-    MODE2,
-    MODE3
+    PREMODE1,
+    EXEMODE1,
+    ONMODE1,
+    PREMODE2,
+    EXEMODE2,
+    ONMODE2,
+    PREMODE3,
+    EXEMODE3,
+    ONMODE3
 } _eModes;
 
 
