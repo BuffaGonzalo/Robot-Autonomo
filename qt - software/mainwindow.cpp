@@ -728,10 +728,25 @@ void MainWindow::sendDataUDP(){
         break;
     case SETBLACKCOLOR:
     case SETWHITECOLOR:
-
+        dato[indice++]=cmdId;
+        dato[NBYTES]=0x02;
         break;
     case SETSERVOLIMITS:
+        dato[indice++]=cmdId;
 
+        w.i32 = QInputDialog::getInt(this, "Configuracion Servo", "MinMs:", 0, 700, 1500, 1, &ok);
+        if(!ok)
+            break;
+        dato[indice++] = w.ui8[0];
+        dato[indice++] = w.ui8[1];
+
+        w.ui32 = QInputDialog::getInt(this, "Configuracion Servo", "MaxMs:", 0, 1500, 2500, 1, &ok);
+        if(!ok)
+            break;
+        dato[indice++] = w.ui8[0];
+        dato[indice++] = w.ui8[1];
+
+        dato[NBYTES]=0x06;
         break;
     default:
         return;
