@@ -375,9 +375,9 @@ volatile int32_t  initialValue, finalValue, distanceValue;
 
 uint32_t speedleftValue, speedRightValue;
 
-uint32_t whiteValue = 9000;
+uint16_t whiteValue = 9000;
 
-uint32_t blackValue = 4000;
+uint16_t blackValue = 4000;
 
 uint32_t minMsServo = 700;
 
@@ -652,8 +652,44 @@ void decodeCommand(_sRx *dataRx, _sTx *dataTx)
             putByteOnTx(dataTx, dataTx->chk);       
         break;
         case SETBLACKCOLOR:
+            uint16_t myBlackValue;
+            putHeaderOnTx(dataTx, SETBLACKCOLOR, 3); //framelenght = 6(sensores)+1(cabecera)
+            
+            //obtenemos el mayor valor
+            myBlackValue = irSensor[0].currentValue;
+            if(myBlackValue < irSensor[1].currentValue)
+                myBlackValue = irSensor[1].currentValue;
+            if(myBlackValue < irSensor[2].currentValue)
+                myBlackValue = irSensor[2].currentValue;
+
+            blackValue = myBlackValue;
+
+            //valor util
+            myWord.ui16[0] = myBlackValue;
+            putByteOnTx(dataTx, myWord.ui8[0]);
+            putByteOnTx(dataTx, myWord.ui8[1]);
+
+            putByteOnTx(dataTx, dataTx->chk); 
         break;
         case SETWHITECOLOR:
+            uint16_t myWhiteValue;
+            putHeaderOnTx(dataTx, SETWHITECOLOR, 3); //framelenght = 6(sensores)+1(cabecera)
+            
+            //obtenemos el menor valor
+            myWhiteValue = irSensor[0].currentValue;
+            if(myWhiteValue > irSensor[1].currentValue)
+                myWhiteValue = irSensor[1].currentValue;
+            if(myWhiteValue > irSensor[2].currentValue)
+                myWhiteValue = irSensor[2].currentValue;
+
+            whiteValue = myWhiteValue;
+
+            //valor util
+            myWord.ui16[0] = myWhiteValue;
+            putByteOnTx(dataTx, myWord.ui8[0]);
+            putByteOnTx(dataTx, myWord.ui8[1]);
+
+            putByteOnTx(dataTx, dataTx->chk); 
         break;
         case MOTORTEST:
             putHeaderOnTx(dataTx, MOTORTEST, 2);
@@ -710,6 +746,7 @@ void decodeCommand(_sRx *dataRx, _sTx *dataTx)
                 miServo.intervalValue=50;
         break;
         case CONFIGSERVO:
+        
         break;
         case GETDISTANCE:
             myWord.ui32 = distanceValue;
@@ -741,8 +778,6 @@ void decodeCommand(_sRx *dataRx, _sTx *dataTx)
         break;
         
     }
-
-
 }
 
 void autoConnectWifi(){
