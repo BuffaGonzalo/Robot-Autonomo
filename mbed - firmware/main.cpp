@@ -75,6 +75,8 @@ typedef struct
 #define DISTANCEINTERVAL    300
 #define MASK 0x01
 
+#define LOOKTIME 300
+
 //#define RIGHTSERVO      700
 //#define LEFTSERVO       2500
 #define MIDDLESERVO     1500
@@ -87,6 +89,7 @@ typedef struct
 #define MINSPEED        6000
 #define TURNSPEED       6000
 #define NOSPEED         0
+#define SPEEDERROR      6000 //Utilizado para contrarestar la diferencia de velocidades en los motores entre 5500 y 6000
 
 #define INTERVALO 10
 
@@ -235,14 +238,6 @@ void aliveAutoTask(_delay_t *aliveAutoTime);
 //SENSORES
 
 /**
- * @brief Rutina oara medir distancia
- * 
- * @param medicionTime variable que contiene el intervalo de medición de distancia
- * @param triggerTime Variable que contiene el valor de tiempo del Trigger
- */
-void distanceTask(_delay_t *medicionTime, int32_t *triggerTime);
-
-/**
  * @brief Rutina para realizar la verificación de mocimiento del servo
  * en caso de que no se mueva envia la respuesta automática a la PC
  * 
@@ -319,11 +314,17 @@ void buttonTask(void *param);
 */
 void move(uint32_t leftSpeed, uint32_t rightSpeed, uint8_t leftMotor, uint8_t rightMotor);
 
+void rotate(uint8_t rotationAngle, uint8_t direction);
+
 //MODOS
 /**
  * @brief Función utilizada en el modo de seguir linea
 */
 void lineFollower();
+
+void dodgeObstacle();
+
+void maintainDistance();
 
 /* END Function prototypes ---------------------------------------------------*/
 
@@ -407,6 +408,8 @@ Timeout triggerTimer;
 
 //MODOS DEL AUTO
 _eModes carMode;
+
+_eFollowModes followModes;
 
 //HEARTBEAT
 uint8_t heartBeatIndex = 0;
@@ -819,26 +822,6 @@ void aliveAutoTask(_delay_t *aliveAutoTime)
     }
 }
 
-//SENSORES
-void distanceTask(_delay_t *medicionTime, int32_t *triggerTime){
-    if(delayRead(medicionTime)){
-        MEDIRDISTANCIA=true; 
-        trigger.write(false);
-    }
-    /******************** MEDICIÓN DE DISTANCIA NON-BLOCKING ********************/
-    if (MEDIRDISTANCIA){
-        if((myTimer.read_us()-*triggerTime)>=10){
-            *triggerTime=myTimer.read_us();
-            if(trigger.read()){
-                trigger.write(false);
-                MEDIRDISTANCIA=false;
-            }else{
-                trigger.write(true);
-            }
-        }
-    }
-}
-
 void servoTask(_delay_t *servoTime, uint32_t*intervalServo){
      /******************** RESPUESTA AUTOMATICA DEL SERVO ********************/
     if(SERVOMOVING){
@@ -969,7 +952,29 @@ void move(uint32_t leftSpeed, uint32_t rightSpeed, uint8_t leftMotor, uint8_t ri
     
     //asignamos la velocidad
     speedMLeft.pulsewidth_us(leftSpeed);
-    speedMRight.pulsewidth_us (rightSpeed);
+    speedMRight.pulsewidth_us (rightSpeed + SPEEDERROR);
+}
+
+void rotate(uint8_t rotationAngle, uint8_t direction){
+    uint8_t x;
+    
+    switch (direction){
+        case 0: //DERECHA
+            move(10000,10000,FORWARD,BACKWARD); //velocidad debe de ser 40%
+        break;
+        case 1: //IZQUIERDA
+            move(10000,10000,BACKWARD,FORWARD);
+        break;
+    }
+
+    x = (((rotationAngle) * 345) / 360) / 5; //10 = 2*5   
+    
+    //345 = diametro circunf auto * 3,14
+    //5 = cm de movimiento del auto
+
+    if(countRightValue >= x){ //countLeftValue = valor del horquilla
+        move(NOSPEED,NOSPEED,STOP,STOP);
+    }
 }
 
 //MODOS
@@ -1033,6 +1038,65 @@ void lineFollower(){
     }
 }
 
+void dodgeObstacle(){
+
+}
+
+void maintainDistance(){
+    static uint32_t savedDistance = 0, savedAngle = 0; 
+    static uint32_t servoAngle = minMsServo;
+    static uint32_t lookTime;
+    static uint32_t rotateTime;
+    uint32_t distance = distanceValue/58; //convertimos a cm los datos
+
+    switch(followModes){
+        case LOOK:
+            if(myTimer.read_ms() - lookTime > LOOKTIME){
+                lookTime = myTimer.read_ms();
+                servoAngle += 250;
+                servo.pulsewidth_us(servoAngle);
+                if(distance<savedDistance){
+                    savedDistance = distance;
+                    savedAngle = servoAngle;
+                }
+                if(servoAngle >= maxMsServo){
+                    followModes = ROTATE;
+                    servoAngle = minMsServo;
+                    rotateTime = myTimer.read_ms(); //actualizamos el tiempo aca para que sea mas preciso
+                    savedAngle = ((savedAngle*(miServo.Y2 - miServo.Y1))/(miServo.X2 - miServo.X1))+miServo.Y1; //convertimos el valor obtenido en pulsos a grados
+                    servo.pulsewidth_us(MIDDLESERVO);
+                }
+            }
+        break;
+        case ROTATE:
+            if(savedAngle<0){
+                rotate(savedAngle,1); //roto a izquierda
+            }else if (savedAngle>0){
+                rotate(savedAngle,0); //roto a derecha
+            } 
+            
+            if((myTimer.read_ms() - rotateTime) > 200)
+                followModes = MOVE;
+        break;
+        case MOVE:
+            if(distance>11 && distance<100){
+                move(MEDSPEED,MEDSPEED,FORWARD,FORWARD);
+            } else if(distance<9){
+                move(MEDSPEED,MEDSPEED,BACKWARD,BACKWARD);
+            } else if(distance<=11 && distance>=9){
+                move(NOSPEED,NOSPEED,STOP,STOP);
+            } else if(distance>=100){
+                followModes = LOOK;
+                lookTime = myTimer.read_ms(); //simpre actualizar las variables de tiempo antes de entrar al modo para mayor precision
+                move(NOSPEED,NOSPEED,STOP,STOP);
+                servo.pulsewidth_us(minMsServo); //llevamos el servo al inicio
+                savedDistance = distance;
+                savedAngle = minMsServo;
+            }        
+        break;
+    }
+}
+
 /* END Function prototypes user code ------------------------------------------*/
 
 int main()
@@ -1071,6 +1135,7 @@ int main()
     _delay_t    servoTime;
     _delay_t    aliveAutoTime;
 
+    //int32_t    triggerTime;
     //VALORES DEL SERVO
     miServo.X2=maxMsServo;
     miServo.X1=minMsServo;
@@ -1081,6 +1146,7 @@ int main()
 
     miServo.currentValue=MIDDLESERVO;
     carMode = IDLE;
+    followModes = MOVE;
     servo.pulsewidth_us(miServo.currentValue);
 
 /* END Local variables -------------------------------------------------------*/
@@ -1114,6 +1180,7 @@ int main()
     delayConfig(&heartBeatTime, HEARBEATIME);
     delayConfig(&debounceTime, DEBOUNCE);
     delayConfig(&generalTime,GENERALTIME);
+    //delayConfig(&medicionTime,DISTANCEINTERVAL);
     delayConfig(&servoTime,miServo.intervalValue);
     delayConfig(&aliveAutoTime, ALIVEAUTOINTERVAL);
 
@@ -1141,7 +1208,6 @@ int main()
     wait_ms(MOTORTIME);
     move(NOSPEED, NOSPEED, STOP, STOP);
 
-
     while(1){
         //CONEXIONES SERIAL Y WIFI
         myWifi.taskWifi();
@@ -1149,7 +1215,7 @@ int main()
         serialTask(&wifiRx,&wifiTx, WIFI); //serialTask -> conexion wifi
 
         //MEDICIONES DE SENSORES
-        speedTask();
+        speedTask(); //medicion de horquillas
         irSensorsTask();
         servoTask(&servoTime,&miServo.intervalValue);
         aliveAutoTask(&aliveAutoTime);
@@ -1235,7 +1301,7 @@ int main()
                     
                 }
                 heartBeatIndex = ONMODE2;
-
+                dodgeObstacle();
             break;
             case PREMODE3:
                 if(updateMefTask(myButton)){
@@ -1268,8 +1334,11 @@ int main()
         }
         //HEARTBEAT 
         hearbeatTask(&heartBeatTime, heartBeatIndex); //ejecutamos la secuencia del heartbeat   
-    }
+    
+        maintainDistance();
 
+
+    }
 /* END User code -------------------------------------------------------------*/
 }
 
