@@ -168,6 +168,12 @@ typedef enum{
     ONMODE3
 } _eModes;
 
+typedef enum{
+    LOOK,
+    ROTATE,
+    MOVE
+}_eFollowModes;
+
 
 
 /* END typedef ---------------------------------------------------------------*/
