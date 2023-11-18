@@ -58,7 +58,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->pushButton_sendSerial->setEnabled(false);
 
     timer1->start(100);
-    //timer2->start(500); //timer encargado del envio de datos cada 500ms
+    timer2->start(500); //timer encargado del envio de datos cada 500ms
 
 }
 
@@ -791,6 +791,12 @@ void MainWindow::getData(){
     buf[0] = cmd;
     sendSerial(buf,n);
     sendUdp(buf,n);
+
+    cmd = GETDISTANCE;
+    n=1;
+    buf[0] = cmd;
+    sendSerial(buf,n);
+    sendUdp(buf,n);
 }
 
 bool MainWindow::eventFilter(QObject *watched, QEvent *event){ //utilizado para mostrar los puestos disponibles
@@ -1011,7 +1017,7 @@ void MainWindow::radar(){
     //dibujamos las lineas
     pen.setWidth(4);
 
-    pen.setColor(QColor::fromRgb(0, 150, 0));
+    pen.setColor(QColor::fromRgb(0, 100, 0));
     paint.setPen(pen);
     paint.setOpacity(0.1);
     paint.opacity();
@@ -1023,7 +1029,7 @@ void MainWindow::radar(){
     paint.restore();
     paint.save();
 
-    pen.setColor(QColor::fromRgb(0, 150, 0));
+    pen.setColor(QColor::fromRgb(0, 200, 0));
     paint.setPen(pen);
     paint.setOpacity(0.2);
     paint.opacity();
