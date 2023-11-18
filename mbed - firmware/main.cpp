@@ -66,49 +66,62 @@ typedef struct
 /* END typedef ---------------------------------------------------------------*/
 
 /* define --------------------------------------------------------------------*/
-#define RXBUFSIZE  256
-#define TXBUFSIZE  256
-#define DEBOUNCE    40
-#define HEARBEATIME 100
-#define GENERALTIME 10
-#define NUMBUTTONS  1
-#define DISTANCEINTERVAL    300
-#define MASK 0x01
+#define RXBUFSIZE            256
+#define TXBUFSIZE            256
+#define DEBOUNCE             40
+#define HEARBEATIME          100
+#define GENERALTIME          10
+#define NUMBUTTONS           1
+#define DISTANCEINTERVAL     300
+#define MASK                 0x01
 
-#define LOOKTIME 300
+#define LOOKTIME             600
 
-//#define RIGHTSERVO      700
-//#define LEFTSERVO       2500
-#define MIDDLESERVO     1500
+//#define RIGHTSERVO         700
+//#define LEFTSERVO          2500
+#define MIDDLESERVO          1500
+#define MINMOVEDISTANCE      9
+#define MAXDISTANCE
 
-#define MOTORTIME       200
-#define SERVOTIME       1000
+/*
+#define INTERSERVODISTANCE   25
+#define MAXSERVODISTANCE     50
+#define SERVOANGLE           375
+*/
 
-#define MAXSPEED        12000
-#define MEDSPEED        8000
-#define MINSPEED        6000
-#define TURNSPEED       6000
-#define NOSPEED         0
-#define SPEEDERROR      6000 //Utilizado para contrarestar la diferencia de velocidades en los motores entre 5500 y 6000
+#define MOTORTIME            200
+#define SERVOTIME            500
 
-#define INTERVALO 10
+#define WAIT150MS            150
+#define WAIT500MS            500
 
-#define LIMIT               0x0F // pulsador
+#define MAXSPEED             12000
+#define MEDSPEED             8000
+#define MINSPEED             5000
+#define TURNSPEED            6000
+#define NOSPEED              0
+#define SPEEDERROR           6000 //Utilizado para contrarestar la diferencia de velocidades en los motores entre 5500 y 6000
 
-#define     FORWARD             2
-#define     BACKWARD            1
-#define     STOP                0
+#define INTERVALO            10
 
-#define     SERIE               0
-#define     WIFI                1
+#define LIMIT                0x0F // pulsador
+
+#define FORWARD              2
+#define BACKWARD             1
+#define STOP                 0
+
+#define SERIE                0
+#define WIFI                 1
+
+#define DERECHA              0
+#define IZQUIERDA            1
 
 
-#define RESETFLAGS      flags.bytes 
-#define ISCOMAND        flags.bits.bit0
-#define SERVOMOVING     flags.bits.bit1
-#define SERVODIRECT     flags.bits.bit2
-#define MEDIRDISTANCIA  flags.bits.bit3
-
+#define RESETFLAGS           flags.bytes 
+#define ISCOMAND             flags.bits.bit0
+#define SERVOMOVING          flags.bits.bit1
+#define SERVODIRECT          flags.bits.bit2
+#define MEDIRDISTANCIA       flags.bits.bit3
 /* END define ----------------------------------------------------------------*/
 
 /* hardware configuration ----------------------------------------------------*/
@@ -407,9 +420,11 @@ Ticker timerGral;
 Timeout triggerTimer;
 
 //MODOS DEL AUTO
-_eModes carMode;
+_eModes carModes;
 
 _eFollowModes followModes;
+
+_eDodgeModes dodgeModes;
 
 //HEARTBEAT
 uint8_t heartBeatIndex = 0;
@@ -959,15 +974,15 @@ void rotate(uint8_t rotationAngle, uint8_t direction){
     uint8_t x;
     
     switch (direction){
-        case 0: //DERECHA
-            move(10000,10000,FORWARD,BACKWARD); //velocidad debe de ser 40%
+        case 0: //IZQUIERDA
+            move(10000,10000,BACKWARD,FORWARD); //velocidad debe de ser 40%
         break;
-        case 1: //IZQUIERDA
-            move(10000,10000,BACKWARD,FORWARD);
+        case 1: //DERECHA
+            move(10000,10000,FORWARD,BACKWARD);
         break;
     }
 
-    x = (((rotationAngle) * 345) / 360) / 5; //10 = 2*5   
+    x = (((rotationAngle) * 345) / 360) / 3; //cambiar entre 1 y 10 en caso de que no rote bien 
     
     //345 = diametro circunf auto * 3,14
     //5 = cm de movimiento del auto
@@ -1039,60 +1054,166 @@ void lineFollower(){
 }
 
 void dodgeObstacle(){
+    static uint32_t waitTime = myTimer.read_ms();
+    int32_t distance = distanceValue/58; //pasamos la distancia a cm
+    int32_t savedDistance = 0;
+    static int8_t cont= 0;
 
+    switch(dodgeModes){
+        case FOLLOWLINE:
+
+            if(distance <= 15){
+                dodgeModes = ROTAR;
+                servo.pulsewidth_us(maxMsServo);
+                waitTime = myTimer.read_ms();
+            } else{
+                lineFollower();
+            }
+            
+        break;
+        case ROTAR:
+
+            if((myTimer.read_ms() - waitTime) > 100){
+                move(NOSPEED, NOSPEED, STOP, STOP);
+                if((myTimer.read_ms() - waitTime) > 500){
+                    waitTime = myTimer.read_ms();
+                    cont++;
+                }
+            } else{
+                move(MINSPEED,MINSPEED,FORWARD,BACKWARD);
+            }
+
+            if(cont == 8){
+                dodgeModes = DISTANCE;
+            }
+
+        break;
+        case DISTANCE: //rotamos a izquierda
+            if ((myTimer.read_ms() - waitTime) > 500){ //espera de 500ms para calcular el giro
+                dodgeModes = MOVER;
+            } else{
+                if(savedDistance < distance)
+                    savedDistance = distance;
+            }
+
+        break;
+        case MOVER:
+            if(savedDistance<9)
+                move(MEDSPEED,MEDSPEED,FORWARD,BACKWARD);
+            else if(savedDistance>11)
+                move(MEDSPEED,MEDSPEED, BACKWARD,FORWARD);
+            else
+                move(MEDSPEED,MEDSPEED,FORWARD,FORWARD);
+            dodgeModes = DISTANCE;
+            savedDistance = distance;
+            wait_ms(2000);
+            move(NOSPEED,NOSPEED,STOP,STOP);  
+                 
+        break;
+        case FINDLINE:
+            //Buscamos la linea pasando por la negra primero y luego por la linea negra
+        break;
+
+    }
 }
 
 void maintainDistance(){
-    static uint32_t savedDistance = 0, savedAngle = 0; 
+    static int32_t savedDistance = 0, savedAngle = 0; 
     static uint32_t servoAngle = minMsServo;
-    static uint32_t lookTime;
+    static uint32_t lookTime; //utilizada para mover el servo actualizando los grados lentamente 
+    static uint32_t distanceTime; //utilizado para comprobar que la distancia obtenida es la correcta
     static uint32_t rotateTime;
-    uint32_t distance = distanceValue/58; //convertimos a cm los datos
+    static bool isDistance = 0; //utilizada para saber si tuve que leer valor moviendo servo
+    int32_t distance = distanceValue/58; //convertimos a cm los datos
 
     switch(followModes){
         case LOOK:
+        
+            if(distance<savedDistance){
+                savedDistance = distance;
+                savedAngle = servoAngle;
+            }
             if(myTimer.read_ms() - lookTime > LOOKTIME){
                 lookTime = myTimer.read_ms();
-                servoAngle += 250;
-                servo.pulsewidth_us(servoAngle);
-                if(distance<savedDistance){
-                    savedDistance = distance;
-                    savedAngle = servoAngle;
-                }
+
                 if(servoAngle >= maxMsServo){
                     followModes = ROTATE;
+                    isDistance = 1;
                     servoAngle = minMsServo;
+                    distanceTime = myTimer.read_ms();                    
                     rotateTime = myTimer.read_ms(); //actualizamos el tiempo aca para que sea mas preciso
-                    savedAngle = ((savedAngle*(miServo.Y2 - miServo.Y1))/(miServo.X2 - miServo.X1))+miServo.Y1; //convertimos el valor obtenido en pulsos a grados
+
+                    if(savedAngle > maxMsServo)
+                        savedAngle = maxMsServo;
+                    //cambiamos los ms a grados
+                    savedAngle = ((((savedAngle-miServo.X1) * (miServo.Y2 - miServo.Y1))/(miServo.X2 - miServo.X1)) + miServo.Y1); //convertimos el valor obtenido en pulsos a grados
+
                     servo.pulsewidth_us(MIDDLESERVO);
+
                 }
+
+                //aumentamos para comprobar antes
+                servoAngle += 375;
+                servo.pulsewidth_us(servoAngle);
             }
+
         break;
         case ROTATE:
+
             if(savedAngle<0){
-                rotate(savedAngle,1); //roto a izquierda
+                //savedAngle *= -1;
+                rotate(savedAngle,1); //roto a derecha
             }else if (savedAngle>0){
-                rotate(savedAngle,0); //roto a derecha
+                rotate(savedAngle,0); //roto a izquierda
             } 
             
-            if((myTimer.read_ms() - rotateTime) > 200)
-                followModes = MOVE;
+            servo.pulsewidth_us(MIDDLESERVO);
+
+            if((myTimer.read_ms() - rotateTime) > 150){ //tiempo de rotacion
+                move(NOSPEED,NOSPEED,STOP,STOP);
+                servo.pulsewidth_us(MIDDLESERVO);
+                if(myTimer.read_ms() - rotateTime > 500){ //esperamos 500 ms de espera para obtener una distancia en caso de rotar
+                    rotateTime = myTimer.read_ms();
+                    followModes = MOVE;
+                }
+            }
+
         break;
         case MOVE:
-            if(distance>11 && distance<100){
-                move(MEDSPEED,MEDSPEED,FORWARD,FORWARD);
+            //esperamos para realizar una medicion previa en caso de haber tenido que mover el auto para encontrar objeto
+            if(distance>11 && distance<50 && (myTimer.read_ms() - distanceTime)>200){
+                distanceTime = myTimer.read_ms();
+                if(isDistance && (distance > savedDistance-5) && (distance < savedDistance+5)){ //comprobamos si es el objeto previamente encontrado mediante isDistance
+                    isDistance = 0;
+                    move(MINSPEED,MINSPEED,FORWARD,FORWARD);
+                } else if (isDistance && ((distance < savedDistance-5) || (distance > savedDistance+5))){ //si la medida realizada no es 
+                    isDistance = 0;
+                    servoAngle = minMsServo;
+                    followModes = LOOK;
+                    lookTime = myTimer.read_ms(); 
+                    move(NOSPEED,NOSPEED,STOP,STOP);
+                    servo.pulsewidth_us(minMsServo);
+                    savedDistance = distance;
+                    savedAngle = minMsServo;
+                } else { //caso de entrada de inicio
+                    if(distance > 25)
+                        move(MEDSPEED,MEDSPEED,FORWARD,FORWARD);
+                    else
+                        move(MINSPEED,MINSPEED,FORWARD,FORWARD);
+                }        
             } else if(distance<9){
-                move(MEDSPEED,MEDSPEED,BACKWARD,BACKWARD);
+                move(MINSPEED,MINSPEED,BACKWARD,BACKWARD);
             } else if(distance<=11 && distance>=9){
                 move(NOSPEED,NOSPEED,STOP,STOP);
-            } else if(distance>=100){
+            } else if(distance>=50){
                 followModes = LOOK;
                 lookTime = myTimer.read_ms(); //simpre actualizar las variables de tiempo antes de entrar al modo para mayor precision
                 move(NOSPEED,NOSPEED,STOP,STOP);
                 servo.pulsewidth_us(minMsServo); //llevamos el servo al inicio
-                savedDistance = distance;
-                savedAngle = minMsServo;
-            }        
+                savedDistance = distance; //guardamos las distancia inicial
+                servoAngle = minMsServo; //guardamos el angulo inicial
+                savedAngle = ((((savedAngle-miServo.X1) * (miServo.Y2 - miServo.Y1))/(miServo.X2 - miServo.X1)) + miServo.Y1) - 180; //convertimos el valor de ms a grados
+            }
         break;
     }
 }
@@ -1145,8 +1266,9 @@ int main()
     //FIN VALORES SERVO
 
     miServo.currentValue=MIDDLESERVO;
-    carMode = IDLE;
+    carModes = IDLE;
     followModes = MOVE;
+    dodgeModes = FOLLOWLINE;
     servo.pulsewidth_us(miServo.currentValue);
 
 /* END Local variables -------------------------------------------------------*/
@@ -1166,9 +1288,15 @@ int main()
 
     timerGral.attach_us(&do100ms, 100000); 
 
+    //mido flanco ascendente
     speedLeft.rise(&speedCountLeft);
 
     speedRight.rise(&speedCountRight);
+
+    //mido flanco descendente
+    speedLeft.fall(&speedCountLeft);
+
+    speedRight.fall(&speedCountRight);
 
     hecho.rise(&distanceInitMeasurement);
 
@@ -1237,17 +1365,17 @@ int main()
         }
 
         //MODOS DEL AUTO
-        switch(carMode){
+        switch(carModes){
             case IDLE:
                 if(updateMefTask(myButton) && (myButton[0].timeDiff >= 100) && (myButton[0].timeDiff < 1000)){
-                    carMode = PREMODE1;       
+                    carModes = PREMODE1;       
                     heartBeatIndex = PREMODE1;             
                 }
             break;
             case PREMODE1:
                 if(updateMefTask(myButton)){
                     if((myButton[0].timeDiff >= 100) && (myButton[0].timeDiff < 1000)){ //cambia de modo
-                        carMode = PREMODE2;
+                        carModes = PREMODE2;
                         heartBeatIndex = PREMODE2;  
                         move(NOSPEED, NOSPEED, STOP, STOP);
                     } else if((myButton[0].timeDiff < 3000)){ //reinicio de modo
@@ -1257,7 +1385,7 @@ int main()
                 if((myTimer.read_ms() - myButton[0].timePressed >= 1000) && (myTimer.read_ms() - myButton[0].timePressed <= 3000)){ //ejecucion de modo
                     heartBeatIndex = EXEMODE1;
                     if(updateMefTask(myButton))
-                        carMode = ONMODE1;
+                        carModes = ONMODE1;
                 }
                 if(myTimer.read_ms() - myButton[0].timePressed > 3000)
                     heartBeatIndex = PREMODE1;
@@ -1266,7 +1394,7 @@ int main()
             break;
             case ONMODE1:
                 if(updateMefTask(myButton) && myButton[0].timeDiff >= 3000){ //salir ejecucion
-                    carMode=PREMODE1;
+                    carModes=PREMODE1;
                     heartBeatIndex=PREMODE1;
                     move(NOSPEED, NOSPEED, STOP, STOP); 
                 }
@@ -1276,7 +1404,7 @@ int main()
             case PREMODE2:
                 if(updateMefTask(myButton)){
                     if((myButton[0].timeDiff >= 100) && (myButton[0].timeDiff < 1000)){ //cambia de modo
-                        carMode = PREMODE3; 
+                        carModes = PREMODE3; 
                         heartBeatIndex = PREMODE3; 
                         move(NOSPEED, NOSPEED, STOP, STOP);
                     } else if((myButton[0].timeDiff < 3000)){ //reinicio de modo
@@ -1286,7 +1414,7 @@ int main()
                 if((myTimer.read_ms() - myButton[0].timePressed >= 1000) && (myTimer.read_ms() - myButton[0].timePressed <= 3000)){ //ejecucion de modo
                     heartBeatIndex = EXEMODE2;
                     if(updateMefTask(myButton))
-                        carMode = ONMODE2;
+                        carModes = ONMODE2;
                 }
                 if(myTimer.read_ms() - myButton[0].timePressed > 3000)
                     heartBeatIndex = PREMODE2;
@@ -1295,7 +1423,7 @@ int main()
             break;
             case ONMODE2:
                 if(updateMefTask(myButton) && (myButton[0].timeDiff >= 3000)){ //salir ejecucion
-                    carMode = PREMODE2;
+                    carModes = PREMODE2;
                     heartBeatIndex = PREMODE2;
                     move(NOSPEED, NOSPEED, STOP, STOP);
                     
@@ -1306,7 +1434,7 @@ int main()
             case PREMODE3:
                 if(updateMefTask(myButton)){
                     if((myButton[0].timeDiff >= 100) && (myButton[0].timeDiff < 1000)){ //cambia de modo
-                        carMode = IDLE;
+                        carModes = IDLE;
                         heartBeatIndex = IDLE; 
                         move(NOSPEED, NOSPEED, STOP, STOP);
                     } else if((myButton[0].timeDiff < 3000)){ //reinicio de modo
@@ -1316,7 +1444,7 @@ int main()
                 if((myTimer.read_ms() - myButton[0].timePressed >= 1000) && (myTimer.read_ms() - myButton[0].timePressed <= 3000)){ //ejecucion de modo
                     heartBeatIndex = EXEMODE3;
                     if(updateMefTask(myButton))
-                        carMode = ONMODE3;
+                        carModes = ONMODE3;
                 }
                 if(myTimer.read_ms() - myButton[0].timePressed > 3000)
                     heartBeatIndex = PREMODE3;
@@ -1325,7 +1453,7 @@ int main()
             break;
             case ONMODE3:
                 if(updateMefTask(myButton) && (myButton[0].timeDiff >= 3000)){ //salir ejecucion
-                    carMode=PREMODE3;
+                    carModes=PREMODE3;
                     heartBeatIndex=PREMODE3;
                     move(NOSPEED, NOSPEED, STOP, STOP);
                 }
@@ -1337,6 +1465,11 @@ int main()
     
         maintainDistance();
 
+        //dodgeObstacle();
+
+        //lineFollower();
+
+        //rotate(45,1);
 
     }
 /* END User code -------------------------------------------------------------*/
