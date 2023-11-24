@@ -92,15 +92,21 @@ typedef struct
 #define MOTORTIME            200
 #define SERVOTIME            500
 
-#define WAIT150MS            150
+#define WAIT100MS            100
+#define WAIT200MS            200
+#define WAIT250MS            250
+#define WAIT300MS            300
+#define WAIT400MS            400
 #define WAIT500MS            500
+#define WAIT1000MS           1000
+#define WAIT2000MS           2000
 
 #define MAXSPEED             12000
 #define MEDSPEED             8000
 #define MINSPEED             5000
 #define TURNSPEED            6000
 #define NOSPEED              0
-#define SPEEDERROR           6000 //Utilizado para contrarestar la diferencia de velocidades en los motores entre 5500 y 6000
+#define SPEEDERROR           1000 //Utilizado para contrarestar la diferencia de velocidades en los motores entre 5500 y 6000
 
 #define INTERVALO            10
 
@@ -115,6 +121,9 @@ typedef struct
 
 #define DERECHA              0
 #define IZQUIERDA            1
+
+#define DODGEDISTANCE        10
+#define REFDISTANCE          20
 
 
 #define RESETFLAGS           flags.bytes 
@@ -1054,66 +1063,150 @@ void lineFollower(){
 }
 
 void dodgeObstacle(){
-    static uint32_t waitTime = myTimer.read_ms();
+    static int32_t waitTime = myTimer.read_ms();
+    //variables del control de distancia deben de ser con signo para que los calculos realizados sean correctos 
     int32_t distance = distanceValue/58; //pasamos la distancia a cm
-    int32_t savedDistance = 0;
     static int8_t cont= 0;
+    static int8_t irValue = 0;
+    static bool rotDir = DERECHA;
+    static int8_t Dr = 15; //velocidad referecia
 
+    //DERECHA = 0 - IZQUIERDA = 1
     switch(dodgeModes){
         case FOLLOWLINE:
 
-            if(distance <= 15){
+            if(distance <= DODGEDISTANCE){
                 dodgeModes = ROTAR;
-                servo.pulsewidth_us(maxMsServo);
+                cont = 0;
+                move(NOSPEED, NOSPEED, STOP, STOP);
                 waitTime = myTimer.read_ms();
+
+                if(rotDir == DERECHA){
+                    servo.pulsewidth_us(maxMsServo); //colocamos el servo en la maxima posicion
+                } else if (rotDir ==IZQUIERDA){
+                    servo.pulsewidth_us(minMsServo);
+                } 
             } else{
                 lineFollower();
-            }
-            
+
+                dodgeModes = FOLLOWLINE;
+            }        
         break;
         case ROTAR:
-
-            if((myTimer.read_ms() - waitTime) > 100){
+            if((myTimer.read_ms() - waitTime) > WAIT100MS){
                 move(NOSPEED, NOSPEED, STOP, STOP);
-                if((myTimer.read_ms() - waitTime) > 500){
+                if((myTimer.read_ms() - waitTime) > WAIT500MS){
                     waitTime = myTimer.read_ms();
                     cont++;
                 }
             } else{
-                move(MINSPEED,MINSPEED,FORWARD,BACKWARD);
+                if(rotDir == DERECHA)
+                    move(MEDSPEED,MEDSPEED,FORWARD,BACKWARD); // roto hacia la derecha
+                else if( rotDir == IZQUIERDA)   
+                    move(MEDSPEED,MEDSPEED,BACKWARD,FORWARD);
             }
 
-            if(cont == 8){
-                dodgeModes = DISTANCE;
+            if(cont == 6){ //VALORES 8 O 3
+                dodgeModes = ESPERAR;
+                waitTime = myTimer.read_ms();
+                move(NOSPEED,NOSPEED,STOP,STOP);
             }
-
         break;
-        case DISTANCE: //rotamos a izquierda
-            if ((myTimer.read_ms() - waitTime) > 500){ //espera de 500ms para calcular el giro
+        case ESPERAR:
+            if((myTimer.read_ms() - waitTime) - 10000){
                 dodgeModes = MOVER;
-            } else{
-                if(savedDistance < distance)
-                    savedDistance = distance;
             }
-
         break;
         case MOVER:
-            if(savedDistance<9)
-                move(MEDSPEED,MEDSPEED,FORWARD,BACKWARD);
-            else if(savedDistance>11)
-                move(MEDSPEED,MEDSPEED, BACKWARD,FORWARD);
-            else
-                move(MEDSPEED,MEDSPEED,FORWARD,FORWARD);
-            dodgeModes = DISTANCE;
-            savedDistance = distance;
-            wait_ms(2000);
-            move(NOSPEED,NOSPEED,STOP,STOP);  
-                 
+            //FORMULA DE 1,5 VECES MINSPEED*30)/20
+            //MUEVO MIRANDO LA DISTANCIA A LA PARED Y TAMBIEN SI ENCUENTRO LA LINEA
+
+            int32_t rWheelSpeed;
+            int32_t lWheelSpeed;
+
+            //calculamos el valor en porcentaje
+
+            if(distance < 40){
+
+                switch(rotDir){
+                    case DERECHA:
+                        rWheelSpeed = 20 - ((Dr - distance)*2);//distanceCoef;
+                    break;
+                    case IZQUIERDA:
+                        rWheelSpeed = 20 + ((Dr - distance)*2);//distanceCoef;
+                    break;
+                }
+
+                if(rWheelSpeed < 20) //VALORES EN %
+                    rWheelSpeed = 20;
+                if(rWheelSpeed > 50)
+                    rWheelSpeed = 50;
+
+                switch(rotDir){
+                    case DERECHA:
+                        lWheelSpeed = 20 + ((Dr - distance)*2);//distanceCoef;
+                    break;
+                    case IZQUIERDA:
+                        lWheelSpeed = 20 - ((Dr - distance)*2);//distanceCoef;
+                    break;
+                }
+
+                if(lWheelSpeed < 15)
+                    lWheelSpeed = 15;
+                if(lWheelSpeed > 50)
+                    lWheelSpeed = 50;
+
+            } else{ //DISTANCIA MAYOR 40
+                if(rotDir == DERECHA){
+                    rWheelSpeed = 60;
+                    lWheelSpeed = 20;
+                } else{
+                    rWheelSpeed = 20;
+                    lWheelSpeed = 60;
+                }
+            }
+
+            //calculamos el valor en pulsos
+            /*
+            25000 ----- 100
+            x-----------rWheelSpeed
+            */
+            //pasamos el porcentaje a pulsos
+
+            rWheelSpeed *= 250;
+            lWheelSpeed *= 250;
+
+            move(lWheelSpeed, rWheelSpeed, FORWARD, FORWARD);
+
+            waitTime = myTimer.read_ms();
+            dodgeModes = FINDLINE;
+            irValue = 0;
         break;
         case FINDLINE:
-            //Buscamos la linea pasando por la negra primero y luego por la linea negra
-        break;
+            for(int i=0; i<3;i++){
+                if(irSensor[i].currentValue<blackValue){ //si el color es blanco, color > 9000
+                    irValue = irValue | (irMask << i);
+                }
+            }
 
+            dodgeModes = MOVER;
+
+            if((irValue == 1) || (irValue == 2) || (irValue == 4)){
+                dodgeModes = FOLLOWLINE;
+
+                switch(rotDir){
+                    case DERECHA:
+                        move(MAXSPEED,NOSPEED,FORWARD,STOP);
+                    break;
+                    case IZQUIERDA:
+                        move(NOSPEED,MAXSPEED,STOP,FORWARD);
+                    break;
+                }
+
+                (rotDir == DERECHA)? (rotDir = IZQUIERDA) : (rotDir = DERECHA);
+                servo.pulsewidth_us(MIDDLESERVO);
+            }
+        break;
     }
 }
 
@@ -1413,8 +1506,9 @@ int main()
                 }
                 if((myTimer.read_ms() - myButton[0].timePressed >= 1000) && (myTimer.read_ms() - myButton[0].timePressed <= 3000)){ //ejecucion de modo
                     heartBeatIndex = EXEMODE2;
-                    if(updateMefTask(myButton))
+                    if(updateMefTask(myButton)){
                         carModes = ONMODE2;
+                    }
                 }
                 if(myTimer.read_ms() - myButton[0].timePressed > 3000)
                     heartBeatIndex = PREMODE2;
@@ -1458,14 +1552,17 @@ int main()
                     move(NOSPEED, NOSPEED, STOP, STOP);
                 }
                 heartBeatIndex = ONMODE3;
+                maintainDistance();
             break;
         }
         //HEARTBEAT 
         hearbeatTask(&heartBeatTime, heartBeatIndex); //ejecutamos la secuencia del heartbeat   
     
-        maintainDistance();
+        //maintainDistance();
 
-        //dodgeObstacle();
+        dodgeObstacle();
+
+        //move(MINSPEED, MINSPEED, FORWARD, FORWARD);
 
         //lineFollower();
 

@@ -175,10 +175,10 @@ typedef enum{
 }_eFollowModes;
 
 typedef enum{
-    FOLLOWLINE,
+    FOLLOWLINE, 
     ROTAR,
-    DISTANCE,
-    MOVER, //maintain distance 
+    ESPERAR, 
+    MOVER, 
     FINDLINE
 }_eDodgeModes;
 
