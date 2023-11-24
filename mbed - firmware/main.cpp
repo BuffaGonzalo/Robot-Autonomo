@@ -114,6 +114,7 @@ typedef struct
 
 #define FORWARD              2
 #define BACKWARD             1
+#define ENERGYSTOP           3
 #define STOP                 0
 
 #define SERIE                0
@@ -1074,23 +1075,24 @@ void dodgeObstacle(){
     //DERECHA = 0 - IZQUIERDA = 1
     switch(dodgeModes){
         case FOLLOWLINE:
+            if((myTimer.read_ms() - waitTime)>WAIT1000MS){
+                if(distance <= DODGEDISTANCE){
+                    dodgeModes = ROTAR;
+                    cont = 0;
+                    move(NOSPEED, NOSPEED, STOP, STOP);
+                    waitTime = myTimer.read_ms();
 
-            if(distance <= DODGEDISTANCE){
-                dodgeModes = ROTAR;
-                cont = 0;
-                move(NOSPEED, NOSPEED, STOP, STOP);
-                waitTime = myTimer.read_ms();
-
-                if(rotDir == DERECHA){
-                    servo.pulsewidth_us(maxMsServo); //colocamos el servo en la maxima posicion
-                } else if (rotDir ==IZQUIERDA){
-                    servo.pulsewidth_us(minMsServo);
+                    if(rotDir == DERECHA){
+                        servo.pulsewidth_us(maxMsServo); //colocamos el servo en la maxima posicion
+                    } else if (rotDir ==IZQUIERDA){
+                        servo.pulsewidth_us(minMsServo);
+                    } 
+                } else{
+                    lineFollower();
                 } 
             } else{
-                lineFollower();
-
-                dodgeModes = FOLLOWLINE;
-            }        
+                move(NOSPEED,NOSPEED,ENERGYSTOP,ENERGYSTOP);
+            }     
         break;
         case ROTAR:
             if((myTimer.read_ms() - waitTime) > WAIT100MS){
@@ -1106,14 +1108,15 @@ void dodgeObstacle(){
                     move(MEDSPEED,MEDSPEED,BACKWARD,FORWARD);
             }
 
-            if(cont == 6){ //VALORES 8 O 3
+            if(cont == 8){ //VALORES 5 - MUCHA BATERIA O 3 - POCA BATERIA
                 dodgeModes = ESPERAR;
                 waitTime = myTimer.read_ms();
                 move(NOSPEED,NOSPEED,STOP,STOP);
             }
         break;
         case ESPERAR:
-            if((myTimer.read_ms() - waitTime) - 10000){
+            if((myTimer.read_ms() - waitTime) > WAIT500MS){
+                waitTime = myTimer.read_ms();
                 dodgeModes = MOVER;
             }
         break;
@@ -1192,19 +1195,20 @@ void dodgeObstacle(){
             dodgeModes = MOVER;
 
             if((irValue == 1) || (irValue == 2) || (irValue == 4)){
-                dodgeModes = FOLLOWLINE;
 
                 switch(rotDir){
                     case DERECHA:
-                        move(MAXSPEED,NOSPEED,FORWARD,STOP);
+                        move(MINSPEED,NOSPEED,FORWARD,STOP);
                     break;
                     case IZQUIERDA:
-                        move(NOSPEED,MAXSPEED,STOP,FORWARD);
+                        move(NOSPEED,MINSPEED,STOP,FORWARD);
                     break;
                 }
 
+                waitTime = myTimer.read_ms();
+                dodgeModes = FOLLOWLINE;
                 (rotDir == DERECHA)? (rotDir = IZQUIERDA) : (rotDir = DERECHA);
-                servo.pulsewidth_us(MIDDLESERVO);
+                servo.pulsewidth_us(MIDDLESERVO); //llevamos el servo al centro
             }
         break;
     }
@@ -1212,10 +1216,11 @@ void dodgeObstacle(){
 
 void maintainDistance(){
     static int32_t savedDistance = 0, savedAngle = 0; 
-    static uint32_t servoAngle = minMsServo;
+    static uint16_t servoAngle = minMsServo;
     static uint32_t lookTime; //utilizada para mover el servo actualizando los grados lentamente 
     static uint32_t distanceTime; //utilizado para comprobar que la distancia obtenida es la correcta
     static uint32_t rotateTime;
+    static bool rotateFlag = 0;
     static bool isDistance = 0; //utilizada para saber si tuve que leer valor moviendo servo
     int32_t distance = distanceValue/58; //convertimos a cm los datos
 
@@ -1231,6 +1236,7 @@ void maintainDistance(){
 
                 if(servoAngle >= maxMsServo){
                     followModes = ROTATE;
+                    rotateFlag = 1;
                     isDistance = 1;
                     servoAngle = minMsServo;
                     distanceTime = myTimer.read_ms();                    
@@ -1247,30 +1253,36 @@ void maintainDistance(){
 
                 //aumentamos para comprobar antes
                 servoAngle += 375;
+                if(servoAngle>maxMsServo)
+                    servoAngle = maxMsServo;
                 servo.pulsewidth_us(servoAngle);
             }
 
         break;
         case ROTATE:
+            if((myTimer.read_ms() - rotateTime) > WAIT1000MS){
+                rotateTime = myTimer.read_ms();
+                followModes = MOVE;
+            } else{
+                if(rotateFlag){
+                    if(savedAngle<0){
+                        //savedAngle *= -1;
+                        rotate(savedAngle,1); //roto a derecha
+                    }else if (savedAngle>0){
+                        rotate(savedAngle,0); //roto a izquierda
+                    } 
+                    
+                    servo.pulsewidth_us(MIDDLESERVO);
 
-            if(savedAngle<0){
-                //savedAngle *= -1;
-                rotate(savedAngle,1); //roto a derecha
-            }else if (savedAngle>0){
-                rotate(savedAngle,0); //roto a izquierda
-            } 
-            
-            servo.pulsewidth_us(MIDDLESERVO);
-
-            if((myTimer.read_ms() - rotateTime) > 150){ //tiempo de rotacion
-                move(NOSPEED,NOSPEED,STOP,STOP);
-                servo.pulsewidth_us(MIDDLESERVO);
-                if(myTimer.read_ms() - rotateTime > 500){ //esperamos 500 ms de espera para obtener una distancia en caso de rotar
-                    rotateTime = myTimer.read_ms();
-                    followModes = MOVE;
+                    if((myTimer.read_ms() - rotateTime) > 150){ //tiempo de rotacion
+                        move(NOSPEED,NOSPEED,STOP,STOP);
+                        servo.pulsewidth_us(MIDDLESERVO);
+                        if(myTimer.read_ms() - rotateTime > 500){ //esperamos 500 ms de espera para obtener una distancia en caso de rotar
+                            rotateFlag = 0;
+                        }
+                    }
                 }
             }
-
         break;
         case MOVE:
             //esperamos para realizar una medicion previa en caso de haber tenido que mover el auto para encontrar objeto
@@ -1310,7 +1322,6 @@ void maintainDistance(){
         break;
     }
 }
-
 /* END Function prototypes user code ------------------------------------------*/
 
 int main()
@@ -1430,6 +1441,10 @@ int main()
     move(NOSPEED, NOSPEED, STOP, STOP);
 
     while(1){
+
+        //HEARTBEAT 
+        hearbeatTask(&heartBeatTime, heartBeatIndex); //ejecutamos la secuencia del heartbeat   
+
         //CONEXIONES SERIAL Y WIFI
         myWifi.taskWifi();
         serialTask((_sRx *)&dataRx,&dataTx, SERIE); //serialTask -> conexion serial
@@ -1520,7 +1535,6 @@ int main()
                     carModes = PREMODE2;
                     heartBeatIndex = PREMODE2;
                     move(NOSPEED, NOSPEED, STOP, STOP);
-                    
                 }
                 heartBeatIndex = ONMODE2;
                 dodgeObstacle();
@@ -1555,20 +1569,8 @@ int main()
                 maintainDistance();
             break;
         }
-        //HEARTBEAT 
-        hearbeatTask(&heartBeatTime, heartBeatIndex); //ejecutamos la secuencia del heartbeat   
-    
-        //maintainDistance();
-
-        dodgeObstacle();
-
-        //move(MINSPEED, MINSPEED, FORWARD, FORWARD);
-
-        //lineFollower();
-
-        //rotate(45,1);
-
     }
+    
 /* END User code -------------------------------------------------------------*/
 }
 
