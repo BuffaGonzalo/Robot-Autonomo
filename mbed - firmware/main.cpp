@@ -349,6 +349,8 @@ void dodgeObstacle();
 
 void maintainDistance();
 
+void shortestMazePath();
+
 /* END Function prototypes ---------------------------------------------------*/
 
 
@@ -1322,6 +1324,14 @@ void maintainDistance(){
         break;
     }
 }
+
+void shortestMazePath(){
+
+    lineFollower();
+
+}
+
+
 /* END Function prototypes user code ------------------------------------------*/
 
 int main()
@@ -1392,6 +1402,7 @@ int main()
 
     timerGral.attach_us(&do100ms, 100000); 
 
+    //MEDICION VELOCIDAD
     //mido flanco ascendente
     speedLeft.rise(&speedCountLeft);
 
@@ -1402,6 +1413,8 @@ int main()
 
     speedRight.fall(&speedCountRight);
 
+    //MEDICION DISTANCIA
+    //mido flanco ascendente y descendente
     hecho.rise(&distanceInitMeasurement);
 
     hecho.fall(&distanceMeasurement);
@@ -1483,8 +1496,8 @@ int main()
             case PREMODE1:
                 if(updateMefTask(myButton)){
                     if((myButton[0].timeDiff >= 100) && (myButton[0].timeDiff < 1000)){ //cambia de modo
-                        carModes = PREMODE2;
-                        heartBeatIndex = PREMODE2;  
+                        carModes = IDLE;
+                        heartBeatIndex = IDLE;  
                         move(NOSPEED, NOSPEED, STOP, STOP);
                     } else if((myButton[0].timeDiff < 3000)){ //reinicio de modo
                         heartBeatIndex=PREMODE1;
@@ -1507,75 +1520,126 @@ int main()
                     move(NOSPEED, NOSPEED, STOP, STOP); 
                 }
                 heartBeatIndex = ONMODE1;
-                lineFollower();
+                shortestMazePath();
             break;
             case PREMODE2:
-                if(updateMefTask(myButton)){
-                    if((myButton[0].timeDiff >= 100) && (myButton[0].timeDiff < 1000)){ //cambia de modo
-                        carModes = PREMODE3; 
-                        heartBeatIndex = PREMODE3; 
-                        move(NOSPEED, NOSPEED, STOP, STOP);
-                    } else if((myButton[0].timeDiff < 3000)){ //reinicio de modo
-                        heartBeatIndex = PREMODE2;
-                    }
-                }
-                if((myTimer.read_ms() - myButton[0].timePressed >= 1000) && (myTimer.read_ms() - myButton[0].timePressed <= 3000)){ //ejecucion de modo
-                    heartBeatIndex = EXEMODE2;
-                    if(updateMefTask(myButton)){
-                        carModes = ONMODE2;
-                    }
-                }
-                if(myTimer.read_ms() - myButton[0].timePressed > 3000)
-                    heartBeatIndex = PREMODE2;
             break;
             case EXEMODE2:
             break;
             case ONMODE2:
-                if(updateMefTask(myButton) && (myButton[0].timeDiff >= 3000)){ //salir ejecucion
-                    carModes = PREMODE2;
-                    heartBeatIndex = PREMODE2;
-                    move(NOSPEED, NOSPEED, STOP, STOP);
-                }
-                heartBeatIndex = ONMODE2;
-                dodgeObstacle();
             break;
             case PREMODE3:
-                if(updateMefTask(myButton)){
-                    if((myButton[0].timeDiff >= 100) && (myButton[0].timeDiff < 1000)){ //cambia de modo
-                        carModes = IDLE;
-                        heartBeatIndex = IDLE; 
-                        move(NOSPEED, NOSPEED, STOP, STOP);
-                    } else if((myButton[0].timeDiff < 3000)){ //reinicio de modo
-                        heartBeatIndex=PREMODE3;
-                    }
-                }
-                if((myTimer.read_ms() - myButton[0].timePressed >= 1000) && (myTimer.read_ms() - myButton[0].timePressed <= 3000)){ //ejecucion de modo
-                    heartBeatIndex = EXEMODE3;
-                    if(updateMefTask(myButton))
-                        carModes = ONMODE3;
-                }
-                if(myTimer.read_ms() - myButton[0].timePressed > 3000)
-                    heartBeatIndex = PREMODE3;
             break;
             case EXEMODE3:
             break;
             case ONMODE3:
-                if(updateMefTask(myButton) && (myButton[0].timeDiff >= 3000)){ //salir ejecucion
-                    carModes=PREMODE3;
-                    heartBeatIndex=PREMODE3;
-                    move(NOSPEED, NOSPEED, STOP, STOP);
-                }
-                heartBeatIndex = ONMODE3;
-                maintainDistance();
             break;
         }
     }
-    
+        
 /* END User code -------------------------------------------------------------*/
 }
 
 
-
+/*
+//MENU DE MODOS DEL AUTO DE REGULARIZACION
+switch(carModes){
+    case IDLE:
+        if(updateMefTask(myButton) && (myButton[0].timeDiff >= 100) && (myButton[0].timeDiff < 1000)){
+            carModes = PREMODE1;       
+            heartBeatIndex = PREMODE1;             
+        }
+    break;
+    case PREMODE1:
+        if(updateMefTask(myButton)){
+            if((myButton[0].timeDiff >= 100) && (myButton[0].timeDiff < 1000)){ //cambia de modo
+                carModes = PREMODE2;
+                heartBeatIndex = PREMODE2;  
+                move(NOSPEED, NOSPEED, STOP, STOP);
+            } else if((myButton[0].timeDiff < 3000)){ //reinicio de modo
+                heartBeatIndex=PREMODE1;
+            }
+        }
+        if((myTimer.read_ms() - myButton[0].timePressed >= 1000) && (myTimer.read_ms() - myButton[0].timePressed <= 3000)){ //ejecucion de modo
+            heartBeatIndex = EXEMODE1;
+            if(updateMefTask(myButton))
+                carModes = ONMODE1;
+        }
+        if(myTimer.read_ms() - myButton[0].timePressed > 3000)
+            heartBeatIndex = PREMODE1;
+    break;
+    case EXEMODE1:
+    break;
+    case ONMODE1:
+        if(updateMefTask(myButton) && myButton[0].timeDiff >= 3000){ //salir ejecucion
+            carModes=PREMODE1;
+            heartBeatIndex=PREMODE1;
+            move(NOSPEED, NOSPEED, STOP, STOP); 
+        }
+        heartBeatIndex = ONMODE1;
+        lineFollower();
+    break;
+    case PREMODE2:
+        if(updateMefTask(myButton)){
+            if((myButton[0].timeDiff >= 100) && (myButton[0].timeDiff < 1000)){ //cambia de modo
+                carModes = PREMODE3; 
+                heartBeatIndex = PREMODE3; 
+                move(NOSPEED, NOSPEED, STOP, STOP);
+            } else if((myButton[0].timeDiff < 3000)){ //reinicio de modo
+                heartBeatIndex = PREMODE2;
+            }
+        }
+        if((myTimer.read_ms() - myButton[0].timePressed >= 1000) && (myTimer.read_ms() - myButton[0].timePressed <= 3000)){ //ejecucion de modo
+            heartBeatIndex = EXEMODE2;
+            if(updateMefTask(myButton)){
+                carModes = ONMODE2;
+            }
+        }
+        if(myTimer.read_ms() - myButton[0].timePressed > 3000)
+            heartBeatIndex = PREMODE2;
+    break;
+    case EXEMODE2:
+    break;
+    case ONMODE2:
+        if(updateMefTask(myButton) && (myButton[0].timeDiff >= 3000)){ //salir ejecucion
+            carModes = PREMODE2;
+            heartBeatIndex = PREMODE2;
+            move(NOSPEED, NOSPEED, STOP, STOP);
+        }
+        heartBeatIndex = ONMODE2;
+        dodgeObstacle();
+    break;
+    case PREMODE3:
+        if(updateMefTask(myButton)){
+            if((myButton[0].timeDiff >= 100) && (myButton[0].timeDiff < 1000)){ //cambia de modo
+                carModes = IDLE;
+                heartBeatIndex = IDLE; 
+                move(NOSPEED, NOSPEED, STOP, STOP);
+            } else if((myButton[0].timeDiff < 3000)){ //reinicio de modo
+                heartBeatIndex=PREMODE3;
+            }
+        }
+        if((myTimer.read_ms() - myButton[0].timePressed >= 1000) && (myTimer.read_ms() - myButton[0].timePressed <= 3000)){ //ejecucion de modo
+            heartBeatIndex = EXEMODE3;
+            if(updateMefTask(myButton))
+                carModes = ONMODE3;
+        }
+        if(myTimer.read_ms() - myButton[0].timePressed > 3000)
+            heartBeatIndex = PREMODE3;
+    break;
+    case EXEMODE3:
+    break;
+    case ONMODE3:
+        if(updateMefTask(myButton) && (myButton[0].timeDiff >= 3000)){ //salir ejecucion
+            carModes=PREMODE3;
+            heartBeatIndex=PREMODE3;
+            move(NOSPEED, NOSPEED, STOP, STOP);
+        }
+        heartBeatIndex = ONMODE3;
+        maintainDistance();
+    break;
+}
+*/
 
 
 
