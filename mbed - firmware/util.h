@@ -154,6 +154,8 @@ typedef enum{
 
 /**
  * @brief Enumeracion utilizada para los modos del auto y del heartbeat
+ * valores idle, premode1, premode2, premode3, onmode1, onmode2, onmode3 utilizadas para el manejo de modos
+ * todos son utilizados tambien para los modos del heartbeat 
 */
 typedef enum{
     IDLE,
@@ -164,15 +166,22 @@ typedef enum{
     EXEMODE2,
     ONMODE2,
     PREMODE3,
-    EXEMODE3,
+    EXEMODE3, 
     ONMODE3
 } _eModes;
 
+/**
+ * @brief Enumeracion utilizada para el modo de seguir el objeto
+*/
 typedef enum{
     LOOK,
     ROTATE,
     MOVE
 }_eFollowModes;
+
+/**
+ * @brief Enumeracion utilizada para esquivar el objeto 
+*/
 
 typedef enum{
     FOLLOWLINE, 
@@ -182,7 +191,21 @@ typedef enum{
     FINDLINE
 }_eDodgeModes;
 
+/**
+ * Enumeracion utilizada para encontrar el camino mas corto del laberinto
+*/
 
+typedef enum{
+
+    SETSERVO,
+    SEGUIRLINEA, 
+    ALINEAR,
+    ONPATH,
+    NEWPATH,
+    TAKENPATH,
+
+
+}_eMazePathModes;
 
 /* END typedef ---------------------------------------------------------------*/
 

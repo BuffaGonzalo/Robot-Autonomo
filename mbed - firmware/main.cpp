@@ -438,6 +438,8 @@ _eFollowModes followModes;
 
 _eDodgeModes dodgeModes;
 
+_eMazePathModes mazeModes;
+
 //HEARTBEAT
 uint8_t heartBeatIndex = 0;
 
@@ -1326,9 +1328,78 @@ void maintainDistance(){
 }
 
 void shortestMazePath(){
+    static uint8_t irValue = 0;
+    static int8_t waitTime;
+    //static bool onPath = 0;
 
-    lineFollower();
+    int32_t distance = distanceValue/58; //convertimos a cm los datos
 
+
+    //GENERAR UNA ESTRUCTURA CON ESTOS DATOS
+    static bool blackBlock = 0;
+    static bool levelStart = 0;
+    static bool levelEnd = 0;
+    static uint8_t pathLevel = 0;
+
+    switch(mazeModes){
+        case SETSERVO:
+            servo.pulsewidth_ms(maxMsServo); //movemos el servo hacia la izquierda
+            mazeModes = SEGUIRLINEA;
+        break;
+        case SEGUIRLINEA:
+            if(distance<15){ //distancia a comprobar es 10, aumentamos para asegurarnos que es la distancia correcta
+                mazeModes = ONPATH;
+            } else{
+                lineFollower();
+            }
+        break;
+        case ALINEAR:
+            move(MEDSPEED,MINSPEED,FORWARD,FORWARD);
+
+            if((myTimer.read_ms() - waitTime) > WAIT200MS){ //colocamos el autito en la direccion de la linea
+                waitTime = myTimer.read_ms();
+                mazeModes = ONPATH;
+            }
+        break;
+        case ONPATH:
+            //comprobamos el valor de los sensores
+            for(int i=0; i<3;i++){
+                if(irSensor[i].currentValue<blackValue){ //si el color es blanco, color > 9000
+                    irValue = irValue | (irMask << i);
+                }
+            }
+            
+
+            move(MINSPEED,MINSPEED,FORWARD,FORWARD);
+
+            //TENER EN CUENTA CON UN TIMER EL TIEMPO QUE ESTOY, PORQUE SI PASO CONSTANTEMENTE ES POSIBLE QUE PASE MUCHAS VECES POR ESTOS MODOS
+            switch(irValue){
+                case 1:
+                case 2:
+                case 4: 
+                    blackBlock = 1;
+                break;
+                case 0:
+                    if(blackBlock)
+                        pathLevel++;
+                break;
+                case 7:
+                    (levelStart == 0)? (levelStart = 1) : (levelEnd = 1);
+                    if(blackBlock == 0)
+                        blackBlock = 1;
+                    
+                break;
+            }
+
+            irValue = 0;            
+        break;
+        case NEWPATH:
+
+        break;
+        case TAKENPATH:
+
+        break;
+    }
 }
 
 
@@ -1383,6 +1454,7 @@ int main()
     carModes = IDLE;
     followModes = MOVE;
     dodgeModes = FOLLOWLINE;
+    mazeModes = SETSERVO;
     servo.pulsewidth_us(miServo.currentValue);
 
 /* END Local variables -------------------------------------------------------*/
@@ -1536,7 +1608,7 @@ int main()
             break;
         }
     }
-        
+
 /* END User code -------------------------------------------------------------*/
 }
 
