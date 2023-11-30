@@ -170,26 +170,6 @@ typedef enum{
     ONMODE3
 } _eModes;
 
-/**
- * @brief Enumeracion utilizada para el modo de seguir el objeto
-*/
-typedef enum{
-    LOOK,
-    ROTATE,
-    MOVE
-}_eFollowModes;
-
-/**
- * @brief Enumeracion utilizada para esquivar el objeto 
-*/
-
-typedef enum{
-    FOLLOWLINE, 
-    ROTAR,
-    ESPERAR, 
-    MOVER, 
-    FINDLINE
-}_eDodgeModes;
 
 /**
  * Enumeracion utilizada para encontrar el camino mas corto del laberinto
@@ -197,15 +177,29 @@ typedef enum{
 
 typedef enum{
 
-    SETSERVO,
-    SEGUIRLINEA, 
-    ALINEAR,
-    ONPATH,
-    NEWPATH,
-    TAKENPATH,
+   INROTATE,
+   GOAHEAD,
+   INCIRCLE,
+   ONPATH,
+   INLINE
+
 
 
 }_eMazePathModes;
+
+
+typedef enum{
+    BLACKSEARCH,
+    WHITESEARCH
+}_eLineSearch;
+
+
+typedef enum{
+    CLOSEDIST,
+    FSTWAIT,
+    FARDIST,
+    SNDWAIT
+}_eSearchingPath;
 
 /* END typedef ---------------------------------------------------------------*/
 

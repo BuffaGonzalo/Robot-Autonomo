@@ -93,20 +93,28 @@ typedef struct
 #define SERVOTIME            500
 
 #define WAIT100MS            100
+#define WAIT150MS            150
 #define WAIT200MS            200
 #define WAIT250MS            250
 #define WAIT300MS            300
 #define WAIT400MS            400
 #define WAIT500MS            500
+#define WAIT750MS            750
 #define WAIT1000MS           1000
+#define WAIT1500MS           1500
 #define WAIT2000MS           2000
+#define WAIT3000MS           3000
+#define WAIT4000MS           4000
+#define WAIT5000MS           5000
 
 #define MAXSPEED             12000
-#define MEDSPEED             8000
+#define MEDSPEED             7000
 #define MINSPEED             5000
-#define TURNSPEED            6000
+#define TURNSPEED            6000 
+
+
 #define NOSPEED              0
-#define SPEEDERROR           1000 //Utilizado para contrarestar la diferencia de velocidades en los motores entre 5500 y 6000
+#define SPEEDERROR           1000 //Varia entre 1000, 5500 y 6000
 
 #define INTERVALO            10
 
@@ -345,10 +353,6 @@ void rotate(uint8_t rotationAngle, uint8_t direction);
 */
 void lineFollower();
 
-void dodgeObstacle();
-
-void maintainDistance();
-
 void shortestMazePath();
 
 /* END Function prototypes ---------------------------------------------------*/
@@ -401,9 +405,9 @@ volatile int32_t  initialValue, finalValue, distanceValue;
 
 uint32_t speedleftValue, speedRightValue;
 
-uint16_t whiteValue = 9000;
+uint16_t whiteValue = 10000; //antes 9000
 
-uint16_t blackValue = 4000;
+uint16_t blackValue = 5000; //antes 4000
 
 uint16_t minMsServo = 700;
 
@@ -434,11 +438,11 @@ Timeout triggerTimer;
 //MODOS DEL AUTO
 _eModes carModes;
 
-_eFollowModes followModes;
-
-_eDodgeModes dodgeModes;
-
 _eMazePathModes mazeModes;
+
+_eLineSearch lineSearch;
+
+_eSearchingPath srchPathModes;
 
 //HEARTBEAT
 uint8_t heartBeatIndex = 0;
@@ -985,19 +989,22 @@ void move(uint32_t leftSpeed, uint32_t rightSpeed, uint8_t leftMotor, uint8_t ri
 }
 
 void rotate(uint8_t rotationAngle, uint8_t direction){
-    uint8_t x;
+    uint16_t x;
     
     switch (direction){
         case 0: //IZQUIERDA
-            move(10000,10000,BACKWARD,FORWARD); //velocidad debe de ser 40%
+            move(MEDSPEED,MEDSPEED,BACKWARD,FORWARD); //velocidad debe de ser 40%
         break;
         case 1: //DERECHA
-            move(10000,10000,FORWARD,BACKWARD);
+            move(MEDSPEED,MEDSPEED,FORWARD,BACKWARD);
         break;
     }
 
     x = (((rotationAngle) * 345) / 360) / 3; //cambiar entre 1 y 10 en caso de que no rote bien 
     
+    //3 cantidad de mm de recorrido de un pulso;
+
+
     //345 = diametro circunf auto * 3,14
     //5 = cm de movimiento del auto
 
@@ -1052,7 +1059,7 @@ void lineFollower(){
                 move(MINSPEED, MINSPEED, FORWARD, BACKWARD);
             break;
             case 7:
-                move(MEDSPEED, MEDSPEED, FORWARD, FORWARD);
+                move(MEDSPEED, MINSPEED, FORWARD, FORWARD);
             break;
             default:
                 if(lastIrValue == 1 || lastIrValue == 3)
@@ -1067,337 +1074,121 @@ void lineFollower(){
     }
 }
 
-void dodgeObstacle(){
-    static int32_t waitTime = myTimer.read_ms();
-    //variables del control de distancia deben de ser con signo para que los calculos realizados sean correctos 
-    int32_t distance = distanceValue/58; //pasamos la distancia a cm
-    static int8_t cont= 0;
-    static int8_t irValue = 0;
-    static bool rotDir = DERECHA;
-    static int8_t Dr = 15; //velocidad referecia
-
-    //DERECHA = 0 - IZQUIERDA = 1
-    switch(dodgeModes){
-        case FOLLOWLINE:
-            if((myTimer.read_ms() - waitTime)>WAIT1000MS){
-                if(distance <= DODGEDISTANCE){
-                    dodgeModes = ROTAR;
-                    cont = 0;
-                    move(NOSPEED, NOSPEED, STOP, STOP);
-                    waitTime = myTimer.read_ms();
-
-                    if(rotDir == DERECHA){
-                        servo.pulsewidth_us(maxMsServo); //colocamos el servo en la maxima posicion
-                    } else if (rotDir ==IZQUIERDA){
-                        servo.pulsewidth_us(minMsServo);
-                    } 
-                } else{
-                    lineFollower();
-                } 
-            } else{
-                move(NOSPEED,NOSPEED,ENERGYSTOP,ENERGYSTOP);
-            }     
-        break;
-        case ROTAR:
-            if((myTimer.read_ms() - waitTime) > WAIT100MS){
-                move(NOSPEED, NOSPEED, STOP, STOP);
-                if((myTimer.read_ms() - waitTime) > WAIT500MS){
-                    waitTime = myTimer.read_ms();
-                    cont++;
-                }
-            } else{
-                if(rotDir == DERECHA)
-                    move(MEDSPEED,MEDSPEED,FORWARD,BACKWARD); // roto hacia la derecha
-                else if( rotDir == IZQUIERDA)   
-                    move(MEDSPEED,MEDSPEED,BACKWARD,FORWARD);
-            }
-
-            if(cont == 8){ //VALORES 5 - MUCHA BATERIA O 3 - POCA BATERIA
-                dodgeModes = ESPERAR;
-                waitTime = myTimer.read_ms();
-                move(NOSPEED,NOSPEED,STOP,STOP);
-            }
-        break;
-        case ESPERAR:
-            if((myTimer.read_ms() - waitTime) > WAIT500MS){
-                waitTime = myTimer.read_ms();
-                dodgeModes = MOVER;
-            }
-        break;
-        case MOVER:
-            //FORMULA DE 1,5 VECES MINSPEED*30)/20
-            //MUEVO MIRANDO LA DISTANCIA A LA PARED Y TAMBIEN SI ENCUENTRO LA LINEA
-
-            int32_t rWheelSpeed;
-            int32_t lWheelSpeed;
-
-            //calculamos el valor en porcentaje
-
-            if(distance < 40){
-
-                switch(rotDir){
-                    case DERECHA:
-                        rWheelSpeed = 20 - ((Dr - distance)*2);//distanceCoef;
-                    break;
-                    case IZQUIERDA:
-                        rWheelSpeed = 20 + ((Dr - distance)*2);//distanceCoef;
-                    break;
-                }
-
-                if(rWheelSpeed < 20) //VALORES EN %
-                    rWheelSpeed = 20;
-                if(rWheelSpeed > 50)
-                    rWheelSpeed = 50;
-
-                switch(rotDir){
-                    case DERECHA:
-                        lWheelSpeed = 20 + ((Dr - distance)*2);//distanceCoef;
-                    break;
-                    case IZQUIERDA:
-                        lWheelSpeed = 20 - ((Dr - distance)*2);//distanceCoef;
-                    break;
-                }
-
-                if(lWheelSpeed < 15)
-                    lWheelSpeed = 15;
-                if(lWheelSpeed > 50)
-                    lWheelSpeed = 50;
-
-            } else{ //DISTANCIA MAYOR 40
-                if(rotDir == DERECHA){
-                    rWheelSpeed = 60;
-                    lWheelSpeed = 20;
-                } else{
-                    rWheelSpeed = 20;
-                    lWheelSpeed = 60;
-                }
-            }
-
-            //calculamos el valor en pulsos
-            /*
-            25000 ----- 100
-            x-----------rWheelSpeed
-            */
-            //pasamos el porcentaje a pulsos
-
-            rWheelSpeed *= 250;
-            lWheelSpeed *= 250;
-
-            move(lWheelSpeed, rWheelSpeed, FORWARD, FORWARD);
-
-            waitTime = myTimer.read_ms();
-            dodgeModes = FINDLINE;
-            irValue = 0;
-        break;
-        case FINDLINE:
-            for(int i=0; i<3;i++){
-                if(irSensor[i].currentValue<blackValue){ //si el color es blanco, color > 9000
-                    irValue = irValue | (irMask << i);
-                }
-            }
-
-            dodgeModes = MOVER;
-
-            if((irValue == 1) || (irValue == 2) || (irValue == 4)){
-
-                switch(rotDir){
-                    case DERECHA:
-                        move(MINSPEED,NOSPEED,FORWARD,STOP);
-                    break;
-                    case IZQUIERDA:
-                        move(NOSPEED,MINSPEED,STOP,FORWARD);
-                    break;
-                }
-
-                waitTime = myTimer.read_ms();
-                dodgeModes = FOLLOWLINE;
-                (rotDir == DERECHA)? (rotDir = IZQUIERDA) : (rotDir = DERECHA);
-                servo.pulsewidth_us(MIDDLESERVO); //llevamos el servo al centro
-            }
-        break;
-    }
-}
-
-void maintainDistance(){
-    static int32_t savedDistance = 0, savedAngle = 0; 
-    static uint16_t servoAngle = minMsServo;
-    static uint32_t lookTime; //utilizada para mover el servo actualizando los grados lentamente 
-    static uint32_t distanceTime; //utilizado para comprobar que la distancia obtenida es la correcta
-    static uint32_t rotateTime;
-    static bool rotateFlag = 0;
-    static bool isDistance = 0; //utilizada para saber si tuve que leer valor moviendo servo
-    int32_t distance = distanceValue/58; //convertimos a cm los datos
-
-    switch(followModes){
-        case LOOK:
-        
-            if(distance<savedDistance){
-                savedDistance = distance;
-                savedAngle = servoAngle;
-            }
-            if(myTimer.read_ms() - lookTime > LOOKTIME){
-                lookTime = myTimer.read_ms();
-
-                if(servoAngle >= maxMsServo){
-                    followModes = ROTATE;
-                    rotateFlag = 1;
-                    isDistance = 1;
-                    servoAngle = minMsServo;
-                    distanceTime = myTimer.read_ms();                    
-                    rotateTime = myTimer.read_ms(); //actualizamos el tiempo aca para que sea mas preciso
-
-                    if(savedAngle > maxMsServo)
-                        savedAngle = maxMsServo;
-                    //cambiamos los ms a grados
-                    savedAngle = ((((savedAngle-miServo.X1) * (miServo.Y2 - miServo.Y1))/(miServo.X2 - miServo.X1)) + miServo.Y1); //convertimos el valor obtenido en pulsos a grados
-
-                    servo.pulsewidth_us(MIDDLESERVO);
-
-                }
-
-                //aumentamos para comprobar antes
-                servoAngle += 375;
-                if(servoAngle>maxMsServo)
-                    servoAngle = maxMsServo;
-                servo.pulsewidth_us(servoAngle);
-            }
-
-        break;
-        case ROTATE:
-            if((myTimer.read_ms() - rotateTime) > WAIT1000MS){
-                rotateTime = myTimer.read_ms();
-                followModes = MOVE;
-            } else{
-                if(rotateFlag){
-                    if(savedAngle<0){
-                        //savedAngle *= -1;
-                        rotate(savedAngle,1); //roto a derecha
-                    }else if (savedAngle>0){
-                        rotate(savedAngle,0); //roto a izquierda
-                    } 
-                    
-                    servo.pulsewidth_us(MIDDLESERVO);
-
-                    if((myTimer.read_ms() - rotateTime) > 150){ //tiempo de rotacion
-                        move(NOSPEED,NOSPEED,STOP,STOP);
-                        servo.pulsewidth_us(MIDDLESERVO);
-                        if(myTimer.read_ms() - rotateTime > 500){ //esperamos 500 ms de espera para obtener una distancia en caso de rotar
-                            rotateFlag = 0;
-                        }
-                    }
-                }
-            }
-        break;
-        case MOVE:
-            //esperamos para realizar una medicion previa en caso de haber tenido que mover el auto para encontrar objeto
-            if(distance>11 && distance<50 && (myTimer.read_ms() - distanceTime)>200){
-                distanceTime = myTimer.read_ms();
-                if(isDistance && (distance > savedDistance-5) && (distance < savedDistance+5)){ //comprobamos si es el objeto previamente encontrado mediante isDistance
-                    isDistance = 0;
-                    move(MINSPEED,MINSPEED,FORWARD,FORWARD);
-                } else if (isDistance && ((distance < savedDistance-5) || (distance > savedDistance+5))){ //si la medida realizada no es 
-                    isDistance = 0;
-                    servoAngle = minMsServo;
-                    followModes = LOOK;
-                    lookTime = myTimer.read_ms(); 
-                    move(NOSPEED,NOSPEED,STOP,STOP);
-                    servo.pulsewidth_us(minMsServo);
-                    savedDistance = distance;
-                    savedAngle = minMsServo;
-                } else { //caso de entrada de inicio
-                    if(distance > 25)
-                        move(MEDSPEED,MEDSPEED,FORWARD,FORWARD);
-                    else
-                        move(MINSPEED,MINSPEED,FORWARD,FORWARD);
-                }        
-            } else if(distance<9){
-                move(MINSPEED,MINSPEED,BACKWARD,BACKWARD);
-            } else if(distance<=11 && distance>=9){
-                move(NOSPEED,NOSPEED,STOP,STOP);
-            } else if(distance>=50){
-                followModes = LOOK;
-                lookTime = myTimer.read_ms(); //simpre actualizar las variables de tiempo antes de entrar al modo para mayor precision
-                move(NOSPEED,NOSPEED,STOP,STOP);
-                servo.pulsewidth_us(minMsServo); //llevamos el servo al inicio
-                savedDistance = distance; //guardamos las distancia inicial
-                servoAngle = minMsServo; //guardamos el angulo inicial
-                savedAngle = ((((savedAngle-miServo.X1) * (miServo.Y2 - miServo.Y1))/(miServo.X2 - miServo.X1)) + miServo.Y1) - 180; //convertimos el valor de ms a grados
-            }
-        break;
-    }
-}
 
 void shortestMazePath(){
+    static int32_t waitTime = myTimer.read_ms();
+    static int32_t distTime = myTimer.read_ms();
     static uint8_t irValue = 0;
-    static int8_t waitTime;
-    //static bool onPath = 0;
-
+    static bool noLine = false;
     int32_t distance = distanceValue/58; //convertimos a cm los datos
 
-
-    //GENERAR UNA ESTRUCTURA CON ESTOS DATOS
-    static bool blackBlock = 0;
-    static bool levelStart = 0;
-    static bool levelEnd = 0;
-    static uint8_t pathLevel = 0;
+    irValue = 0;
+    //comprobamos el valor de los sensores
+    for(int i=0; i<3;i++){
+        if(irSensor[i].currentValue<blackValue){ //si el color es blanco, color > 9000
+            irValue = irValue | (irMask << i);
+        }
+    }
 
     switch(mazeModes){
-        case SETSERVO:
-            servo.pulsewidth_ms(maxMsServo); //movemos el servo hacia la izquierda
-            mazeModes = SEGUIRLINEA;
-        break;
-        case SEGUIRLINEA:
-            if(distance<15){ //distancia a comprobar es 10, aumentamos para asegurarnos que es la distancia correcta
-                mazeModes = ONPATH;
-            } else{
-                lineFollower();
-            }
-        break;
-        case ALINEAR:
-            move(MEDSPEED,MINSPEED,FORWARD,FORWARD);
-
-            if((myTimer.read_ms() - waitTime) > WAIT200MS){ //colocamos el autito en la direccion de la linea
-                waitTime = myTimer.read_ms();
-                mazeModes = ONPATH;
-            }
-        break;
-        case ONPATH:
-            //comprobamos el valor de los sensores
-            for(int i=0; i<3;i++){
-                if(irSensor[i].currentValue<blackValue){ //si el color es blanco, color > 9000
-                    irValue = irValue | (irMask << i);
+        case INROTATE:
+            move(MEDSPEED,MEDSPEED,FORWARD,BACKWARD);         
+            if((myTimer.read_ms() - waitTime) > WAIT1500MS){ //tiempo de rotacion
+                move(NOSPEED,NOSPEED,ENERGYSTOP,ENERGYSTOP);
+                if(myTimer.read_ms() - waitTime > WAIT2000MS){ 
+                    waitTime = myTimer.read_ms();
+                    mazeModes = GOAHEAD;
                 }
             }
-            
-
-            move(MINSPEED,MINSPEED,FORWARD,FORWARD);
-
-            //TENER EN CUENTA CON UN TIMER EL TIEMPO QUE ESTOY, PORQUE SI PASO CONSTANTEMENTE ES POSIBLE QUE PASE MUCHAS VECES POR ESTOS MODOS
-            switch(irValue){
-                case 1:
-                case 2:
-                case 4: 
-                    blackBlock = 1;
+        break;
+        case GOAHEAD:
+            switch(lineSearch){
+                case BLACKSEARCH:
+                    if((myTimer.read_ms() - waitTime) > WAIT1000MS){
+                        move(MINSPEED,MINSPEED,FORWARD,FORWARD);
+                        if(irValue == 0){
+                            move(NOSPEED,NOSPEED,ENERGYSTOP,ENERGYSTOP);
+                            waitTime = myTimer.read_ms();
+                            servo.pulsewidth_us(minMsServo); //colocamos el servo en posicion para realizar las medidas correctas en el sigueinte modo
+                            mazeModes = INCIRCLE;
+                            lineSearch = WHITESEARCH;
+                        }                        
+                    } else{
+                        move(NOSPEED,NOSPEED,ENERGYSTOP,ENERGYSTOP);
+                    }
                 break;
-                case 0:
-                    if(blackBlock)
-                        pathLevel++;
-                break;
-                case 7:
-                    (levelStart == 0)? (levelStart = 1) : (levelEnd = 1);
-                    if(blackBlock == 0)
-                        blackBlock = 1;
-                    
+                case WHITESEARCH:
+                    move(MINSPEED,MINSPEED,FORWARD,FORWARD);
+                    if(irValue == 1 || irValue == 2 || irValue == 4 || irValue == 7){ 
+                        lineSearch = BLACKSEARCH;
+                        waitTime = myTimer.read_ms();
+                    }
                 break;
             }
-
-            irValue = 0;            
         break;
-        case NEWPATH:
+        case INCIRCLE:
+            if((myTimer.read_ms() - waitTime) > WAIT750MS){
 
+                lineFollower();
+
+                switch(srchPathModes){
+                    case CLOSEDIST:
+                        if(distance < 25){
+                            distTime = myTimer.read_ms();
+                            srchPathModes = FSTWAIT;
+                            servo.pulsewidth_us(MIDDLESERVO);
+                        }
+                    break;
+                    case FSTWAIT:
+                        if((myTimer.read_ms() - distTime) > WAIT500MS){
+                            distTime = myTimer.read_ms();
+                            srchPathModes = FARDIST;
+                        } else{
+                            move(NOSPEED,NOSPEED,ENERGYSTOP,ENERGYSTOP); //paramos el auto
+                        }
+                    break;
+                    case FARDIST:
+                        //esperamos para tener una medida precisa
+                        if(distance > 100){ 
+                            mazeModes = ONPATH;
+                            distTime = myTimer.read_ms();
+                            waitTime = myTimer.read_ms();
+                        } else {
+                            servo.pulsewidth_us(minMsServo);
+                            srchPathModes = SNDWAIT;
+                        }                        
+                    break;
+                    case SNDWAIT:
+                        if((myTimer.read_ms() - distTime) > WAIT500MS){
+                            irValue = 1;
+                            move(NOSPEED,NOSPEED,ENERGYSTOP,ENERGYSTOP); 
+                            srchPathModes = CLOSEDIST;
+                            distTime = myTimer.read_ms();
+                        }
+                    break;
+                }
+            } else{
+                move(NOSPEED,MEDSPEED,ENERGYSTOP,FORWARD); //enderezamos el auto para encontrar la linea en el sentido correcto
+            }      
         break;
-        case TAKENPATH:
-
+        case ONPATH: //enderezamos al camino el cual analizaremos
+            if((myTimer.read_ms() - waitTime) > WAIT200MS){
+                move(NOSPEED,NOSPEED,ENERGYSTOP,ENERGYSTOP);
+                waitTime = myTimer.read_ms();
+                mazeModes = INLINE;
+            } else{
+                move(80*250, 20*250, FORWARD, FORWARD);
+                
+                if(irValue == 0) //comprobamos al salida de la linea
+                    noLine = true;
+                if((noLine == true) && (irValue == 1 || irValue == 2 || irValue == 4)){ //si estamos fuera de la linea y encontramos linea, seguimos la linea
+                    noLine = false;
+                    mazeModes = INLINE; 
+                }
+            }
+        break;
+        case INLINE:
+            lineFollower();
         break;
     }
 }
@@ -1452,9 +1243,11 @@ int main()
 
     miServo.currentValue=MIDDLESERVO;
     carModes = IDLE;
-    followModes = MOVE;
-    dodgeModes = FOLLOWLINE;
-    mazeModes = SETSERVO;
+    //followModes = MOVE;
+    //dodgeModes = FOLLOWLINE;
+    lineSearch = WHITESEARCH;
+    mazeModes = INROTATE;
+    srchPathModes = CLOSEDIST;
     servo.pulsewidth_us(miServo.currentValue);
 
 /* END Local variables -------------------------------------------------------*/
@@ -1607,113 +1400,10 @@ int main()
             case ONMODE3:
             break;
         }
+
+        shortestMazePath();
+        //lineFollower();
     }
 
 /* END User code -------------------------------------------------------------*/
 }
-
-
-/*
-//MENU DE MODOS DEL AUTO DE REGULARIZACION
-switch(carModes){
-    case IDLE:
-        if(updateMefTask(myButton) && (myButton[0].timeDiff >= 100) && (myButton[0].timeDiff < 1000)){
-            carModes = PREMODE1;       
-            heartBeatIndex = PREMODE1;             
-        }
-    break;
-    case PREMODE1:
-        if(updateMefTask(myButton)){
-            if((myButton[0].timeDiff >= 100) && (myButton[0].timeDiff < 1000)){ //cambia de modo
-                carModes = PREMODE2;
-                heartBeatIndex = PREMODE2;  
-                move(NOSPEED, NOSPEED, STOP, STOP);
-            } else if((myButton[0].timeDiff < 3000)){ //reinicio de modo
-                heartBeatIndex=PREMODE1;
-            }
-        }
-        if((myTimer.read_ms() - myButton[0].timePressed >= 1000) && (myTimer.read_ms() - myButton[0].timePressed <= 3000)){ //ejecucion de modo
-            heartBeatIndex = EXEMODE1;
-            if(updateMefTask(myButton))
-                carModes = ONMODE1;
-        }
-        if(myTimer.read_ms() - myButton[0].timePressed > 3000)
-            heartBeatIndex = PREMODE1;
-    break;
-    case EXEMODE1:
-    break;
-    case ONMODE1:
-        if(updateMefTask(myButton) && myButton[0].timeDiff >= 3000){ //salir ejecucion
-            carModes=PREMODE1;
-            heartBeatIndex=PREMODE1;
-            move(NOSPEED, NOSPEED, STOP, STOP); 
-        }
-        heartBeatIndex = ONMODE1;
-        lineFollower();
-    break;
-    case PREMODE2:
-        if(updateMefTask(myButton)){
-            if((myButton[0].timeDiff >= 100) && (myButton[0].timeDiff < 1000)){ //cambia de modo
-                carModes = PREMODE3; 
-                heartBeatIndex = PREMODE3; 
-                move(NOSPEED, NOSPEED, STOP, STOP);
-            } else if((myButton[0].timeDiff < 3000)){ //reinicio de modo
-                heartBeatIndex = PREMODE2;
-            }
-        }
-        if((myTimer.read_ms() - myButton[0].timePressed >= 1000) && (myTimer.read_ms() - myButton[0].timePressed <= 3000)){ //ejecucion de modo
-            heartBeatIndex = EXEMODE2;
-            if(updateMefTask(myButton)){
-                carModes = ONMODE2;
-            }
-        }
-        if(myTimer.read_ms() - myButton[0].timePressed > 3000)
-            heartBeatIndex = PREMODE2;
-    break;
-    case EXEMODE2:
-    break;
-    case ONMODE2:
-        if(updateMefTask(myButton) && (myButton[0].timeDiff >= 3000)){ //salir ejecucion
-            carModes = PREMODE2;
-            heartBeatIndex = PREMODE2;
-            move(NOSPEED, NOSPEED, STOP, STOP);
-        }
-        heartBeatIndex = ONMODE2;
-        dodgeObstacle();
-    break;
-    case PREMODE3:
-        if(updateMefTask(myButton)){
-            if((myButton[0].timeDiff >= 100) && (myButton[0].timeDiff < 1000)){ //cambia de modo
-                carModes = IDLE;
-                heartBeatIndex = IDLE; 
-                move(NOSPEED, NOSPEED, STOP, STOP);
-            } else if((myButton[0].timeDiff < 3000)){ //reinicio de modo
-                heartBeatIndex=PREMODE3;
-            }
-        }
-        if((myTimer.read_ms() - myButton[0].timePressed >= 1000) && (myTimer.read_ms() - myButton[0].timePressed <= 3000)){ //ejecucion de modo
-            heartBeatIndex = EXEMODE3;
-            if(updateMefTask(myButton))
-                carModes = ONMODE3;
-        }
-        if(myTimer.read_ms() - myButton[0].timePressed > 3000)
-            heartBeatIndex = PREMODE3;
-    break;
-    case EXEMODE3:
-    break;
-    case ONMODE3:
-        if(updateMefTask(myButton) && (myButton[0].timeDiff >= 3000)){ //salir ejecucion
-            carModes=PREMODE3;
-            heartBeatIndex=PREMODE3;
-            move(NOSPEED, NOSPEED, STOP, STOP);
-        }
-        heartBeatIndex = ONMODE3;
-        maintainDistance();
-    break;
-}
-*/
-
-
-
-
-
