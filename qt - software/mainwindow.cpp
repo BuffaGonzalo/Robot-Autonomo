@@ -930,9 +930,9 @@ void MainWindow::on_pushButton_actRadar_clicked()
         sendSerial(buf,n);
 
         //activamos los timers
-        timer3->start(10);
-        timer4->start(40);
-        timer5->start(50);
+        timer3->start(100); //radar
+        timer4->start(50); //distancia
+        timer5->start(100); //velocidad servo
 
     } else{
         timer3->stop();
