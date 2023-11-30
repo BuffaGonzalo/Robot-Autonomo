@@ -76,6 +76,8 @@ private slots:
      */
     void radar();
 
+    void carStatus();
+
     /**
      * @brief onTimer4 - Funcion encargada de obtener distancia para el radar
      */
@@ -93,6 +95,7 @@ private:
     Ui::MainWindow *ui;
     QSerialPort *QSerialPort1;
     QPaintBox *QPaintBox1;
+    QPaintBox *QPaintBox2;
     QLabel *estadoSerial;
 
     //timers
@@ -101,6 +104,7 @@ private:
     QTimer  *timer3;
     QTimer  *timer4;
     QTimer  *timer5;
+    QTimer  *timer6;
 
     //variables comunicacion udp
     QUdpSocket *QUdpSocket1;

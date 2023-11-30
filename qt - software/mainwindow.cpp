@@ -11,13 +11,20 @@ MainWindow::MainWindow(QWidget *parent)
     timer3 = new QTimer(this); //Utilizado para el radar
     timer4 = new QTimer(this); //Utilizado para pedir la distancia
     timer5 = new QTimer(this); //Utilizado para mover el servo
+    timer6 = new QTimer(this);
 
     //dibujo
     QPaintBox1 = new QPaintBox(0,0,ui->widget); //el padre es el widget
+    QPaintBox2 = new QPaintBox(0,0,ui->carWidget);
 
     //comunicacion
     QSerialPort1=new QSerialPort(this);
     QUdpSocket1 = new QUdpSocket(this);
+
+    //
+    estadoSerial = new QLabel(this);
+    estadoSerial->setText("DISCONNECTED");
+    ui->statusBar->addWidget(estadoSerial);
 
     ui->comboBox_PORT->installEventFilter(this);
 
@@ -25,11 +32,13 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->pushButton_sendSerial,&QPushButton::clicked, this, &MainWindow::sendDataSerial);
     connect(QSerialPort1,&QSerialPort::readyRead,this,&MainWindow::dataReceived);
 
+    //connects de los timers con las funciones
     connect(timer1,&QTimer::timeout,this,&MainWindow::timeOut);
     connect(timer2,&QTimer::timeout,this,&MainWindow::getData);
     connect(timer3,&QTimer::timeout,this,&MainWindow::radar);
     connect(timer4,&QTimer::timeout,this,&MainWindow::onTimer4);
     connect(timer5,&QTimer::timeout,this,&MainWindow::onTimer5);
+    connect(timer6, &QTimer::timeout,this,&MainWindow::carStatus);
 
     //connects de udp
     connect(QUdpSocket1,&QUdpSocket::readyRead,this,&MainWindow::OnUdpRxData);
@@ -59,6 +68,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     timer1->start(100);
     timer2->start(500); //timer encargado del envio de datos cada 500ms
+    timer6->start(100); //pintamos el estado del auto cada 100ms
 
 }
 
@@ -900,7 +910,6 @@ void MainWindow::on_pushButton_sendUdp_clicked()
 
 }
 
-
 void MainWindow::on_pushButton_actRadar_clicked()
 {
     if(ui->pushButton_actRadar->text()=="ACTIVATE"){
@@ -1042,6 +1051,202 @@ void MainWindow::radar(){
     paint.save();
 
     QPaintBox1->update();
+}
+
+void MainWindow::carStatus(){
+    QPainter paint(QPaintBox2->getCanvas());
+    QPen pen;
+    QBrush brush;
+    QPoint carStructure[8];
+    QPoint lfTire[4];
+    QPoint rtTire[4];
+    QPoint usSensor[9]; //ultrasonic sensor
+    QPoint lfIr[4]; //left IR
+    QPoint cntIr[4]; //center IR
+    QPoint rtIr[4]; //right IR
+
+    pen.setWidth(2);
+    brush.setStyle(Qt::SolidPattern);
+
+    //definimos los puntos de la estructura del auto
+    carStructure[0].setX(ui->carWidget->width()*2/25);
+    carStructure[0].setY(ui->carWidget->height()*8/25);
+
+    carStructure[1].setX(ui->carWidget->width()*8/25);
+    carStructure[1].setY(ui->carWidget->height()*7/50);
+
+    carStructure[2].setX(ui->carWidget->width()*17/25);
+    carStructure[2].setY(ui->carWidget->height()*7/50);
+
+    carStructure[3].setX(ui->carWidget->width()*23/25);
+    carStructure[3].setY(ui->carWidget->height()*8/25);
+
+    carStructure[4].setX(ui->carWidget->width()*17/25);
+    carStructure[4].setY(ui->carWidget->height()*8/25);
+
+    carStructure[5].setX(ui->carWidget->width()*17/25);
+    carStructure[5].setY(ui->carWidget->height()*41/50);
+
+    carStructure[6].setX(ui->carWidget->width()*8/25);
+    carStructure[6].setY(ui->carWidget->height()*41/50);
+
+    carStructure[7].setX(ui->carWidget->width()*8/25);
+    carStructure[7].setY(ui->carWidget->height()*8/25);
+
+    //pintamos la estructura
+    pen.setColor(Qt::lightGray);
+    paint.setPen(pen);
+    brush.setColor(Qt::lightGray);
+    paint.setBrush(brush);
+    paint.save();
+    paint.drawPolygon(carStructure,8);
+
+    //definimos los puntos de la rueda izquierda
+    lfTire[0].setX(ui->carWidget->width()*2/25);
+    lfTire[0].setY(ui->carWidget->height()*1/2);
+
+    lfTire[1].setX(ui->carWidget->width()*3/10);
+    lfTire[1].setY(ui->carWidget->height()*1/2);
+
+    lfTire[2].setX(ui->carWidget->width()*3/10);
+    lfTire[2].setY(ui->carWidget->height()*41/50);
+
+    lfTire[3].setX(ui->carWidget->width()*2/25);
+    lfTire[3].setY(ui->carWidget->height()*41/50);
+
+    //pintamos la rueda izquieda
+    pen.setColor(Qt::gray);
+    paint.setPen(pen);
+    brush.setColor(Qt::gray);
+    paint.setBrush(brush);
+    paint.save();
+    paint.drawPolygon(lfTire,4);
+
+    //definimos los puntos de la rueda derecha
+    rtTire[0].setX(ui->carWidget->width()*7/10);
+    rtTire[0].setY(ui->carWidget->height()*1/2);
+
+    rtTire[1].setX(ui->carWidget->width()*23/25);
+    rtTire[1].setY(ui->carWidget->height()*1/2);
+
+    rtTire[2].setX(ui->carWidget->width()*23/25);
+    rtTire[2].setY(ui->carWidget->height()*41/50);
+
+    rtTire[3].setX(ui->carWidget->width()*7/10);
+    rtTire[3].setY(ui->carWidget->height()*41/50);
+
+    //pintamos la rueda derecha
+    pen.setColor(Qt::gray);
+    paint.setPen(pen);
+    brush.setColor(Qt::gray);
+    paint.setBrush(brush);
+    paint.save();
+    paint.drawPolygon(rtTire,4);
+
+
+    //definimos los puntos del IR de la izquierda
+    lfIr[0].setX(ui->carWidget->width()*21/50);
+    lfIr[0].setY(ui->carWidget->height()*8/25);
+
+    lfIr[1].setX(ui->carWidget->width()*23/50);
+    lfIr[1].setY(ui->carWidget->height()*8/25);
+
+    lfIr[2].setX(ui->carWidget->width()*23/50);
+    lfIr[2].setY(ui->carWidget->height()*9/25);
+
+    lfIr[3].setX(ui->carWidget->width()*21/50);
+    lfIr[3].setY(ui->carWidget->height()*9/25);
+
+    pen.setColor(Qt::white);
+    paint.setPen(pen);
+    brush.setColor(Qt::white);
+    paint.setBrush(brush);
+    paint.save();
+    paint.drawPolygon(lfIr,4);
+
+    //definimos los puntos del IR de la derecha
+    rtIr[0].setX(ui->carWidget->width()*27/50);
+    rtIr[0].setY(ui->carWidget->height()*8/25);
+
+    rtIr[1].setX(ui->carWidget->width()*29/50);
+    rtIr[1].setY(ui->carWidget->height()*8/25);
+
+    rtIr[2].setX(ui->carWidget->width()*29/50);
+    rtIr[2].setY(ui->carWidget->height()*9/25);
+
+    rtIr[3].setX(ui->carWidget->width()*27/50);
+    rtIr[3].setY(ui->carWidget->height()*9/25);
+
+    pen.setColor(Qt::white);
+    paint.setPen(pen);
+    brush.setColor(Qt::white);
+    paint.setBrush(brush);
+    paint.save();
+    paint.drawPolygon(rtIr,4);
+
+    //definimos los puntos del IR del centro
+    cntIr[0].setX(ui->carWidget->width()*12/25);
+    cntIr[0].setY(ui->carWidget->height()*8/25);
+
+    cntIr[1].setX(ui->carWidget->width()*13/25);
+    cntIr[1].setY(ui->carWidget->height()*8/25);
+
+    cntIr[2].setX(ui->carWidget->width()*13/25);
+    cntIr[2].setY(ui->carWidget->height()*9/25);
+
+    cntIr[3].setX(ui->carWidget->width()*12/25);
+    cntIr[3].setY(ui->carWidget->height()*9/25);
+
+    pen.setColor(Qt::white);
+    paint.setPen(pen);
+    brush.setColor(Qt::white);
+    paint.setBrush(brush);
+    paint.save();
+    paint.drawPolygon(cntIr,4);
+
+    usSensor[0].setX(0);
+    usSensor[0].setY(0);
+
+    usSensor[1].setX(ui->carWidget->width()*-3/25);
+    usSensor[1].setY(0);
+
+    usSensor[2].setX(ui->carWidget->width()*-3/25);
+    usSensor[2].setY(ui->carWidget->height()*-2/25);
+
+    usSensor[3].setX(ui->carWidget->width()*-1/50);
+    usSensor[3].setY(ui->carWidget->height()*-2/25);
+
+    usSensor[4].setX(ui->carWidget->width()*-1/50);
+    usSensor[4].setY(ui->carWidget->height()*-1/25);
+
+    usSensor[5].setX(ui->carWidget->width()*1/50);
+    usSensor[5].setY(ui->carWidget->height()*-1/25);
+
+    usSensor[6].setX(ui->carWidget->width()*1/50);
+    usSensor[6].setY(ui->carWidget->height()*-2/25);
+
+    usSensor[7].setX(ui->carWidget->width()*3/25);
+    usSensor[7].setY(ui->carWidget->height()*-2/25);
+
+    usSensor[8].setX(ui->carWidget->width()*3/25);
+    usSensor[8].setY(0);
+
+    pen.setColor(Qt::darkGray);
+    paint.setPen(pen);
+    brush.setColor(Qt::darkGray);
+    paint.setBrush(brush);
+
+    paint.save();
+    paint.translate(ui->carWidget->width()/2,ui->carWidget->height()*4/25);
+    paint.rotate(0);
+    paint.drawPolygon(usSensor,9);
+    paint.restore();
+    paint.save();
+
+
+
+
+    QPaintBox2->update(); //actualizamos los datos actualizados
 }
 
 void MainWindow::onTimer4(){
