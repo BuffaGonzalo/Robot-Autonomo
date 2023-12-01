@@ -114,7 +114,7 @@ typedef struct
 
 
 #define NOSPEED              0
-#define SPEEDERROR           1000 //Varia entre 1000, 5500 y 6000
+#define SPEEDERROR           1500 //Varia entre 1000, 5500 y 6000
 
 #define INTERVALO            10
 
@@ -413,6 +413,19 @@ uint16_t minMsServo = 700;
 
 uint16_t maxMsServo = 2500;
 
+uint16_t msServo = 0; //variable la cual guarda continuamente el valor del servo y es la encargada de transmitir la posicion del servo en las comunicaciones
+
+//longitudes de los caminos recorridos, estos datos son enviados por Serial o WIFI
+
+uint16_t lntFstPath = 5555;
+
+uint16_t lntSndPath = 10;
+
+uint16_t lntTrdPath = 200;
+
+uint16_t lntFthPath = 9999;
+
+
 uint8_t irSensorValue = 0;
 
 int32_t timeSpeed=0; //variable utilizada para 
@@ -443,6 +456,8 @@ _eMazePathModes mazeModes;
 _eLineSearch lineSearch;
 
 _eSearchingPath srchPathModes;
+
+_eOutLine outLineModes;
 
 //HEARTBEAT
 uint8_t heartBeatIndex = 0;
@@ -727,6 +742,29 @@ void decodeCommand(_sRx *dataRx, _sTx *dataTx)
 
             putByteOnTx(dataTx, dataTx->chk); 
         break;
+        case PATHLENGHT:
+            putHeaderOnTx(dataTx, PATHLENGHT, 9);
+
+            //cargamos la primera longitud
+            myWord.ui16[0] = lntFstPath;
+            putByteOnTx(dataTx, myWord.ui8[0]);
+            putByteOnTx(dataTx, myWord.ui8[1]);
+            //cargamos la segunda longitud
+            myWord.ui16[0] = lntSndPath;
+            putByteOnTx(dataTx, myWord.ui8[0]);
+            putByteOnTx(dataTx, myWord.ui8[1]);
+            //cargamos la tercera longitud
+            myWord.ui16[0] = lntTrdPath;
+            putByteOnTx(dataTx, myWord.ui8[0]);
+            putByteOnTx(dataTx, myWord.ui8[1]);
+            //cargamos la primera longitud
+            myWord.ui16[0] = lntFthPath;
+            putByteOnTx(dataTx, myWord.ui8[0]);
+            putByteOnTx(dataTx, myWord.ui8[1]);
+
+            //colocamos el checksum
+            putByteOnTx(dataTx, dataTx->chk);
+        break;
         case MOTORTEST:
             putHeaderOnTx(dataTx, MOTORTEST, 2);
             putByteOnTx(dataTx, ACK );
@@ -984,8 +1022,8 @@ void move(uint32_t leftSpeed, uint32_t rightSpeed, uint8_t leftMotor, uint8_t ri
     dirMRight.write(rightMotor);
     
     //asignamos la velocidad
-    speedMLeft.pulsewidth_us(leftSpeed);
-    speedMRight.pulsewidth_us (rightSpeed + SPEEDERROR);
+    speedMLeft.pulsewidth_us(leftSpeed + SPEEDERROR);
+    speedMRight.pulsewidth_us (rightSpeed); //ANTES EL SPEEDERROR ESTABA ACA
 }
 
 void rotate(uint8_t rotationAngle, uint8_t direction){
@@ -1080,6 +1118,7 @@ void shortestMazePath(){
     static int32_t distTime = myTimer.read_ms();
     static uint8_t irValue = 0;
     static bool noLine = false;
+    static uint8_t pathLevel = 0;
     int32_t distance = distanceValue/58; //convertimos a cm los datos
 
     irValue = 0;
@@ -1127,13 +1166,13 @@ void shortestMazePath(){
             }
         break;
         case INCIRCLE:
-            if((myTimer.read_ms() - waitTime) > WAIT750MS){
+            if((myTimer.read_ms() - waitTime) > WAIT1000MS){ //tiempo de rotacion para enderezar el auto y qeu qeude para leer la linea
 
                 lineFollower();
 
                 switch(srchPathModes){
                     case CLOSEDIST:
-                        if(distance < 25){
+                        if(distance < 20){
                             distTime = myTimer.read_ms();
                             srchPathModes = FSTWAIT;
                             servo.pulsewidth_us(MIDDLESERVO);
@@ -1168,27 +1207,122 @@ void shortestMazePath(){
                     break;
                 }
             } else{
-                move(NOSPEED,MEDSPEED,ENERGYSTOP,FORWARD); //enderezamos el auto para encontrar la linea en el sentido correcto
+                move(NOSPEED,60*250,ENERGYSTOP,FORWARD); //enderezamos el auto para encontrar la linea en el sentido correcto
             }      
         break;
         case ONPATH: //enderezamos al camino el cual analizaremos
-            if((myTimer.read_ms() - waitTime) > WAIT200MS){
+            if((myTimer.read_ms() - waitTime) > WAIT500MS){
                 move(NOSPEED,NOSPEED,ENERGYSTOP,ENERGYSTOP);
                 waitTime = myTimer.read_ms();
                 mazeModes = INLINE;
             } else{
                 move(80*250, 20*250, FORWARD, FORWARD);
-                
-                if(irValue == 0) //comprobamos al salida de la linea
-                    noLine = true;
-                if((noLine == true) && (irValue == 1 || irValue == 2 || irValue == 4)){ //si estamos fuera de la linea y encontramos linea, seguimos la linea
-                    noLine = false;
-                    mazeModes = INLINE; 
+                if((myTimer.read_ms() - waitTime) > WAIT200MS){ //movemos hacia adelante para no agarrar la circunferencia central  
+                    if((noLine == true) && (irValue == 1 || irValue == 2 || irValue == 4)){ //si estamos fuera de la linea y encontramos linea, seguimos la linea
+                        noLine = false;
+                        mazeModes = INLINE; 
+                    }                 
+                    if(irValue == 0) //comprobamos al salida de la linea
+                        noLine = true;
                 }
             }
         break;
         case INLINE:
             lineFollower();
+
+            if(irValue == 7){ //encontramos el inicio de la linea
+                mazeModes = CNTMARK;
+                lineSearch = WHITESEARCH;
+                waitTime = myTimer.read_ms();
+                move(NOSPEED,NOSPEED,ENERGYSTOP,ENERGYSTOP);
+            }
+        break;
+        case CNTMARK: //CENTERMARK
+            if((myTimer.read_ms() - waitTime) > WAIT1000MS){
+                    move(17*250, 17*250, FORWARD, FORWARD);
+
+                    switch(lineSearch){
+                        case BLACKSEARCH:
+                            switch(irValue){
+                                case 7:
+                                    mazeModes = FLWLINE;
+                                    waitTime = myTimer.read_ms();
+                                break;
+                                case 1:
+                                case 2:
+                                case 4:
+                                    lineSearch = WHITESEARCH;
+                                break;
+                            }
+                        break;
+                        case WHITESEARCH:
+                            if(irValue == 0){
+                                pathLevel++;
+                                lineSearch = BLACKSEARCH;
+                            }
+                        break;
+                    }
+            } else{
+                move(NOSPEED,NOSPEED,ENERGYSTOP,ENERGYSTOP);
+            }
+        break;
+        case FLWLINE:
+            lineFollower();
+
+
+            if(irValue == 7)
+                move(NOSPEED,NOSPEED,ENERGYSTOP,ENERGYSTOP);
+        /*
+            if((myTimer.read_ms() - waitTime) > WAIT500MS){
+                lineFollower();
+                if((myTimer.read_ms() - waitTime) > WAIT1000MS){ //esperamos para no perdernos
+                    if(irValue == 7){
+                        waitTime = myTimer.read_ms();
+                        mazeModes = OUTMARK;
+                        lineSearch = WHITESEARCH;
+                    }
+                }
+            } else {
+                move(NOSPEED,NOSPEED,ENERGYSTOP,ENERGYSTOP);
+            }
+            */
+        break;
+        case OUTMARK:
+            move(17*250, 17*250, FORWARD, FORWARD);
+
+            switch(lineSearch){
+                case BLACKSEARCH:
+                    if(irValue == 7)
+                        mazeModes = OUTLINE;
+                break;
+                case WHITESEARCH:
+                    lineSearch = BLACKSEARCH;
+                break;
+            }
+        break;
+        case OUTLINE: //LINEA EXTERNA
+            switch(outLineModes){
+                case OKDIST:
+                    if(distance < 15){
+                        outLineModes = ROTCAR;
+                        servo.pulsewidth_us(maxMsServo);
+                        waitTime = myTimer.read_ms();
+                    } else{
+                        move(17*250, 17*250, FORWARD, FORWARD);
+                    }
+                break;
+                case ROTCAR:
+                    if((myTimer.read_ms() - waitTime) > WAIT750MS){
+                        outLineModes = FLLINE;
+                        waitTime = myTimer.read_ms();
+                    } else{
+                        move(60*250, 17*250, FORWARD, FORWARD);
+                    }    
+                break;
+                case FLLINE:
+                    lineFollower();
+                break;
+            }
         break;
     }
 }
@@ -1248,6 +1382,7 @@ int main()
     lineSearch = WHITESEARCH;
     mazeModes = INROTATE;
     srchPathModes = CLOSEDIST;
+    outLineModes = OKDIST;
     servo.pulsewidth_us(miServo.currentValue);
 
 /* END Local variables -------------------------------------------------------*/
@@ -1402,6 +1537,7 @@ int main()
         }
 
         shortestMazePath();
+        //move(17*250, 17*250, FORWARD, FORWARD);
         //lineFollower();
     }
 

@@ -142,6 +142,7 @@ typedef enum{
     ANALOGSENSORS = 0xA0,
     SETBLACKCOLOR = 0xA6,
     SETWHITECOLOR = 0xA7,
+    PATHLENGHT = 0xA8,
     MOTORTEST = 0xA1,
     SERVOANGLE = 0xA2,
     CONFIGSERVO = 0xA5,
@@ -176,30 +177,42 @@ typedef enum{
 */
 
 typedef enum{
-
    INROTATE,
    GOAHEAD,
    INCIRCLE,
    ONPATH,
-   INLINE
-
-
-
+   INLINE,
+   CNTMARK,
+   FLWLINE,
+   OUTMARK,
+   OUTLINE
 }_eMazePathModes;
 
-
+/**
+ * @brief Enumeracion utilizada para encontrar lineas negras y blancas
+*/
 typedef enum{
     BLACKSEARCH,
     WHITESEARCH
 }_eLineSearch;
 
-
+/**
+ * @brief Enumeracion utiliza para salir de la circunferencia
+*/
 typedef enum{
     CLOSEDIST,
     FSTWAIT,
     FARDIST,
     SNDWAIT
 }_eSearchingPath;
+
+typedef enum{
+    OKDIST,
+    ROTCAR,
+    FLLINE //followline
+}_eOutLine;
+
+
 
 /* END typedef ---------------------------------------------------------------*/
 

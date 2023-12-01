@@ -770,7 +770,7 @@
      </font>
     </property>
     <property name="text">
-     <string>ROAD LENGHT</string>
+     <string>PATH LENGHT</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_3">
@@ -788,7 +788,7 @@
      </font>
     </property>
     <property name="text">
-     <string>ROAD 1</string>
+     <string>PATH 1</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_4">
@@ -806,7 +806,7 @@
      </font>
     </property>
     <property name="text">
-     <string>ROAD 2</string>
+     <string>PATH 2</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_5">
@@ -824,7 +824,7 @@
      </font>
     </property>
     <property name="text">
-     <string>ROAD 3</string>
+     <string>PATH 3</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_6">
@@ -842,10 +842,10 @@
      </font>
     </property>
     <property name="text">
-     <string>ROAD 4</string>
+     <string>PATH 4</string>
     </property>
    </widget>
-   <widget class="QLabel" name="label_7">
+   <widget class="QLabel" name="label_pathFstData">
     <property name="geometry">
      <rect>
       <x>620</x>
@@ -861,10 +861,10 @@
      </font>
     </property>
     <property name="text">
-     <string>ROAD DATA</string>
+     <string>PATH DATA</string>
     </property>
    </widget>
-   <widget class="QLabel" name="label_8">
+   <widget class="QLabel" name="label_pathSndData">
     <property name="geometry">
      <rect>
       <x>620</x>
@@ -880,10 +880,10 @@
      </font>
     </property>
     <property name="text">
-     <string>ROAD DATA</string>
+     <string>PATH DATA</string>
     </property>
    </widget>
-   <widget class="QLabel" name="label_9">
+   <widget class="QLabel" name="label_pathTrdData">
     <property name="geometry">
      <rect>
       <x>620</x>
@@ -899,10 +899,10 @@
      </font>
     </property>
     <property name="text">
-     <string>ROAD DATA</string>
+     <string>PATH DATA</string>
     </property>
    </widget>
-   <widget class="QLabel" name="label_10">
+   <widget class="QLabel" name="label_pathFthData">
     <property name="geometry">
      <rect>
       <x>620</x>
@@ -918,7 +918,7 @@
      </font>
     </property>
     <property name="text">
-     <string>ROAD DATA</string>
+     <string>PATH DATA</string>
     </property>
    </widget>
   </widget>
@@ -936,12 +936,14 @@
      <string>DEVICE</string>
     </property>
     <addaction name="actionQUIT"/>
+    <addaction name="actionHELP"/>
    </widget>
    <widget class="QMenu" name="menuDEBUG">
     <property name="title">
      <string>DEBUG</string>
     </property>
     <addaction name="actionPROTOCOL_DATA"/>
+    <addaction name="actionCAR_MODE"/>
    </widget>
    <addaction name="menuDEVICE"/>
    <addaction name="menuDEBUG"/>
@@ -955,6 +957,16 @@
   <action name="actionPROTOCOL_DATA">
    <property name="text">
     <string>PROTOCOL DATA</string>
+   </property>
+  </action>
+  <action name="actionCAR_MODE">
+   <property name="text">
+    <string>CAR MODE</string>
+   </property>
+  </action>
+  <action name="actionHELP">
+   <property name="text">
+    <string>HELP</string>
    </property>
   </action>
  </widget>

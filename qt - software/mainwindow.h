@@ -160,6 +160,7 @@ private:
         SETSERVOLIMITS=0xA5,
         SETBLACKCOLOR=0xA6,
         SETWHITECOLOR=0xA7,
+        PATHLENGHT=0xA8,
         OTHERS
     }_eCmd;
 

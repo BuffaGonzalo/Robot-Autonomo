@@ -351,6 +351,28 @@ void MainWindow::decodeData(uint8_t *datosRx, uint8_t source){
         strOut = QString("%1").arg(w.i32 & 0xFFFF, 4, 10, QChar('0')); //con el 0xFFFF utilizamos solamente los 16 bits mas significativos
         ui->label_white_ir_data->setText(strOut);
         break;
+    case PATHLENGHT:
+        //distancia primera linea
+        w.ui8[0] = datosRx[2];
+        w.ui8[1] = datosRx[3];
+        strOut = QString("%1").arg(w.i16[0], 4, 10, QChar('0'));
+        ui->label_pathFstData->setText(strOut);
+        //distancia segunda linea
+        w.ui8[0] = datosRx[4];
+        w.ui8[1] = datosRx[5];
+        strOut = QString("%1").arg(w.i16[0], 4, 10, QChar('0'));
+        ui->label_pathSndData->setText(strOut);
+        //distanccia tercera linea
+        w.ui8[0] = datosRx[6];
+        w.ui8[1] = datosRx[7];
+        strOut = QString("%1").arg(w.i16[0], 4, 10, QChar('0'));
+        ui->label_pathTrdData->setText(strOut);
+        //distancia cuarta linea
+        w.ui8[0] = datosRx[8];
+        w.ui8[1] = datosRx[9];
+        strOut = QString("%1").arg(w.i16[0], 4, 10, QChar('0'));
+        ui->label_pathFthData->setText(strOut);
+        break;
     case SETSERVOLIMITS:
         w.ui8[0] = datosRx[2];
         w.ui8[1] = datosRx[3];
@@ -423,12 +445,9 @@ void MainWindow::sendDataSerial(){
     case GETFIRMWARE:// GETFIRMWARE=0xF1
     case GETANALOGSENSORS://ANALOGSENSORS=0xA0,
     case SETLEDS:
-        dato[indice++]=cmdId;
-        //falta implementar el envío del valor de seteo
-        dato[NBYTES]=0x02;
-        break;
     case SETBLACKCOLOR:
     case SETWHITECOLOR:
+    case PATHLENGHT:
         dato[indice++]=cmdId;
         dato[NBYTES]=0x02;
     break;
@@ -744,11 +763,9 @@ void MainWindow::sendDataUDP(){
     case GETFIRMWARE:// GETFIRMWARE=0xF1
     case GETANALOGSENSORS://ANALOGSENSORS=0xA0,
     case SETLEDS:
-        dato[indice++]=cmdId;
-        dato[NBYTES]=0x02;
-        break;
     case SETBLACKCOLOR:
     case SETWHITECOLOR:
+    case PATHLENGHT:
         dato[indice++]=cmdId;
         dato[NBYTES]=0x02;
         break;
@@ -815,6 +832,12 @@ void MainWindow::getData(){
 
     cmd = GETDISTANCE;
     n=1;
+    buf[0] = cmd;
+    sendSerial(buf,n);
+    sendUdp(buf,n);
+
+    cmd=PATHLENGHT;
+    n=1; //bytes de la longitud del
     buf[0] = cmd;
     sendSerial(buf,n);
     sendUdp(buf,n);
