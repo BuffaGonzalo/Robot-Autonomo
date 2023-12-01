@@ -11,7 +11,7 @@
 #include <QTime>
 #include <QSerialPortInfo>
 #include <qpaintbox.h>
-
+#include "debug.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -90,6 +90,11 @@ private slots:
 
     void onTimer5();
 
+    /**
+ * @brief onTimer7 - Funcion utilizada para pintar el radar del widget una vez al principio
+ */
+    void onTimer7();
+
 
 private:
     Ui::MainWindow *ui;
@@ -98,6 +103,8 @@ private:
     QPaintBox *QPaintBox2;
     QLabel *estadoSerial;
 
+    Debug *myDebug;
+
     //timers
     QTimer  *timer1;
     QTimer  *timer2;
@@ -105,6 +112,7 @@ private:
     QTimer  *timer4;
     QTimer  *timer5;
     QTimer  *timer6;
+    QTimer  *timer7;
 
     //variables comunicacion udp
     QUdpSocket *QUdpSocket1;
@@ -116,6 +124,7 @@ private:
     //otras
     bool firExe; //bool utilizado para dibujar el fondo del radar
     bool servoDir; //bool utilizado para modificar el sentido de giro del servo
+    bool firRadarExe = true;
     int contadorAlive=0;
     int angle;
     int32_t servoAngle; //variable utilizada para controlar el angulo del servo en la animacion

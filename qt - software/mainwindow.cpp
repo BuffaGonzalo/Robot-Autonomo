@@ -12,6 +12,7 @@ MainWindow::MainWindow(QWidget *parent)
     timer4 = new QTimer(this); //Utilizado para pedir la distancia
     timer5 = new QTimer(this); //Utilizado para mover el servo
     timer6 = new QTimer(this);
+    timer7 = new QTimer(this); //Utilizado para pintar el radar al inicio
 
     //dibujo
     QPaintBox1 = new QPaintBox(0,0,ui->widget); //el padre es el widget
@@ -21,7 +22,10 @@ MainWindow::MainWindow(QWidget *parent)
     QSerialPort1=new QSerialPort(this);
     QUdpSocket1 = new QUdpSocket(this);
 
-    //
+    //debug de comandos
+    myDebug = new Debug(this);
+
+
     estadoSerial = new QLabel(this);
     estadoSerial->setText("DISCONNECTED");
     ui->statusBar->addWidget(estadoSerial);
@@ -39,10 +43,14 @@ MainWindow::MainWindow(QWidget *parent)
     connect(timer4,&QTimer::timeout,this,&MainWindow::onTimer4);
     connect(timer5,&QTimer::timeout,this,&MainWindow::onTimer5);
     connect(timer6, &QTimer::timeout,this,&MainWindow::carStatus);
+    connect(timer7, &QTimer::timeout,this,&MainWindow::onTimer7);
 
     //connects de udp
     connect(QUdpSocket1,&QUdpSocket::readyRead,this,&MainWindow::OnUdpRxData);
     connect(ui->pushButton_sendUdp,&QPushButton::clicked,this,&MainWindow::sendDataUDP);
+
+    //connect(ui->actionScanPorts, &QAction::triggered, settingPorts,&SettingsDialog::show);
+    connect(ui->actionPROTOCOL_DATA, &QAction::triggered, myDebug, &Debug::show);
 
     //añadimos los comandos
     ui->comboBox_CMD->addItem("ALIVE", 0xF0);
@@ -68,6 +76,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     timer1->start(100);
     timer2->start(500); //timer encargado del envio de datos cada 500ms
+    timer3->start(100); //iniciamos para pintar al inicio
     timer6->start(100); //pintamos el estado del auto cada 100ms
 
 }
@@ -98,7 +107,8 @@ void MainWindow::dataReceived(){
         else
             str = str +"{" + QString("%1").arg(incomingBuffer[i],2,16,QChar('0')) + "}";
     }
-    ui->plainTextEdit->appendPlainText("MBED-->SERIAL-->PC (" + str + ")");
+
+    myDebug->showMessage("MBED-->SERIAL-->PC (" + str + ")");
 
     //Cada vez que se recibe un dato reinicio el timeOut
     rxData.timeOut=6;
@@ -161,8 +171,8 @@ void MainWindow::dataReceived(){
                 if(rxData.cheksum==incomingBuffer[i]){
                     decodeData(&rxData.payLoad[0], SERIE);
                 }else{
-                    ui->plainTextEdit->appendPlainText("Chk Calculado ** " +QString().number(rxData.cheksum,16) + " **" );
-                    ui->plainTextEdit->appendPlainText("Chk recibido ** " +QString().number(incomingBuffer[i],16) + " **" );
+                    myDebug->showMessage("Chk Calculado ** " +QString().number(rxData.cheksum,16) + " **" );
+                    myDebug->showMessage("Chk recibido ** " +QString().number(incomingBuffer[i],16) + " **" );
 
                 }
             }
@@ -186,7 +196,7 @@ void MainWindow::decodeData(uint8_t *datosRx, uint8_t source){
         else
             str = str +QString("%1").arg(datosRx[i],2,16,QChar('0'));
     }
-    ui->plainTextEdit->appendPlainText("*(MBED-S->PC)->decodeData (" + str + ")");
+    myDebug->showMessage("*(MBED-S->PC)->decodeData (" + str + ")");
 
     switch (datosRx[1]) {
     case GETANALOGSENSORS://     ANALOGSENSORS=0xA0,
@@ -194,25 +204,25 @@ void MainWindow::decodeData(uint8_t *datosRx, uint8_t source){
         w.ui8[1] = datosRx[3];
         str = QString("%1").arg(w.ui16[0], 5, 10, QChar('0'));
         strOut = "LEFT IR: " + str;
-        ui->plainTextEdit->appendPlainText(strOut);
+        myDebug->showMessage(strOut);
         ui->label_left_ir_data->setText(str);
         w.ui8[0] = datosRx[4];
         w.ui8[1] = datosRx[5];
         str = QString("%1").arg(w.ui16[0], 5, 10, QChar('0'));
         strOut = "CENTER IR: " + str;
-        ui->plainTextEdit->appendPlainText(strOut);
+        myDebug->showMessage(strOut);
         ui->label_center_ir_data->setText(str);
         w.ui8[0] = datosRx[6];
         w.ui8[1] = datosRx[7];
         str =QString("%1").arg(w.ui16[0], 5, 10, QChar('0'));
         strOut = "RIGHT IR: " + str;
-        ui->plainTextEdit->appendPlainText(strOut);
+        myDebug->showMessage(strOut);
         ui->label_right_ir_data->setText(str);
         break;
     case SETMOTORTEST://     MOTORTEST=0xA1,
         if(datosRx[2]==0x0D)
             str= "Test Motores ACK";
-        ui->plainTextEdit->appendPlainText(str);
+        myDebug->showMessage(str);
         break;
     case SETSERVOANGLE://     SERVOANGLE=0xA2,
         if(datosRx[2]==0x0D)
@@ -221,7 +231,7 @@ void MainWindow::decodeData(uint8_t *datosRx, uint8_t source){
                 if(datosRx[2]==0x0A)
                     str= "Servo en posición Final!!!";
             }
-        ui->plainTextEdit->appendPlainText(str);
+        myDebug->showMessage(str);
         break;
     case GETDISTANCE://     GETDISTANCE=0xA3,
         w.ui8[0] = datosRx[2];
@@ -238,7 +248,7 @@ void MainWindow::decodeData(uint8_t *datosRx, uint8_t source){
 
         //mostramos datos
         ui->label_distance_data->setText(str+ "cm");
-        ui->plainTextEdit->appendPlainText("DISTANCIA: "+QString().number(w.ui32/58)+ "cm");
+        myDebug->showMessage("DISTANCIA: "+QString().number(w.ui32/58)+ "cm");
         break;
     case GETSPEED://     GETSPEED=0xA4,
         str = "VM1: ";
@@ -256,7 +266,7 @@ void MainWindow::decodeData(uint8_t *datosRx, uint8_t source){
         strOut = QString("%1").arg(w.i32, 4, 10, QChar('0'));
         ui->label_right_encoder_data->setText(strOut);
         str = str + QString("%1").arg(w.i32, 4, 10, QChar('0'));
-        ui->plainTextEdit->appendPlainText(str);
+        myDebug->showMessage(str);
         break;
     case GETSWITCHES: //GETSWITCHES=0xA5
         str = "SW3: ";
@@ -279,7 +289,7 @@ void MainWindow::decodeData(uint8_t *datosRx, uint8_t source){
             str = str + "HIGH";
         else
             str = str + "LOW";
-        ui->plainTextEdit->appendPlainText(str);
+        myDebug->showMessage(str);
         break;
 
     case GETALIVE://     GETALIVE=0xF0,
@@ -294,14 +304,14 @@ void MainWindow::decodeData(uint8_t *datosRx, uint8_t source){
         }else{
             str= "ALIVE BLUEPILL VIA *SERIE*  NO ACK!!!";
         }
-        ui->plainTextEdit->appendPlainText(str);
+        myDebug->showMessage(str);
         break;
     case GETFIRMWARE://     GETFIRMWARE=0xF1
         str = "FIRMWARE:";
         for(uint8_t a=0;a<(datosRx[0]-1);a++){
             str += (QChar)datosRx[2+a];
         }
-        ui->plainTextEdit->appendPlainText(str);
+        myDebug->showMessage(str);
 
         break;
     case SETLEDS:
@@ -325,7 +335,7 @@ void MainWindow::decodeData(uint8_t *datosRx, uint8_t source){
             str = str + "HIGH";
         else
             str = str + "LOW";
-        ui->plainTextEdit->appendPlainText(str);
+        myDebug->showMessage(str);
         break;
     case SETBLACKCOLOR:
         w.ui8[0] = datosRx[2];
@@ -347,7 +357,7 @@ void MainWindow::decodeData(uint8_t *datosRx, uint8_t source){
         w.ui8[2] = datosRx[4];
         w.ui8[3] = datosRx[5];
 
-        ui->plainTextEdit->appendPlainText("TEST");
+        myDebug->showMessage("TEST");
 
         strOut = QString("%1").arg(w.i16[0], 4, 10, QChar('0')); //con el 0xFFFF utilizamos solamente los 16 bits mas significativos
         ui->label_min_servo_data->setText(strOut);
@@ -358,7 +368,7 @@ void MainWindow::decodeData(uint8_t *datosRx, uint8_t source){
         break;
     default:
         str = str + "Comando DESCONOCIDO!!!!";
-        ui->plainTextEdit->appendPlainText(str);
+        myDebug->showMessage(str);
     }
 }
 
@@ -459,11 +469,11 @@ void MainWindow::sendDataSerial(){
     }
 
     uint16_t valor=dato[NBYTES]+PAYLOAD;
-    ui->plainTextEdit->appendPlainText("***COMANDO NUEVO***");
-    ui->plainTextEdit->appendPlainText("INDICE ** " +QString().number(indice,10) + " **" );
-    ui->plainTextEdit->appendPlainText("NUMERO DE DATOS ** " +QString().number(valor,10) + " **" );
-    ui->plainTextEdit->appendPlainText("CHECKSUM ** " +QString().number(chk,16) + " **" );
-    ui->plainTextEdit->appendPlainText("PC--SERIAL-->MBED ( " + str + " )");
+    myDebug->showMessage("***COMANDO NUEVO***");
+    myDebug->showMessage("INDICE ** " +QString().number(indice,10) + " **" );
+    myDebug->showMessage("NUMERO DE DATOS ** " +QString().number(valor,10) + " **" );
+    myDebug->showMessage("CHECKSUM ** " +QString().number(chk,16) + " **" );
+    myDebug->showMessage("PC--SERIAL-->MBED ( " + str + " )");
 
 }
 
@@ -505,7 +515,7 @@ void MainWindow::sendSerial(uint8_t *buf, uint8_t length){
         strHex = strHex + QString("%1").arg(tx[i], 2, 16, QChar('0')).toUpper();
     }
 
-    ui->plainTextEdit->appendPlainText(strHex);
+    myDebug->showMessage(strHex);
 
     QSerialPort1->write((char *)tx, length+7);
 }
@@ -573,7 +583,7 @@ void MainWindow::sendUdp(uint8_t *buf, uint8_t length){
     }
     str=str + clientAddress.toString() + "  " +  QString().number(puertoremoto,10);
 
-    ui->plainTextEdit->appendPlainText("PC--UDP-->MBED ( " + str + " )");
+    myDebug->showMessage("PC--UDP-->MBED ( " + str + " )");
 }
 
 void MainWindow::timeOut(){
@@ -604,9 +614,10 @@ void MainWindow::OnUdpRxData(){
         else
             str = str +"{" + QString("%1").arg(incomingBuffer[i],2,16,QChar('0')) + "}";
     }
-    ui->plainTextEdit->appendPlainText("MBED-->UDP-->PC (" + str + ")");
+    myDebug->showMessage("MBED-->UDP-->PC (" + str + ")");
     QString adress=RemoteAddress.toString();
-    ui->plainTextEdit->appendPlainText(" adr " + adress);
+    myDebug->showMessage(" adr " + adress);
+
     ui->lineEdit_device_ip->setText(RemoteAddress.toString().right((RemoteAddress.toString().length())-7));
     ui->lineEdit_device_port->setText(QString().number(RemotePort,10));
 
@@ -669,7 +680,7 @@ void MainWindow::OnUdpRxData(){
                 if(rxDataUdp.cheksum==incomingBuffer[i]){
                     decodeData(&rxDataUdp.payLoad[0],UDP);
                 }else{
-                    ui->plainTextEdit->appendPlainText(" CHK DISTINTO!!!!! ");
+                    myDebug->showMessage(" CHK DISTINTO!!!!! ");
                 }
             }
             break;
@@ -783,7 +794,7 @@ void MainWindow::sendDataUDP(){
             str = str +"{" + QString("%1").arg(dato[i],2,16,QChar('0')) + "}";
     }
     str=str + clientAddress.toString() + "  " +  QString().number(puertoremoto,10);
-    ui->plainTextEdit->appendPlainText("PC--UDP-->MBED ( " + str + " )");
+    myDebug->showMessage("PC--UDP-->MBED ( " + str + " )");
 }
 
 void MainWindow::getData(){
@@ -864,7 +875,7 @@ void MainWindow::on_pushButton_sendSerial_clicked()
 
 void MainWindow::on_pushButton_clean_clicked()
 {
-    ui->plainTextEdit->clear();
+   // ui->plainTextEdit->clear();
 }
 
 void MainWindow::on_pushButton_connectUdp_clicked()
@@ -1051,6 +1062,12 @@ void MainWindow::radar(){
     paint.save();
 
     QPaintBox1->update();
+
+    //condicion utilizada para pintar una vez el radar al inicio y que no quede en negro el widget
+    if(firRadarExe){
+        firRadarExe = false;
+        timer7->start(100);
+    }
 }
 
 void MainWindow::carStatus(){
@@ -1290,3 +1307,8 @@ void MainWindow::onTimer5(){
 
 }
 
+void MainWindow::onTimer7(){
+    //utilizamos este timer para pintar el radar y que no quede en negro el widget
+    timer3->stop();
+    timer7->stop();
+}
