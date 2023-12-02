@@ -342,14 +342,14 @@ void MainWindow::decodeData(uint8_t *datosRx, uint8_t source){
         w.ui8[1] = datosRx[3];
 
         strOut = QString("%1").arg(w.i32 & 0xFFFF, 4, 10, QChar('0')); //con el 0xFFFF utilizamos solamente los 16 bits mas significativos
-        ui->label_black_ir_data->setText(strOut);
+
         break;
     case SETWHITECOLOR:
         w.ui8[0] = datosRx[2];
         w.ui8[1] = datosRx[3];
 
         strOut = QString("%1").arg(w.i32 & 0xFFFF, 4, 10, QChar('0')); //con el 0xFFFF utilizamos solamente los 16 bits mas significativos
-        ui->label_white_ir_data->setText(strOut);
+        strOut = QString("%1").arg(w.i16[0], 4, 10, QChar('0'));
         break;
     case PATHLENGHT:
         //distancia primera linea
@@ -379,13 +379,9 @@ void MainWindow::decodeData(uint8_t *datosRx, uint8_t source){
         w.ui8[2] = datosRx[4];
         w.ui8[3] = datosRx[5];
 
-        myDebug->showMessage("TEST");
-
         strOut = QString("%1").arg(w.i16[0], 4, 10, QChar('0')); //con el 0xFFFF utilizamos solamente los 16 bits mas significativos
-        ui->label_min_servo_data->setText(strOut);
 
         strOut = QString("%1").arg(w.i16[1], 4, 10, QChar('0')); //con el 0xFFFF utilizamos solamente los 16 bits mas significativos
-        ui->label_max_servo_data->setText(strOut);
 
         break;
     default:
@@ -894,11 +890,6 @@ void MainWindow::on_pushButton_connectSerial_clicked()
 void MainWindow::on_pushButton_sendSerial_clicked()
 {
 
-}
-
-void MainWindow::on_pushButton_clean_clicked()
-{
-   // ui->plainTextEdit->clear();
 }
 
 void MainWindow::on_pushButton_connectUdp_clicked()

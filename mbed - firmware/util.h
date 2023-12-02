@@ -182,10 +182,16 @@ typedef enum{
    INCIRCLE,
    ONPATH,
    INLINE,
-   CNTMARK,
+   FSTLNCORR,
+   FSWAIT,
+   FSTMARK,
    FLWLINE,
-   OUTMARK,
-   OUTLINE
+   SNDLNCORR,
+   SDWAIT,
+   SNDMARK,
+   OUTLINE, 
+   ENTRY,
+   ENTRCIRC
 }_eMazePathModes;
 
 /**

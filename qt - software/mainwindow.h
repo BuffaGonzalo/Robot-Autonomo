@@ -43,8 +43,6 @@ private slots:
 
     void on_pushButton_sendSerial_clicked();
 
-    void on_pushButton_clean_clicked();
-
     void on_pushButton_connectUdp_clicked();
 
     void on_pushButton_sendUdp_clicked();
