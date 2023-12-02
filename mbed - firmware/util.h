@@ -145,6 +145,7 @@ typedef enum{
     SETWHITECOLOR = 0xA7,
     PATHLENGHT = 0xA8, //utilizada para enviar la longitud del camino a Qt
     CURRMODE = 0xA9, // utilizada para enviar la posicion actual
+    CURRLEVEL = 0x20, //Utilizada para pasar el nivel del camino
     MOTORTEST = 0xA1,
     SERVOANGLE = 0xA2,
     CONFIGSERVO = 0xA5,
@@ -209,6 +210,9 @@ typedef enum{
     OUTLINE, 
     ENTRY,
     ENTRCIRC,
+
+    BCKCIRC,
+    BCKOUTLINE
 
 
     //FINALROTATE ??

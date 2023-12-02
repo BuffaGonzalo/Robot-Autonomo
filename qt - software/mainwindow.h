@@ -99,7 +99,7 @@ private:
     QSerialPort *QSerialPort1;
     QPaintBox *QPaintBox1;
     QPaintBox *QPaintBox2;
-    QLabel *estadoSerial;
+    QLabel *statusMode;
 
     Debug *myDebug;
 
@@ -159,8 +159,30 @@ private:
         SETBLACKCOLOR=0xA6,
         SETWHITECOLOR=0xA7,
         PATHLENGHT=0xA8,
+        CURRMODE=0xA9,
+        CURRLEVEL=0x20,
         OTHERS
     }_eCmd;
+
+
+    typedef enum{
+        INROTATE,
+        GOAHEAD,
+        INCIRCLE,
+        ONPATH,
+        INLINE,
+        FSTLNCORR,
+        FSWAIT,
+        FSTMARK,
+        FLWLINE,
+        SNDLNCORR,
+        SDWAIT,
+        SNDMARK,
+        OUTLINE,
+        ENTRY,
+        ENTRCIRC,
+        //FINALROTATE ??
+    }_eMazePathModes;
 
 
     typedef struct{

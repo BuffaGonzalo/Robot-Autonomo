@@ -11,7 +11,7 @@ MainWindow::MainWindow(QWidget *parent)
     timer3 = new QTimer(this); //Utilizado para el radar
     timer4 = new QTimer(this); //Utilizado para pedir la distancia
     timer5 = new QTimer(this); //Utilizado para mover el servo
-    timer6 = new QTimer(this);
+    timer6 = new QTimer(this); //Utilizado para pedir los valores del servo
     timer7 = new QTimer(this); //Utilizado para pintar el radar al inicio
 
     //dibujo
@@ -25,10 +25,11 @@ MainWindow::MainWindow(QWidget *parent)
     //debug de comandos
     myDebug = new Debug(this);
 
-
-    estadoSerial = new QLabel(this);
-    estadoSerial->setText("DISCONNECTED");
-    ui->statusBar->addWidget(estadoSerial);
+    //Utilizada para colocar el nivel en la barra de status
+    statusMode = new QLabel(this);
+    //Colocamos en un principio IDLE
+    statusMode->setText("CURRENT STATE --> IDLE");
+    ui->statusBar->addWidget(statusMode);
 
     ui->comboBox_PORT->installEventFilter(this);
 
@@ -373,6 +374,56 @@ void MainWindow::decodeData(uint8_t *datosRx, uint8_t source){
         strOut = QString("%1").arg(w.i16[0], 4, 10, QChar('0'));
         ui->label_pathFthData->setText(strOut);
         break;
+    case CURRMODE:
+        w.ui8[0] = datosRx[2];
+
+            switch(w.ui8[0]){
+            case INROTATE:
+                statusMode->setText("CURRENT STATE --> INICIAL ROTATION");
+            break;
+            case INCIRCLE:
+                statusMode->setText("CURRENT STATE --> PATH SEARCHING");
+            break;
+            case ONPATH:
+                statusMode->setText("CURRENT STATE --> ON PATH");
+            break;
+            case INLINE:
+            case GOAHEAD:
+            case FSTLNCORR:
+            case SNDLNCORR:
+                statusMode->setText("CURRENT STATE --> CORRECTION");
+            break;
+            case FSWAIT:
+            case SDWAIT:
+                statusMode->setText("CURRENT STATE --> ESPERA");
+            break;
+            case FSTMARK:
+            case SNDMARK:
+                statusMode->setText("CURRENT STATE --> READING MARK");
+            break;
+            case FLWLINE:
+            case ENTRY:
+                statusMode->setText("CURRENT STATE --> INTERN FOLLOWLINE");
+            break;
+            case OUTLINE:
+                statusMode->setText("CURRENT STATE --> EXTERN FOLLOWLINE");
+            break;
+            case ENTRCIRC:
+                statusMode->setText("CURRENT STATE -->  ENTERING");
+            break;
+        }
+
+        ui->statusBar->addWidget(statusMode);
+
+    break;
+    case CURRLEVEL:
+        w.ui8[0] = datosRx[2];
+
+        strOut = QString("%1").arg(w.i8[0], 4, 10, QChar('0'));
+
+        ui->label_currLevel->setText(strOut);
+
+    break;
     case SETSERVOLIMITS:
         w.ui8[0] = datosRx[2];
         w.ui8[1] = datosRx[3];
@@ -444,6 +495,8 @@ void MainWindow::sendDataSerial(){
     case SETBLACKCOLOR:
     case SETWHITECOLOR:
     case PATHLENGHT:
+    case CURRMODE:
+    case CURRLEVEL:
         dato[indice++]=cmdId;
         dato[NBYTES]=0x02;
     break;
@@ -762,6 +815,8 @@ void MainWindow::sendDataUDP(){
     case SETBLACKCOLOR:
     case SETWHITECOLOR:
     case PATHLENGHT:
+    case CURRMODE:
+    case CURRLEVEL:
         dato[indice++]=cmdId;
         dato[NBYTES]=0x02;
         break;
@@ -837,6 +892,22 @@ void MainWindow::getData(){
     buf[0] = cmd;
     sendSerial(buf,n);
     sendUdp(buf,n);
+
+    cmd=CURRMODE;
+    n=1; //bytes de la longitud del
+    buf[0] = cmd;
+    sendSerial(buf,n);
+    sendUdp(buf,n);
+
+    cmd=CURRLEVEL;
+    n=1; //bytes de la longitud del
+    buf[0] = cmd;
+    sendSerial(buf,n);
+    sendUdp(buf,n);
+
+    if(!QSerialPort1->isOpen() && !QUdpSocket1->isOpen()) //colocamos un estadopredeterminado en caso de no estar conectado
+        statusMode->setText("CURRENT STATE --> IDLE");
+
 }
 
 bool MainWindow::eventFilter(QObject *watched, QEvent *event){ //utilizado para mostrar los puestos disponibles
@@ -937,7 +1008,7 @@ void MainWindow::on_pushButton_sendUdp_clicked()
 
 void MainWindow::on_pushButton_actRadar_clicked()
 {
-    if(ui->pushButton_actRadar->text()=="ACTIVATE"){
+    if(ui->pushButton_actRadar->text()=="ACTIVATE" && QSerialPort1->isOpen() ){
         servoAngle = 90; //configuramos el angulo de inicio
         angle = -180;
 

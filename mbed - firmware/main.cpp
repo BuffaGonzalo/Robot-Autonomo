@@ -126,11 +126,13 @@ typedef struct
 #define INTERVALO            10
 #define LIMIT                0x0F // pulsador
 
-#define DERECHA              0
-#define IZQUIERDA            1
+#define DERECHA              1
+#define IZQUIERDA            0
 
 #define DODGEDISTANCE        10
 #define REFDISTANCE          20
+
+#define MAXPATH              3 //cantidad total de caminos
 
 
 /* END define ----------------------------------------------------------------*/
@@ -410,16 +412,17 @@ uint16_t msServo = 0; //variable la cual guarda continuamente el valor del servo
 
 //longitudes de los caminos recorridos, estos datos son enviados por Serial o WIFI
 
-uint16_t lntFstPath = 5555; //LENGHT FIRST PATH
+uint16_t lntFstPath = 0; //LENGHT FIRST PATH
  
-uint16_t lntSndPath = 10;
+uint16_t lntSndPath = 0;
 
-uint16_t lntTrdPath = 200;
+uint16_t lntTrdPath = 0;
 
-uint16_t lntFthPath = 9999;
+uint16_t lntFthPath = 0;
 
 uint8_t currPath = 0;
 
+uint8_t pathLevel = 0;
 
 uint8_t lastIrValue;
 
@@ -763,9 +766,18 @@ void decodeCommand(_sRx *dataRx, _sTx *dataTx)
             putByteOnTx(dataTx, dataTx->chk);
         break;
         case CURRMODE:
-            putHeaderOnTx(dataTx, CURRMODE, 3);
+            putHeaderOnTx(dataTx, CURRMODE, 2);
             
             myWord.ui8[0] = mazeModes;
+            putByteOnTx(dataTx, myWord.ui8[0]);
+
+            //colocamos el checksum
+            putByteOnTx(dataTx, dataTx->chk);
+        break;
+        case CURRLEVEL:
+            putHeaderOnTx(dataTx, CURRLEVEL, 2);
+
+            myWord.ui8[0] = pathLevel;
             putByteOnTx(dataTx, myWord.ui8[0]);
 
             //colocamos el checksum
@@ -1036,10 +1048,10 @@ void rotate(uint8_t rotationAngle, uint8_t direction){
     uint16_t x;
     
     switch (direction){
-        case 0: //IZQUIERDA
+        case IZQUIERDA: //IZQUIERDA
             move(MEDSPEED,MEDSPEED,BACKWARD,FORWARD); //velocidad debe de ser 40%
         break;
-        case 1: //DERECHA
+        case DERECHA: //DERECHA
             move(MEDSPEED,MEDSPEED,FORWARD,BACKWARD);
         break;
     }
@@ -1119,15 +1131,21 @@ void lineFollower(){
 
 
 void shortestMazePath(){
+    //variables de tiempos
     static int32_t waitTime = myTimer.read_ms();
     static int32_t distTime = myTimer.read_ms();
-    static uint8_t irValue = 0;
-    static bool noLine = false;
-    static bool LEAVCIRC = true; //utilizada para saber si estoy entrando o saliendo del circulo
-    static bool pathCount = false;
-    static uint8_t fstPathLevel = 0;
-    //static uint8_t sndPathLevel = 0;
+    static int32_t pathTime;
+
     int32_t distance = distanceValue/58; //convertimos a cm los datos
+    static uint8_t irValue = 0;
+    static bool isNewPath = true;
+    static bool noLine = false;
+    static bool leavCirc = true; //utilizada para saber si estoy entrando o saliendo del circulo
+
+    static bool pathCount = false;
+    static uint8_t iPath = 0; //indice de camino recorrido
+    static uint8_t takenPaths[MAXPATH] = {};
+    
 
     irValue = 0;
     //comprobamos el valor de los sensores
@@ -1259,7 +1277,7 @@ void shortestMazePath(){
         break;
         case FSWAIT: //FIRSTWAIT
             if((myTimer.read_ms() - waitTime) > WAIT1000MS){
-                fstPathLevel = 0; //hacemos 0 para tener una medida correcta
+                pathLevel = 0; //hacemos 0 para tener una medida correcta
                 mazeModes = FSTMARK;
                 lineSearch = WHITESEARCH;
                 waitTime = myTimer.read_ms();
@@ -1272,7 +1290,24 @@ void shortestMazePath(){
             }
         break;
         case FSTMARK: //FIRSTMARK
-            if((irValue == 7) && (fstPathLevel != 0)){
+            if((irValue == 7) && (pathLevel != 0)){
+                //comprobamos si ya no recorrimos el camino analizado
+                for(uint8_t i = 0; i<MAXPATH; i++){
+                    if(pathLevel == takenPaths[i]){ //si algun camino ya se recorrio
+                        if(leavCirc == true){
+                            mazeModes = BCKCIRC; //si estamos saliendo, volvemos a la circunferencia
+                        } else {
+                            mazeModes = BCKOUTLINE; //si estamos entrando, volvemos a la linea
+                        }
+                        break; //salimos para que la MEF no tome otro estado
+                    }
+                }
+                //si no lo recorrimos, lo guardamos
+                iPath++;
+                takenPaths[iPath] = pathLevel; //guardamos el nivel recorrido
+                isNewPath = true;
+                pathTime = myTimer.read_ms(); //igualamos al tiempo para luego saber ucal es el camino mas corto
+
                 mazeModes = FLWLINE;
                 pathCount = true;
                 waitTime = myTimer.read_ms();
@@ -1280,7 +1315,7 @@ void shortestMazePath(){
                 pathCount = true;
             } else if((irValue == 0) && (pathCount)){
                 pathCount = false;
-                fstPathLevel++;
+                pathLevel++;
             }
 
             move(15*250, 15*250, FORWARD, FORWARD);
@@ -1321,16 +1356,33 @@ void shortestMazePath(){
         case SNDMARK: //SECONDMARK
             //nos movemos hasta encontrar el blanco una vez, en caso que lo encontremos empezamosa buscar negro y si encontramos desidimos que hacer
             if((irValue == 7) && (!pathCount)){ 
-                if(LEAVCIRC == false){ //significa que estoy entrando en el circulo y no saliendo
+                if(leavCirc == false){ //significa que estoy entrando en el circulo y no saliendo
                     mazeModes = ENTRCIRC; //entramos en el circulo central
-                    LEAVCIRC = true;
+                    leavCirc = true;
                     break; //salimos para que no entre en la siguiente condicion
                 }
-                if(LEAVCIRC == true){ //significa que estoy saliendo del circulo
+                if(leavCirc == true){ //significa que estoy saliendo del circulo
                     outLineModes = OKDIST; //comprobamos la  distancia
                     mazeModes = OUTLINE;
-                    LEAVCIRC = false;
-                }                
+                    //pathLevel = 0; //llevamos la variable a 0 para control
+                    leavCirc = false;
+                }
+                if(isNewPath == true){ //si es un camino nuevo calculamos la distancia en tiempo
+                    switch(takenPaths[iPath]){
+                        case 1:
+                            lntFstPath = myTimer.read() - pathTime;
+                        break;
+                        case 2:
+                            lntSndPath = myTimer.read() - pathTime;
+                        break;
+                        case 3:
+                            lntTrdPath = myTimer.read() - pathTime;
+                        break;
+                        case 4:
+                            lntFthPath = myTimer.read() - pathTime;
+                        break;
+                    }
+                }
                 pathCount = true;
                 waitTime = myTimer.read_ms();
             } else if((irValue == 0) && (pathCount)){
@@ -1393,25 +1445,27 @@ void shortestMazePath(){
             }    
         break;
         case ENTRCIRC: //entrando al circulo
-            //if((myTimer.read_ms() - waitTime) > WAIT500MS){
-                //if((myTimer.read_ms() - waitTime) > WAIT100MS){
-                move(80*250, 15*250, FORWARD,FORWARD);
-                    if((myTimer.read_ms() - waitTime) > WAIT750MS){
-                        //move(MINSPEED, MINSPEED, FORWARD,FORWARD);
-                       // move(MEDSPEED, MEDSPEED,FORWARD, BACKWARD);
-                        //if((myTimer.read_ms() - waitTime) > WAIT1250MS){
-                            mazeModes = INCIRCLE;
-                            lastIrValue = 4;
-                            waitTime = myTimer.read_ms();
-                        }
-                    //}
-               // }
-           // } 
-            /*else{
-                //move(NOSPEED,NOSPEED,ENERGYSTOP,ENERGYSTOP);
-                move(MINSPEED, MINSPEED, FORWARD,FORWARD);
+            move(80*250, 15*250, FORWARD,FORWARD);
+            if((myTimer.read_ms() - waitTime) > WAIT750MS){
+                    mazeModes = INCIRCLE;
+                    lastIrValue = 4;
+                    waitTime = myTimer.read_ms();
+                }
+        break;
+        case BCKCIRC:
+            if((myTimer.read_ms() - waitTime) > WAIT250MS){
+                rotate(90, IZQUIERDA);
+                if((myTimer.read_ms() - waitTime) > WAIT500MS){
+                    mazeModes = INCIRCLE;
+                    waitTime = myTimer.read_ms();
+                }
+            } else{
+                move(NOSPEED,NOSPEED,ENERGYSTOP,ENERGYSTOP);
             }
-            */
+        break;
+        case BCKOUTLINE:
+            mazeModes = OUTLINE;
+            outLineModes = ROTCAR;
         break;
     }
 }
@@ -1626,7 +1680,7 @@ int main()
         }
         
         //wait_ms(10);
-        shortestMazePath();
+        //shortestMazePath();
         //contamos encoder y si un encoder va mas rapido que el otro, a uno le pongo mas velocidad que al otro
         //move(17*250, 17*250, FORWARD, FORWARD);
         //lineFollower();
