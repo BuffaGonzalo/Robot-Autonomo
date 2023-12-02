@@ -132,6 +132,7 @@ typedef enum{
 
 /**
  * @brief Enumeración de los comandos del protocolo
+ *
  * 
  */
 typedef enum{
@@ -142,7 +143,8 @@ typedef enum{
     ANALOGSENSORS = 0xA0,
     SETBLACKCOLOR = 0xA6,
     SETWHITECOLOR = 0xA7,
-    PATHLENGHT = 0xA8,
+    PATHLENGHT = 0xA8, //utilizada para enviar la longitud del camino a Qt
+    CURRMODE = 0xA9, // utilizada para enviar la posicion actual
     MOTORTEST = 0xA1,
     SERVOANGLE = 0xA2,
     CONFIGSERVO = 0xA5,
@@ -174,24 +176,45 @@ typedef enum{
 
 /**
  * Enumeracion utilizada para encontrar el camino mas corto del laberinto
+ * INROTATE -> Es la accion de rotacion inicial en el centro de la circunferencia
+ * GOAHEAD -> Es la accion de avanzar y dejar el auto sobre la circunferencia
+ * INCIRCLE -> Es la comprobacion de si hay o no un camino a tomar por el auto
+ * ONPATH -> Es la rotacion del auto con el fin de que quede sobre la linea del camino
+ * INLINE -> Seguimiento de linea hasta encontrar todos los IR en negro
+ * FSTLNCORR -> Correccion para que el auto quede recto en la linea
+ * FSWAIT -> Espera del auto frenado
+ * FSTMARK -> Contamos el nivel del camino
+ * FLWLINE -> Seguimiento de linea hasta encontrar la sigueinte marca
+ * SNDLNCORR -> Correccion en la segunda linea para que el auto quede recto y listo para leer
+ * SDWAIT -> Espera del auto previo a la lectura
+ * SNDMARK -> Contamos los niveles del camino
+ * OUTLINE -> Salida de la linea interna e ingreso a la externa
+ * ENTRY -> Entrada en caso de encontrar una pared
+ * ENTRCIRC -> Reingreso del auto al centro
 */
 
 typedef enum{
-   INROTATE,
-   GOAHEAD,
-   INCIRCLE,
-   ONPATH,
-   INLINE,
-   FSTLNCORR,
-   FSWAIT,
-   FSTMARK,
-   FLWLINE,
-   SNDLNCORR,
-   SDWAIT,
-   SNDMARK,
-   OUTLINE, 
-   ENTRY,
-   ENTRCIRC
+    INROTATE,
+    GOAHEAD,
+    INCIRCLE,
+    ONPATH,
+    INLINE,
+    FSTLNCORR,
+    FSWAIT,
+    FSTMARK,
+    FLWLINE,
+    SNDLNCORR,
+    SDWAIT,
+    SNDMARK,
+    OUTLINE, 
+    ENTRY,
+    ENTRCIRC,
+
+
+    //FINALROTATE ??
+
+
+
 }_eMazePathModes;
 
 /**
