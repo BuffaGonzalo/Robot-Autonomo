@@ -127,6 +127,18 @@ private:
     int angle;
     int32_t servoAngle; //variable utilizada para controlar el angulo del servo en la animacion
     uint32_t distance;
+    uint16_t lftIrValue;
+    uint16_t cntIrValue;
+    uint16_t rhtIrValue;
+    uint16_t blackIrValue;
+    uint16_t whiteIrValue;
+
+    uint32_t lftEncData;
+    uint32_t rhtEncData;
+
+    //canales de RGB utilizados para pintar la velocidad de las ruedas
+    uint8_t redChannel;
+    uint8_t greenChannel;
 
     typedef enum{
         START,
@@ -181,6 +193,8 @@ private:
         OUTLINE,
         ENTRY,
         ENTRCIRC,
+        BCKCIRC,
+        BCKOUTLINE
         //FINALROTATE ??
     }_eMazePathModes;
 

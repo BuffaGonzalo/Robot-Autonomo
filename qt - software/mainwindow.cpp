@@ -70,6 +70,19 @@ MainWindow::MainWindow(QWidget *parent)
     //inicializamos
     estadoProtocolo=START;
     rxData.timeOut=0;
+    lftIrValue = 0;
+    cntIrValue = 0;
+    rhtIrValue = 0;
+    blackIrValue = 6000;
+    whiteIrValue = 10000;
+    servoAngle = 0;
+    //variables relacionadas con las ruedas, las velocidades y colores
+    lftEncData = 0;
+    rhtEncData = 0;
+    //como inicializamos las velocidades de encoders en 0, entonces definimos el canel verde en maximo y el rojo en minimo
+    greenChannel = 255;
+    redChannel = 0;
+
 
     //desabilitamos los botones con el fin de que no puedan ser presionados si no esta conectado
     ui->pushButton_sendUdp->setEnabled(false);
@@ -203,18 +216,21 @@ void MainWindow::decodeData(uint8_t *datosRx, uint8_t source){
     case GETANALOGSENSORS://     ANALOGSENSORS=0xA0,
         w.ui8[0] = datosRx[2];
         w.ui8[1] = datosRx[3];
+        lftIrValue = w.ui16[0]; //guardamos el valor del IR izquierdo
         str = QString("%1").arg(w.ui16[0], 5, 10, QChar('0'));
         strOut = "LEFT IR: " + str;
         myDebug->showMessage(strOut);
         ui->label_left_ir_data->setText(str);
         w.ui8[0] = datosRx[4];
         w.ui8[1] = datosRx[5];
+        cntIrValue = w.ui16[0]; //guardamos el valor del IR central
         str = QString("%1").arg(w.ui16[0], 5, 10, QChar('0'));
         strOut = "CENTER IR: " + str;
         myDebug->showMessage(strOut);
         ui->label_center_ir_data->setText(str);
         w.ui8[0] = datosRx[6];
         w.ui8[1] = datosRx[7];
+        rhtIrValue =  w.ui16[0]; //guardamos el valor del IR derecho
         str =QString("%1").arg(w.ui16[0], 5, 10, QChar('0'));
         strOut = "RIGHT IR: " + str;
         myDebug->showMessage(strOut);
@@ -257,6 +273,8 @@ void MainWindow::decodeData(uint8_t *datosRx, uint8_t source){
         w.ui8[1] = datosRx[3];
         w.ui8[2] = datosRx[4];
         w.ui8[3] = datosRx[5];
+        w.i32 = w.i32 * 122.5/100; //calculamos un valor mas elevado porque recibimos valores muy pequeños
+        lftEncData = w.i32;
         strOut = QString("%1").arg(w.i32, 4, 10, QChar('0'));
         ui->label_left_encoder_data->setText(strOut);
         str = str + QString("%1").arg(w.i32, 4, 10, QChar('0')) + " - VM2: ";
@@ -264,6 +282,8 @@ void MainWindow::decodeData(uint8_t *datosRx, uint8_t source){
         w.ui8[1] = datosRx[7];
         w.ui8[2] = datosRx[8];
         w.ui8[3] = datosRx[9];
+        w.i32 = w.i32 * 22.5/100; //calculamos el 20% apox del valor porque me devuelve siempre valores muy elevados cerca a 400
+        rhtEncData = w.i32;
         strOut = QString("%1").arg(w.i32, 4, 10, QChar('0'));
         ui->label_right_encoder_data->setText(strOut);
         str = str + QString("%1").arg(w.i32, 4, 10, QChar('0'));
@@ -341,16 +361,18 @@ void MainWindow::decodeData(uint8_t *datosRx, uint8_t source){
     case SETBLACKCOLOR:
         w.ui8[0] = datosRx[2];
         w.ui8[1] = datosRx[3];
+        blackIrValue = w.ui16[0];
 
-        strOut = QString("%1").arg(w.i32 & 0xFFFF, 4, 10, QChar('0')); //con el 0xFFFF utilizamos solamente los 16 bits mas significativos
+        //strOut = QString("%1").arg(w.i32 & 0xFFFF, 4, 10, QChar('0')); //con el 0xFFFF utilizamos solamente los 16 bits mas significativos
 
         break;
     case SETWHITECOLOR:
         w.ui8[0] = datosRx[2];
         w.ui8[1] = datosRx[3];
+        whiteIrValue = w.ui16[0];//w.i32 & 0xFFFF
 
-        strOut = QString("%1").arg(w.i32 & 0xFFFF, 4, 10, QChar('0')); //con el 0xFFFF utilizamos solamente los 16 bits mas significativos
-        strOut = QString("%1").arg(w.i16[0], 4, 10, QChar('0'));
+        //strOut = QString("%1").arg(w.i32 & 0xFFFF, 4, 10, QChar('0')); //con el 0xFFFF utilizamos solamente los 16 bits mas significativos
+        //strOut = QString("%1").arg(w.i16[0], 4, 10, QChar('0'));
         break;
     case PATHLENGHT:
         //distancia primera linea
@@ -395,7 +417,7 @@ void MainWindow::decodeData(uint8_t *datosRx, uint8_t source){
             break;
             case FSWAIT:
             case SDWAIT:
-                statusMode->setText("CURRENT STATE --> ESPERA");
+                statusMode->setText("CURRENT STATE --> WAIT");
             break;
             case FSTMARK:
             case SNDMARK:
@@ -410,6 +432,10 @@ void MainWindow::decodeData(uint8_t *datosRx, uint8_t source){
             break;
             case ENTRCIRC:
                 statusMode->setText("CURRENT STATE -->  ENTERING");
+            break;
+            case BCKCIRC:
+            case BCKOUTLINE:
+                statusMode->setText("CURRENT STATE --> TAKEN PATH - GOING OUT");
             break;
         }
 
@@ -480,6 +506,7 @@ void MainWindow::sendDataSerial(){
     case SETSERVOANGLE://SERVOANGLE=0xA2,
         dato[indice++] =SETSERVOANGLE;
         w.i32 = QInputDialog::getInt(this, "SERVO", "Angulo:", 0, -90, 90, 1, &ok);
+        servoAngle = w.i32;
         if(!ok)
             break;
         dato[indice++] = w.i8[0];
@@ -800,6 +827,7 @@ void MainWindow::sendDataUDP(){
     case SETSERVOANGLE://SERVOANGLE=0xA2,
         dato[indice++] =SETSERVOANGLE;
         w.i32 = QInputDialog::getInt(this, "SERVO", "Angulo:", 0, -90, 90, 1, &ok);
+        servoAngle = w.i32;
         if(!ok)
             return;
         dato[indice++] = w.i8[0];
@@ -936,6 +964,9 @@ void MainWindow::on_pushButton_connectSerial_clicked()
         QSerialPort1->close();
         ui->pushButton_sendSerial->setEnabled(false);        
         ui->pushButton_connectSerial->setText("CONNECT");
+        timer3->stop();
+        timer4->stop();
+        timer5->stop();
     }
     else{
         ui->pushButton_sendSerial->setEnabled(true);
@@ -1008,7 +1039,7 @@ void MainWindow::on_pushButton_sendUdp_clicked()
 
 void MainWindow::on_pushButton_actRadar_clicked()
 {
-    if(ui->pushButton_actRadar->text()=="ACTIVATE" && QSerialPort1->isOpen() ){
+    if(QSerialPort1->isOpen() && ui->pushButton_actRadar->text() == "ACTIVATE"){
         servoAngle = 90; //configuramos el angulo de inicio
         angle = -180;
 
@@ -1159,6 +1190,7 @@ void MainWindow::carStatus(){
     QPainter paint(QPaintBox2->getCanvas());
     QPen pen;
     QBrush brush;
+    QPoint bkgColor[4];
     QPoint carStructure[8];
     QPoint lfTire[4];
     QPoint rtTire[4];
@@ -1169,6 +1201,27 @@ void MainWindow::carStatus(){
 
     pen.setWidth(2);
     brush.setStyle(Qt::SolidPattern);
+
+    //definimos los puntos del fondo
+    bkgColor[0].setX(0);
+    bkgColor[0].setY(0);
+
+    bkgColor[1].setX(ui->carWidget->width());
+    bkgColor[1].setY(0);
+
+    bkgColor[2].setX(ui->carWidget->width());
+    bkgColor[2].setY(ui->carWidget->height());
+
+    bkgColor[3].setX(0);
+    bkgColor[3].setY(ui->carWidget->height());
+
+    //pintamos la estructura
+    pen.setColor(Qt::black);
+    paint.setPen(pen);
+    brush.setColor(Qt::black);
+    paint.setBrush(brush);
+    paint.save();
+    paint.drawPolygon(bkgColor,4);
 
     //definimos los puntos de la estructura del auto
     carStructure[0].setX(ui->carWidget->width()*2/25);
@@ -1216,10 +1269,27 @@ void MainWindow::carStatus(){
     lfTire[3].setX(ui->carWidget->width()*2/25);
     lfTire[3].setY(ui->carWidget->height()*41/50);
 
-    //pintamos la rueda izquieda
-    pen.setColor(Qt::gray);
+    if(lftEncData <= 50){
+        //aumentamos el canal rojo
+        redChannel  = lftEncData * 255 / 50; //velocidad encoder * canal total / 50%
+        greenChannel = 255;
+    } else{
+        //disminuimos el canal verde
+        redChannel = 255;
+        greenChannel = 255 - ((lftEncData-50) * 255 / 50); //lftencData - 50 para poder utilizar la misma formula,
+        //ademas hacemos 255 menos lo calculado apra que el valor disminuzca y no aumente
+    }
+
+    //pintamos las ruedas
+    if(!QSerialPort1->isOpen() && !QUdpSocket1->isOpen()){
+        pen.setColor(Qt::darkGray);
+        brush.setColor(Qt::darkGray);
+    } else{
+        pen.setColor(QColor::fromRgb(redChannel, greenChannel, 0));
+        brush.setColor(QColor::fromRgb(redChannel, greenChannel, 0));
+    }
+
     paint.setPen(pen);
-    brush.setColor(Qt::gray);
     paint.setBrush(brush);
     paint.save();
     paint.drawPolygon(lfTire,4);
@@ -1237,10 +1307,27 @@ void MainWindow::carStatus(){
     rtTire[3].setX(ui->carWidget->width()*7/10);
     rtTire[3].setY(ui->carWidget->height()*41/50);
 
-    //pintamos la rueda derecha
-    pen.setColor(Qt::gray);
+    if(rhtEncData <= 50){
+        //aumentamos el canal rojo
+        redChannel  = rhtEncData * 255 / 50; //velocidad encoder * canal total / 50%
+        greenChannel = 255;
+    } else{
+        //disminuimos el canal verde
+        redChannel = 255;
+        greenChannel = 255 - ((rhtEncData-50) * 255 / 50); //lftencData - 50 para poder utilizar la misma formula,
+        //ademas hacemos 255 menos lo calculado apra que el valor disminuzca y no aumente
+    }
+
+    //pintamos las ruedas
+    if(!QSerialPort1->isOpen() && !QUdpSocket1->isOpen()){
+        pen.setColor(Qt::darkGray);
+        brush.setColor(Qt::darkGray);
+    } else{
+        pen.setColor(QColor::fromRgb(redChannel, greenChannel, 0));
+        brush.setColor(QColor::fromRgb(redChannel, greenChannel, 0));
+    }
+
     paint.setPen(pen);
-    brush.setColor(Qt::gray);
     paint.setBrush(brush);
     paint.save();
     paint.drawPolygon(rtTire,4);
@@ -1259,9 +1346,18 @@ void MainWindow::carStatus(){
     lfIr[3].setX(ui->carWidget->width()*21/50);
     lfIr[3].setY(ui->carWidget->height()*9/25);
 
-    pen.setColor(Qt::white);
+    if(!QSerialPort1->isOpen() && !QUdpSocket1->isOpen()){ //si no estamos conectados lo pintamos de blanco
+        pen.setColor(Qt::darkGray);
+        brush.setColor(Qt::darkGray);
+    } else if(lftIrValue <= blackIrValue){ //si estamos conectados
+        pen.setColor(Qt::black);
+        brush.setColor(Qt::black);
+    } else{
+        pen.setColor(Qt::white);
+        brush.setColor(Qt::white);
+    }
+
     paint.setPen(pen);
-    brush.setColor(Qt::white);
     paint.setBrush(brush);
     paint.save();
     paint.drawPolygon(lfIr,4);
@@ -1279,9 +1375,18 @@ void MainWindow::carStatus(){
     rtIr[3].setX(ui->carWidget->width()*27/50);
     rtIr[3].setY(ui->carWidget->height()*9/25);
 
-    pen.setColor(Qt::white);
+    if(!QSerialPort1->isOpen() && !QUdpSocket1->isOpen()){ //si no estamos conectados lo pintamos de blanco
+        pen.setColor(Qt::darkGray);
+        brush.setColor(Qt::darkGray);
+    } else if(rhtIrValue <= blackIrValue){ //si estamos conectados
+        pen.setColor(Qt::black);
+        brush.setColor(Qt::black);
+    } else{
+        pen.setColor(Qt::white);
+        brush.setColor(Qt::white);
+    }
+
     paint.setPen(pen);
-    brush.setColor(Qt::white);
     paint.setBrush(brush);
     paint.save();
     paint.drawPolygon(rtIr,4);
@@ -1299,13 +1404,23 @@ void MainWindow::carStatus(){
     cntIr[3].setX(ui->carWidget->width()*12/25);
     cntIr[3].setY(ui->carWidget->height()*9/25);
 
-    pen.setColor(Qt::white);
+    if(!QSerialPort1->isOpen() && !QUdpSocket1->isOpen()){ //si no estamos conectados lo pintamos de blanco
+        pen.setColor(Qt::darkGray);
+        brush.setColor(Qt::darkGray);
+    } else if(cntIrValue <= blackIrValue){ //si estamos conectados
+        pen.setColor(Qt::black);
+        brush.setColor(Qt::black);
+    } else{
+        pen.setColor(Qt::white);
+        brush.setColor(Qt::white);
+    }
+
     paint.setPen(pen);
-    brush.setColor(Qt::white);
     paint.setBrush(brush);
     paint.save();
     paint.drawPolygon(cntIr,4);
 
+    //definimos los puntos del ultrasonico
     usSensor[0].setX(0);
     usSensor[0].setY(0);
 
@@ -1333,20 +1448,22 @@ void MainWindow::carStatus(){
     usSensor[8].setX(ui->carWidget->width()*3/25);
     usSensor[8].setY(0);
 
-    pen.setColor(Qt::darkGray);
-    paint.setPen(pen);
-    brush.setColor(Qt::darkGray);
-    paint.setBrush(brush);
+    if(!QSerialPort1->isOpen() && !QUdpSocket1->isOpen()){
+        pen.setColor(Qt::darkGray);
+        brush.setColor(Qt::darkGray);
+    } else{
+        pen.setColor(Qt::magenta);
+        brush.setColor(Qt::magenta);
+    }
 
+    paint.setPen(pen);
+    paint.setBrush(brush);
     paint.save();
     paint.translate(ui->carWidget->width()/2,ui->carWidget->height()*4/25);
-    paint.rotate(0);
+    paint.rotate(-servoAngle);
     paint.drawPolygon(usSensor,9);
     paint.restore();
     paint.save();
-
-
-
 
     QPaintBox2->update(); //actualizamos los datos actualizados
 }
