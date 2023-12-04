@@ -75,6 +75,8 @@ MainWindow::MainWindow(QWidget *parent)
     rhtIrValue = 0;
     blackIrValue = 6000;
     whiteIrValue = 10000;
+    minMsServo = 700;
+    maxMsServo = 2500;
     servoAngle = 0;
     //variables relacionadas con las ruedas, las velocidades y colores
     lftEncData = 0;
@@ -450,16 +452,26 @@ void MainWindow::decodeData(uint8_t *datosRx, uint8_t source){
         ui->label_currLevel->setText(strOut);
 
     break;
+    case CURRMSSERVO:
+        w.ui8[0] = datosRx[2];
+        w.ui8[1] = datosRx[3];
+
+        servoAngle = w.ui16[0];
+
+        //convertimos los ms a grados
+        servoAngle = ((servoAngle * 180) / (maxMsServo - minMsServo)) + -160;
+        //strOut = QString("%1").arg(w.i8[0], 4, 10, QChar('0'));
+
+        //ui->label_currLevel->setText(strOut);
+    break;
     case SETSERVOLIMITS:
         w.ui8[0] = datosRx[2];
         w.ui8[1] = datosRx[3];
         w.ui8[2] = datosRx[4];
         w.ui8[3] = datosRx[5];
 
-        strOut = QString("%1").arg(w.i16[0], 4, 10, QChar('0')); //con el 0xFFFF utilizamos solamente los 16 bits mas significativos
-
-        strOut = QString("%1").arg(w.i16[1], 4, 10, QChar('0')); //con el 0xFFFF utilizamos solamente los 16 bits mas significativos
-
+        minMsServo = w.ui16[0];
+        maxMsServo = w.ui16[1];
         break;
     default:
         str = str + "Comando DESCONOCIDO!!!!";
@@ -524,6 +536,7 @@ void MainWindow::sendDataSerial(){
     case PATHLENGHT:
     case CURRMODE:
     case CURRLEVEL:
+    case CURRMSSERVO:
         dato[indice++]=cmdId;
         dato[NBYTES]=0x02;
     break;
@@ -845,6 +858,7 @@ void MainWindow::sendDataUDP(){
     case PATHLENGHT:
     case CURRMODE:
     case CURRLEVEL:
+    case CURRMSSERVO:
         dato[indice++]=cmdId;
         dato[NBYTES]=0x02;
         break;
@@ -928,6 +942,12 @@ void MainWindow::getData(){
     sendUdp(buf,n);
 
     cmd=CURRLEVEL;
+    n=1; //bytes de la longitud del
+    buf[0] = cmd;
+    sendSerial(buf,n);
+    sendUdp(buf,n);
+
+    cmd=CURRMSSERVO;
     n=1; //bytes de la longitud del
     buf[0] = cmd;
     sendSerial(buf,n);

@@ -136,6 +136,10 @@ private:
     uint32_t lftEncData;
     uint32_t rhtEncData;
 
+    //variables del servo
+    uint16_t minMsServo;
+    uint16_t maxMsServo;
+
     //canales de RGB utilizados para pintar la velocidad de las ruedas
     uint8_t redChannel;
     uint8_t greenChannel;
@@ -173,6 +177,7 @@ private:
         PATHLENGHT=0xA8,
         CURRMODE=0xA9,
         CURRLEVEL=0x20,
+        CURRMSSERVO = 0x21,
         OTHERS
     }_eCmd;
 
