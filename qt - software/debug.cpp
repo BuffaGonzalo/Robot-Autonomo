@@ -15,7 +15,12 @@ Debug::~Debug()
     delete ui;
 }
 
-void Debug::showMessage(QString info)
+void Debug::showUnProcessed(QString info)
 {
-    ui->textBrowser->append(info);
+    ui->textBrowserUnProcessed->append(info);
+}
+
+void Debug::showProcessed(QString info)
+{
+    ui->textBrowserProcessed->append(info);
 }

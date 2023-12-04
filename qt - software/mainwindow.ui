@@ -593,7 +593,7 @@
      <enum>Qt::Vertical</enum>
     </property>
    </widget>
-   <widget class="QLabel" name="label_2">
+   <widget class="QLabel" name="label_pathInfo">
     <property name="geometry">
      <rect>
       <x>620</x>
@@ -611,7 +611,7 @@
      <string>PATH INFO</string>
     </property>
    </widget>
-   <widget class="QLabel" name="label_3">
+   <widget class="QLabel" name="label_pathFst">
     <property name="geometry">
      <rect>
       <x>620</x>
@@ -629,7 +629,7 @@
      <string>PATH 1</string>
     </property>
    </widget>
-   <widget class="QLabel" name="label_4">
+   <widget class="QLabel" name="label_pathSnd">
     <property name="geometry">
      <rect>
       <x>620</x>
@@ -647,7 +647,7 @@
      <string>PATH 2</string>
     </property>
    </widget>
-   <widget class="QLabel" name="label_5">
+   <widget class="QLabel" name="label_pathTrd">
     <property name="geometry">
      <rect>
       <x>620</x>
@@ -665,7 +665,7 @@
      <string>PATH 3</string>
     </property>
    </widget>
-   <widget class="QLabel" name="label_6">
+   <widget class="QLabel" name="label_pathFth">
     <property name="geometry">
      <rect>
       <x>620</x>
@@ -759,7 +759,7 @@
      <string>PATH DATA</string>
     </property>
    </widget>
-   <widget class="QLabel" name="label_currLevel">
+   <widget class="QLabel" name="label_pathLevelData">
     <property name="geometry">
      <rect>
       <x>620</x>
@@ -778,7 +778,7 @@
      <string>PATH DATA</string>
     </property>
    </widget>
-   <widget class="QLabel" name="label_7">
+   <widget class="QLabel" name="label_pathLevel">
     <property name="geometry">
      <rect>
       <x>620</x>
@@ -806,21 +806,12 @@
      <height>21</height>
     </rect>
    </property>
-   <widget class="QMenu" name="menuDEVICE">
-    <property name="title">
-     <string>DEVICE</string>
-    </property>
-    <addaction name="actionQUIT"/>
-    <addaction name="actionHELP"/>
-   </widget>
    <widget class="QMenu" name="menuDEBUG">
     <property name="title">
      <string>DEBUG</string>
     </property>
     <addaction name="actionPROTOCOL_DATA"/>
-    <addaction name="actionCAR_MODE"/>
    </widget>
-   <addaction name="menuDEVICE"/>
    <addaction name="menuDEBUG"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>

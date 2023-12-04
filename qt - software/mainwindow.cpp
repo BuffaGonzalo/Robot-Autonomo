@@ -124,7 +124,7 @@ void MainWindow::dataReceived(){
             str = str +"{" + QString("%1").arg(incomingBuffer[i],2,16,QChar('0')) + "}";
     }
 
-    myDebug->showMessage("MBED-->SERIAL-->PC (" + str + ")");
+    myDebug->showUnProcessed("MBED-->SERIAL-->PC (" + str + ")");
 
     //Cada vez que se recibe un dato reinicio el timeOut
     rxData.timeOut=6;
@@ -187,8 +187,8 @@ void MainWindow::dataReceived(){
                 if(rxData.cheksum==incomingBuffer[i]){
                     decodeData(&rxData.payLoad[0], SERIE);
                 }else{
-                    myDebug->showMessage("Chk Calculado ** " +QString().number(rxData.cheksum,16) + " **" );
-                    myDebug->showMessage("Chk recibido ** " +QString().number(incomingBuffer[i],16) + " **" );
+                    myDebug->showUnProcessed("Chk Calculado ** " +QString().number(rxData.cheksum,16) + " **" );
+                    myDebug->showUnProcessed("Chk recibido ** " +QString().number(incomingBuffer[i],16) + " **" );
 
                 }
             }
@@ -212,7 +212,7 @@ void MainWindow::decodeData(uint8_t *datosRx, uint8_t source){
         else
             str = str +QString("%1").arg(datosRx[i],2,16,QChar('0'));
     }
-    myDebug->showMessage("*(MBED-S->PC)->decodeData (" + str + ")");
+    myDebug->showUnProcessed("*(MBED-S->PC)->decodeData (" + str + ")");
 
     switch (datosRx[1]) {
     case GETANALOGSENSORS://     ANALOGSENSORS=0xA0,
@@ -221,27 +221,27 @@ void MainWindow::decodeData(uint8_t *datosRx, uint8_t source){
         lftIrValue = w.ui16[0]; //guardamos el valor del IR izquierdo
         str = QString("%1").arg(w.ui16[0], 5, 10, QChar('0'));
         strOut = "LEFT IR: " + str;
-        myDebug->showMessage(strOut);
+        myDebug->showProcessed(strOut);
         ui->label_left_ir_data->setText(str);
         w.ui8[0] = datosRx[4];
         w.ui8[1] = datosRx[5];
         cntIrValue = w.ui16[0]; //guardamos el valor del IR central
         str = QString("%1").arg(w.ui16[0], 5, 10, QChar('0'));
         strOut = "CENTER IR: " + str;
-        myDebug->showMessage(strOut);
+        myDebug->showProcessed(strOut);
         ui->label_center_ir_data->setText(str);
         w.ui8[0] = datosRx[6];
         w.ui8[1] = datosRx[7];
         rhtIrValue =  w.ui16[0]; //guardamos el valor del IR derecho
         str =QString("%1").arg(w.ui16[0], 5, 10, QChar('0'));
         strOut = "RIGHT IR: " + str;
-        myDebug->showMessage(strOut);
+        myDebug->showProcessed(strOut);
         ui->label_right_ir_data->setText(str);
         break;
     case SETMOTORTEST://     MOTORTEST=0xA1,
         if(datosRx[2]==0x0D)
             str= "Test Motores ACK";
-        myDebug->showMessage(str);
+        myDebug->showProcessed(str);
         break;
     case SETSERVOANGLE://     SERVOANGLE=0xA2,
         if(datosRx[2]==0x0D)
@@ -250,7 +250,7 @@ void MainWindow::decodeData(uint8_t *datosRx, uint8_t source){
                 if(datosRx[2]==0x0A)
                     str= "Servo en posición Final!!!";
             }
-        myDebug->showMessage(str);
+        myDebug->showProcessed(str);
         break;
     case GETDISTANCE://     GETDISTANCE=0xA3,
         w.ui8[0] = datosRx[2];
@@ -267,7 +267,7 @@ void MainWindow::decodeData(uint8_t *datosRx, uint8_t source){
 
         //mostramos datos
         ui->label_distance_data->setText(str+ "cm");
-        myDebug->showMessage("DISTANCIA: "+QString().number(w.ui32/58)+ "cm");
+        myDebug->showProcessed("DISTANCIA: "+QString().number(w.ui32/58)+ "cm");
         break;
     case GETSPEED://     GETSPEED=0xA4,
         str = "VM1: ";
@@ -289,7 +289,7 @@ void MainWindow::decodeData(uint8_t *datosRx, uint8_t source){
         strOut = QString("%1").arg(w.i32, 4, 10, QChar('0'));
         ui->label_right_encoder_data->setText(strOut);
         str = str + QString("%1").arg(w.i32, 4, 10, QChar('0'));
-        myDebug->showMessage(str);
+        myDebug->showProcessed(str);
         break;
     case GETSWITCHES: //GETSWITCHES=0xA5
         str = "SW3: ";
@@ -312,7 +312,7 @@ void MainWindow::decodeData(uint8_t *datosRx, uint8_t source){
             str = str + "HIGH";
         else
             str = str + "LOW";
-        myDebug->showMessage(str);
+        myDebug->showProcessed(str);
         break;
 
     case GETALIVE://     GETALIVE=0xF0,
@@ -327,14 +327,14 @@ void MainWindow::decodeData(uint8_t *datosRx, uint8_t source){
         }else{
             str= "ALIVE BLUEPILL VIA *SERIE*  NO ACK!!!";
         }
-        myDebug->showMessage(str);
+        myDebug->showProcessed(str);
         break;
     case GETFIRMWARE://     GETFIRMWARE=0xF1
         str = "FIRMWARE:";
         for(uint8_t a=0;a<(datosRx[0]-1);a++){
             str += (QChar)datosRx[2+a];
         }
-        myDebug->showMessage(str);
+        myDebug->showProcessed(str);
 
         break;
     case SETLEDS:
@@ -358,7 +358,7 @@ void MainWindow::decodeData(uint8_t *datosRx, uint8_t source){
             str = str + "HIGH";
         else
             str = str + "LOW";
-        myDebug->showMessage(str);
+        myDebug->showProcessed(str);
         break;
     case SETBLACKCOLOR:
         w.ui8[0] = datosRx[2];
@@ -449,7 +449,7 @@ void MainWindow::decodeData(uint8_t *datosRx, uint8_t source){
 
         strOut = QString("%1").arg(w.i8[0], 4, 10, QChar('0'));
 
-        ui->label_currLevel->setText(strOut);
+        ui->label_pathLevelData->setText(strOut);
 
     break;
     case CURRMSSERVO:
@@ -475,7 +475,7 @@ void MainWindow::decodeData(uint8_t *datosRx, uint8_t source){
         break;
     default:
         str = str + "Comando DESCONOCIDO!!!!";
-        myDebug->showMessage(str);
+        myDebug->showProcessed(str);
     }
 }
 
@@ -577,11 +577,11 @@ void MainWindow::sendDataSerial(){
     }
 
     uint16_t valor=dato[NBYTES]+PAYLOAD;
-    myDebug->showMessage("***COMANDO NUEVO***");
-    myDebug->showMessage("INDICE ** " +QString().number(indice,10) + " **" );
-    myDebug->showMessage("NUMERO DE DATOS ** " +QString().number(valor,10) + " **" );
-    myDebug->showMessage("CHECKSUM ** " +QString().number(chk,16) + " **" );
-    myDebug->showMessage("PC--SERIAL-->MBED ( " + str + " )");
+    myDebug->showProcessed("***COMANDO NUEVO***");
+    myDebug->showProcessed("INDICE ** " +QString().number(indice,10) + " **" );
+    myDebug->showProcessed("NUMERO DE DATOS ** " +QString().number(valor,10) + " **" );
+    myDebug->showProcessed("CHECKSUM ** " +QString().number(chk,16) + " **" );
+    myDebug->showUnProcessed("PC--SERIAL-->MBED ( " + str + " )");
 
 }
 
@@ -623,7 +623,7 @@ void MainWindow::sendSerial(uint8_t *buf, uint8_t length){
         strHex = strHex + QString("%1").arg(tx[i], 2, 16, QChar('0')).toUpper();
     }
 
-    myDebug->showMessage(strHex);
+    myDebug->showUnProcessed(strHex);
 
     QSerialPort1->write((char *)tx, length+7);
 }
@@ -691,7 +691,7 @@ void MainWindow::sendUdp(uint8_t *buf, uint8_t length){
     }
     str=str + clientAddress.toString() + "  " +  QString().number(puertoremoto,10);
 
-    myDebug->showMessage("PC--UDP-->MBED ( " + str + " )");
+    myDebug->showUnProcessed("PC--UDP-->MBED ( " + str + " )");
 }
 
 void MainWindow::timeOut(){
@@ -722,9 +722,9 @@ void MainWindow::OnUdpRxData(){
         else
             str = str +"{" + QString("%1").arg(incomingBuffer[i],2,16,QChar('0')) + "}";
     }
-    myDebug->showMessage("MBED-->UDP-->PC (" + str + ")");
+    myDebug->showUnProcessed("MBED-->UDP-->PC (" + str + ")");
     QString adress=RemoteAddress.toString();
-    myDebug->showMessage(" adr " + adress);
+    myDebug->showUnProcessed(" adr " + adress);
 
     ui->lineEdit_device_ip->setText(RemoteAddress.toString().right((RemoteAddress.toString().length())-7));
     ui->lineEdit_device_port->setText(QString().number(RemotePort,10));
@@ -788,7 +788,7 @@ void MainWindow::OnUdpRxData(){
                 if(rxDataUdp.cheksum==incomingBuffer[i]){
                     decodeData(&rxDataUdp.payLoad[0],UDP);
                 }else{
-                    myDebug->showMessage(" CHK DISTINTO!!!!! ");
+                    myDebug->showProcessed(" CHK DISTINTO!!!!! ");
                 }
             }
             break;
@@ -904,7 +904,7 @@ void MainWindow::sendDataUDP(){
             str = str +"{" + QString("%1").arg(dato[i],2,16,QChar('0')) + "}";
     }
     str=str + clientAddress.toString() + "  " +  QString().number(puertoremoto,10);
-    myDebug->showMessage("PC--UDP-->MBED ( " + str + " )");
+    myDebug->showUnProcessed("PC--UDP-->MBED ( " + str + " )");
 }
 
 void MainWindow::getData(){
