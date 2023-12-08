@@ -3,6 +3,8 @@
 
 #include <QMainWindow>
 #include <QMessageBox>
+#include <QResizeEvent>
+
 #include <QtSerialPort/QSerialPort>
 #include <QtNetwork/QUdpSocket>
 #include <QLabel>
@@ -93,6 +95,18 @@ private slots:
  */
     void onTimer7();
 
+    /**
+     * @brief resizeEvent - Funcion utilizada para aumentar el tamaño del widget dependiedo de la resolucion
+     * @param event
+     */
+    void resizeEvent(QResizeEvent *event) override;
+
+    /**
+     * @brief paintEvent - Funcion utilizada para pintar el widget
+     * @param event
+     */
+
+    void paintEvent(QPaintEvent *event) override;
 
 private:
     Ui::MainWindow *ui;
@@ -122,7 +136,7 @@ private:
     //otras
     bool firExe; //bool utilizado para dibujar el fondo del radar
     bool servoDir; //bool utilizado para modificar el sentido de giro del servo
-    bool firRadarExe = true;
+    bool firRadarExe;
     int contadorAlive=0;
     int angle;
     int32_t servoAngle; //variable utilizada para controlar el angulo del servo en la animacion

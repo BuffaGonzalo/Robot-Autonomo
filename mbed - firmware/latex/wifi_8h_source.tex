@@ -1,0 +1,54 @@
+\doxysection{wifi.\+h}
+\hypertarget{wifi_8h_source}{}\label{wifi_8h_source}\mbox{\hyperlink{wifi_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*=============================================================================}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ *\ Copyright\ (c)\ 2021,\ Alejandro\ Rougier\ <alejandro.rougier@uner.edu.ar>}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00004\ \textcolor{comment}{\ *\ All\ rights\ reserved.}}
+\DoxyCodeLine{00005\ \textcolor{comment}{\ *\ License:\ Free}}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ *\ Date:\ 2021/11/12}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ *\ Version:\ v1.0}}
+\DoxyCodeLine{00008\ \textcolor{comment}{\ *===========================================================================*/}}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \textcolor{comment}{/*==================[\ Inclusions\ ]============================================*/}}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#ifndef\ WIFI\_H}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#define\ WIFI\_H}}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#include\ "{}mbed.h"{}}}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ \textcolor{comment}{/*==================[\ Global\ Variables\ ]============================================*/}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#pragma\ pack(1)}}
+\DoxyCodeLine{00019\ \ \ \ \ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }}
+\DoxyCodeLine{00020\ \ \ \ \ \{}
+\DoxyCodeLine{00021\ \ \ \ \ \ \ \ \ uint8\_t\ cwmode[17];\ \ \ \ \ }
+\DoxyCodeLine{00022\ \ \ \ \ \ \ \ \ uint8\_t\ cwdhcp[19];\ \ \ \ \ }
+\DoxyCodeLine{00023\ \ \ \ \ \ \ \ \ uint8\_t\ cwjap[100];\ \ \ \ \ }
+\DoxyCodeLine{00024\ \ \ \ \ \ \ \ \ uint8\_t\ cipmux[13];\ \ \ \ \ }
+\DoxyCodeLine{00025\ \ \ \ \ \ \ \ \ uint8\_t\ cipstart[58];\ \ \ }
+\DoxyCodeLine{00026\ \ \ \ \ \ \ \ \ uint8\_t\ cipmode[14];\ \ \ \ }
+\DoxyCodeLine{00027\ \ \ \ \ \ \ \ \ uint8\_t\ cipsend[12];\ \ \ \ }
+\DoxyCodeLine{00028\ \ \ \ \ \}\ \mbox{\hyperlink{structwifi_data}{wifiData}};}
+\DoxyCodeLine{00029\ \textcolor{preprocessor}{\#pragma\ pack(0)}}
+\DoxyCodeLine{00030\ }
+\DoxyCodeLine{00031\ \textcolor{comment}{/*==================[\ Class\ Definitions\ ]============================================*/}}
+\DoxyCodeLine{00032\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_wifi}{Wifi}}}
+\DoxyCodeLine{00033\ \{}
+\DoxyCodeLine{00034\ \ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_wifi}{Wifi}}(uint8\_t\ *buff,\ uint8\_t\ *indexWRx,\ uint32\_t\ lengthBuff);}
+\DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_wifi_af9c0bb40082e1b5dd2907be907b94418}{\string~Wifi}}();}
+\DoxyCodeLine{00053\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_wifi_ac599aea29e221a61547513413a8b7d2c}{configWifi}}(\mbox{\hyperlink{structwifi_data}{wifiData}}\ *);}
+\DoxyCodeLine{00060\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_wifi_ac36fffaff4dd6b7a65dc96538776692b}{writeWifiData}}(uint8\_t\ *buff,\ uint8\_t\ nBytes);}
+\DoxyCodeLine{00065\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_wifi_aacdc9b5e04cb93b8a74647371e1c15f9}{taskWifi}}();}
+\DoxyCodeLine{00072\ \ \ \ \ \ \ \ \ uint8\_t\ \mbox{\hyperlink{class_wifi_a2032991f092778a344d7c87b5d8f653b}{isWifiReady}}();}
+\DoxyCodeLine{00077\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_wifi_a60c1b35e5c02cdd52ce1b4b6a9788181}{initTask}}();}
+\DoxyCodeLine{00082\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_wifi_ab37d9a30bbfb315a158ba87ee367faae}{resetWifi}}();}
+\DoxyCodeLine{00083\ \ \ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00084\ \ \ \ \ \ \ \ \ uint8\_t\ wifiReady=\textcolor{keyword}{false};}
+\DoxyCodeLine{00089\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ wifiSend();}
+\DoxyCodeLine{00095\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ configWifiMef(\mbox{\hyperlink{structwifi_data}{wifiData}}\ *);\ \ \ }
+\DoxyCodeLine{00104\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ wifiResponse(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *,\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ );}
+\DoxyCodeLine{00105\ \};}
+\DoxyCodeLine{00106\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

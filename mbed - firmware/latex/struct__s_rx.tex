@@ -1,0 +1,107 @@
+\doxysection{\+\_\+s\+Rx Struct Reference}
+\hypertarget{struct__s_rx}{}\label{struct__s_rx}\index{\_sRx@{\_sRx}}
+
+
+estructura para la recepción de datos por puerto serie  
+
+
+
+
+{\ttfamily \#include $<$util.\+h$>$}
+
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+uint8\+\_\+t \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{struct__s_rx_a5cd59391950f67265d4673470ddb6f95}{buff}}
+\item 
+uint8\+\_\+t \mbox{\hyperlink{struct__s_rx_a36632098204360331fd5b4bafb5ff240}{indexR}}
+\item 
+uint8\+\_\+t \mbox{\hyperlink{struct__s_rx_a26ff87bc1f5e36e8f5958cb78e0be477}{indexW}}
+\item 
+uint8\+\_\+t \mbox{\hyperlink{struct__s_rx_adcc4bf03c0f5583a2b5e0287a30fd374}{index\+Data}}
+\item 
+uint8\+\_\+t \mbox{\hyperlink{struct__s_rx_a33ea9bef22644f987337ffcc41fffbd6}{mask}}
+\item 
+uint8\+\_\+t \mbox{\hyperlink{struct__s_rx_a763a2cd202ca80dd1301727e0e4b13c9}{chk}}
+\item 
+uint8\+\_\+t \mbox{\hyperlink{struct__s_rx_a59ad237327a8cb85e5e1ac4136c0368e}{n\+Bytes}}
+\item 
+uint8\+\_\+t \mbox{\hyperlink{struct__s_rx_aa869f90084c7d26acafc2ff3ade803af}{header}}
+\item 
+uint8\+\_\+t \mbox{\hyperlink{struct__s_rx_a3a60719639d9a3477eda5ea034794ddc}{time\+Out}}
+\item 
+uint8\+\_\+t \mbox{\hyperlink{struct__s_rx_a0031ebac399824e36b7ced13d3a2b918}{is\+Comannd}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+estructura para la recepción de datos por puerto serie 
+
+
+
+\doxysubsection{Member Data Documentation}
+\Hypertarget{struct__s_rx_a5cd59391950f67265d4673470ddb6f95}\label{struct__s_rx_a5cd59391950f67265d4673470ddb6f95} 
+\index{\_sRx@{\_sRx}!buff@{buff}}
+\index{buff@{buff}!\_sRx@{\_sRx}}
+\doxysubsubsection{\texorpdfstring{buff}{buff}}
+{\footnotesize\ttfamily uint8\+\_\+t\texorpdfstring{$\ast$}{*} \+\_\+s\+Rx\+::buff}
+
+Puntero para el buffer de recepción \Hypertarget{struct__s_rx_a763a2cd202ca80dd1301727e0e4b13c9}\label{struct__s_rx_a763a2cd202ca80dd1301727e0e4b13c9} 
+\index{\_sRx@{\_sRx}!chk@{chk}}
+\index{chk@{chk}!\_sRx@{\_sRx}}
+\doxysubsubsection{\texorpdfstring{chk}{chk}}
+{\footnotesize\ttfamily uint8\+\_\+t \+\_\+s\+Rx\+::chk}
+
+variable para calcular el checksum \Hypertarget{struct__s_rx_aa869f90084c7d26acafc2ff3ade803af}\label{struct__s_rx_aa869f90084c7d26acafc2ff3ade803af} 
+\index{\_sRx@{\_sRx}!header@{header}}
+\index{header@{header}!\_sRx@{\_sRx}}
+\doxysubsubsection{\texorpdfstring{header}{header}}
+{\footnotesize\ttfamily uint8\+\_\+t \+\_\+s\+Rx\+::header}
+
+variable para mantener el estado dela MEF del protocolo \Hypertarget{struct__s_rx_adcc4bf03c0f5583a2b5e0287a30fd374}\label{struct__s_rx_adcc4bf03c0f5583a2b5e0287a30fd374} 
+\index{\_sRx@{\_sRx}!indexData@{indexData}}
+\index{indexData@{indexData}!\_sRx@{\_sRx}}
+\doxysubsubsection{\texorpdfstring{indexData}{indexData}}
+{\footnotesize\ttfamily uint8\+\_\+t \+\_\+s\+Rx\+::index\+Data}
+
+indice para identificar la posición del dato \Hypertarget{struct__s_rx_a36632098204360331fd5b4bafb5ff240}\label{struct__s_rx_a36632098204360331fd5b4bafb5ff240} 
+\index{\_sRx@{\_sRx}!indexR@{indexR}}
+\index{indexR@{indexR}!\_sRx@{\_sRx}}
+\doxysubsubsection{\texorpdfstring{indexR}{indexR}}
+{\footnotesize\ttfamily uint8\+\_\+t \+\_\+s\+Rx\+::indexR}
+
+indice de lectura del buffer circular \Hypertarget{struct__s_rx_a26ff87bc1f5e36e8f5958cb78e0be477}\label{struct__s_rx_a26ff87bc1f5e36e8f5958cb78e0be477} 
+\index{\_sRx@{\_sRx}!indexW@{indexW}}
+\index{indexW@{indexW}!\_sRx@{\_sRx}}
+\doxysubsubsection{\texorpdfstring{indexW}{indexW}}
+{\footnotesize\ttfamily uint8\+\_\+t \+\_\+s\+Rx\+::indexW}
+
+indice de escritura del buffer circular \Hypertarget{struct__s_rx_a0031ebac399824e36b7ced13d3a2b918}\label{struct__s_rx_a0031ebac399824e36b7ced13d3a2b918} 
+\index{\_sRx@{\_sRx}!isComannd@{isComannd}}
+\index{isComannd@{isComannd}!\_sRx@{\_sRx}}
+\doxysubsubsection{\texorpdfstring{isComannd}{isComannd}}
+{\footnotesize\ttfamily uint8\+\_\+t \+\_\+s\+Rx\+::is\+Comannd}
+
+\Hypertarget{struct__s_rx_a33ea9bef22644f987337ffcc41fffbd6}\label{struct__s_rx_a33ea9bef22644f987337ffcc41fffbd6} 
+\index{\_sRx@{\_sRx}!mask@{mask}}
+\index{mask@{mask}!\_sRx@{\_sRx}}
+\doxysubsubsection{\texorpdfstring{mask}{mask}}
+{\footnotesize\ttfamily uint8\+\_\+t \+\_\+s\+Rx\+::mask}
+
+máscara para controlar el tamaño del buffer \Hypertarget{struct__s_rx_a59ad237327a8cb85e5e1ac4136c0368e}\label{struct__s_rx_a59ad237327a8cb85e5e1ac4136c0368e} 
+\index{\_sRx@{\_sRx}!nBytes@{nBytes}}
+\index{nBytes@{nBytes}!\_sRx@{\_sRx}}
+\doxysubsubsection{\texorpdfstring{nBytes}{nBytes}}
+{\footnotesize\ttfamily uint8\+\_\+t \+\_\+s\+Rx\+::n\+Bytes}
+
+variable para almacenar el número de bytes recibidos \Hypertarget{struct__s_rx_a3a60719639d9a3477eda5ea034794ddc}\label{struct__s_rx_a3a60719639d9a3477eda5ea034794ddc} 
+\index{\_sRx@{\_sRx}!timeOut@{timeOut}}
+\index{timeOut@{timeOut}!\_sRx@{\_sRx}}
+\doxysubsubsection{\texorpdfstring{timeOut}{timeOut}}
+{\footnotesize\ttfamily uint8\+\_\+t \+\_\+s\+Rx\+::time\+Out}
+
+variable para resetear la MEF si no llegan más caracteres luego de cierto tiempo 
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{util_8h}{util.\+h}}\end{DoxyCompactItemize}

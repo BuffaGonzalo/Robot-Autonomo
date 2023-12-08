@@ -1,0 +1,72 @@
+\doxysection{my\+Delay.\+h File Reference}
+\hypertarget{my_delay_8h}{}\label{my_delay_8h}\index{myDelay.h@{myDelay.h}}
+{\ttfamily \#include \"{}mbed.\+h\"{}}\newline
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{struct__delay__t}{\+\_\+delay\+\_\+t}}
+\begin{DoxyCompactList}\small\item\em Estructura para manejar el tiempo. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{my_delay_8h_aea3dd6ffb2c772cadaf848c01fe31eca}{delay\+Config}} (\mbox{\hyperlink{struct__delay__t}{\+\_\+delay\+\_\+t}} \texorpdfstring{$\ast$}{*}delay, uint16\+\_\+t interval)
+\begin{DoxyCompactList}\small\item\em Configura el entervalo del Delay. \end{DoxyCompactList}\item 
+uint8\+\_\+t \mbox{\hyperlink{my_delay_8h_ab0f1425aef8bcc382913af0ee74842ad}{delay\+Read}} (\mbox{\hyperlink{struct__delay__t}{\+\_\+delay\+\_\+t}} \texorpdfstring{$\ast$}{*}delay)
+\begin{DoxyCompactList}\small\item\em Lee el Delay para determinar si se ha cumplido el tiempo establecido. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{my_delay_8h_a9680c15a1859e1562be6f3f5fc5c5230}{delay\+Write}} (\mbox{\hyperlink{struct__delay__t}{\+\_\+delay\+\_\+t}} \texorpdfstring{$\ast$}{*}delay, uint16\+\_\+t interval)
+\begin{DoxyCompactList}\small\item\em PErmite modificar el intervalo establecido para un Delay y lo resetea. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Function Documentation}
+\Hypertarget{my_delay_8h_aea3dd6ffb2c772cadaf848c01fe31eca}\label{my_delay_8h_aea3dd6ffb2c772cadaf848c01fe31eca} 
+\index{myDelay.h@{myDelay.h}!delayConfig@{delayConfig}}
+\index{delayConfig@{delayConfig}!myDelay.h@{myDelay.h}}
+\doxysubsubsection{\texorpdfstring{delayConfig()}{delayConfig()}}
+{\footnotesize\ttfamily void delay\+Config (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct__delay__t}{\+\_\+delay\+\_\+t}} \texorpdfstring{$\ast$}{*}}]{delay,  }\item[{uint16\+\_\+t}]{interval }\end{DoxyParamCaption})}
+
+
+
+Configura el entervalo del Delay. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em delay} & Estructura para manejar el tiempo \\
+\hline
+{\em interval} & intervalo de comparación para saber si ya transcurrio el tiempo leido \\
+\hline
+\end{DoxyParams}
+\Hypertarget{my_delay_8h_ab0f1425aef8bcc382913af0ee74842ad}\label{my_delay_8h_ab0f1425aef8bcc382913af0ee74842ad} 
+\index{myDelay.h@{myDelay.h}!delayRead@{delayRead}}
+\index{delayRead@{delayRead}!myDelay.h@{myDelay.h}}
+\doxysubsubsection{\texorpdfstring{delayRead()}{delayRead()}}
+{\footnotesize\ttfamily uint8\+\_\+t delay\+Read (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct__delay__t}{\+\_\+delay\+\_\+t}} \texorpdfstring{$\ast$}{*}}]{delay }\end{DoxyParamCaption})}
+
+
+
+Lee el Delay para determinar si se ha cumplido el tiempo establecido. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em delay} & Estructura para manejar el tiempo \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+uint8\+\_\+t Returna True o False de acuerdo a si se cumplio el tiempo o no 
+\end{DoxyReturn}
+\Hypertarget{my_delay_8h_a9680c15a1859e1562be6f3f5fc5c5230}\label{my_delay_8h_a9680c15a1859e1562be6f3f5fc5c5230} 
+\index{myDelay.h@{myDelay.h}!delayWrite@{delayWrite}}
+\index{delayWrite@{delayWrite}!myDelay.h@{myDelay.h}}
+\doxysubsubsection{\texorpdfstring{delayWrite()}{delayWrite()}}
+{\footnotesize\ttfamily void delay\+Write (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct__delay__t}{\+\_\+delay\+\_\+t}} \texorpdfstring{$\ast$}{*}}]{delay,  }\item[{uint16\+\_\+t}]{interval }\end{DoxyParamCaption})}
+
+
+
+PErmite modificar el intervalo establecido para un Delay y lo resetea. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em delay} & Estructura para manejar el tiempo \\
+\hline
+{\em interval} & intervalo de comparación para saber si ya transcurrio el tiempo leido \\
+\hline
+\end{DoxyParams}

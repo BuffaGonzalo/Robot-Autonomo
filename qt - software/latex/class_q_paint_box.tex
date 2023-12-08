@@ -1,0 +1,206 @@
+\doxysection{QPaint\+Box Class Reference}
+\hypertarget{class_q_paint_box}{}\label{class_q_paint_box}\index{QPaintBox@{QPaintBox}}
+
+
+{\ttfamily \#include $<$qpaintbox.\+h$>$}
+
+Inheritance diagram for QPaint\+Box\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_q_paint_box}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Signals}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{class_q_paint_box_a98e411357cdacde58682a8a7b1b4a426}{On\+Mouse\+Press}} (QMouse\+Event \texorpdfstring{$\ast$}{*}event)
+\begin{DoxyCompactList}\small\item\em On\+Mouse\+Press Señal que indica cuando un boton del mouse se presiono. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_q_paint_box_af6e75eb164e96adbf08a64be97dd542e}{On\+Mouse\+Double\+Click}} (QMouse\+Event \texorpdfstring{$\ast$}{*}event)
+\begin{DoxyCompactList}\small\item\em On\+Mouse\+Double\+Click Señal que indica cuando un boton del mouse se presiono 2 veces. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_q_paint_box_a3125eab82c93b14913d46bd6ed2fe2b7}{On\+Mouse\+Release}} (QMouse\+Event \texorpdfstring{$\ast$}{*}event)
+\begin{DoxyCompactList}\small\item\em On\+Mouse\+Release Señal que se emite cuando el boton del mouse es liberado. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_q_paint_box_ab8cfc738a66ab3ad17c4c54fe5f2f18a}{On\+Mouse\+Move}} (QMouse\+Event \texorpdfstring{$\ast$}{*}event)
+\begin{DoxyCompactList}\small\item\em On\+Mouse\+Move Señal que se emite cuando el mouse se mueve por el canvas del painter. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_q_paint_box_ae5de72047ce7fe733a8f2941749cc7e2}{On\+Wheel\+Move}} (QWheel\+Event \texorpdfstring{$\ast$}{*}event)
+\begin{DoxyCompactList}\small\item\em On\+Mouse\+Move Señal que se emite cuando se mueve la rueda del mouse. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_q_paint_box_a55d1f94f05db0ce7b65a1fc483479540}{QPaint\+Box}} (int a\+Width=200, int a\+Heigth=200, QWidget \texorpdfstring{$\ast$}{*}parent=nullptr)
+\item 
+void \mbox{\hyperlink{class_q_paint_box_a687a56545ce26e71b0f0d006d333cf22}{set\+Width}} (int awidth)
+\item 
+void \mbox{\hyperlink{class_q_paint_box_a191311aa45f8ef333d59d3037c2bc4f4}{set\+Height}} (int aheight)
+\item 
+QPixmap \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{class_q_paint_box_a9d0e967e2375412374d4f4a377d7f89f}{get\+Canvas}} (void)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{class_q_paint_box_a0c61cc8b68dded89ae9ef6b99611e198}{paint\+Event}} (QPaint\+Event \texorpdfstring{$\ast$}{*}event) Q\+\_\+\+DECL\+\_\+\+OVERRIDE
+\item 
+void \mbox{\hyperlink{class_q_paint_box_a2372b80be23beefb509fe41b89d11e27}{resize\+Event}} (QResize\+Event \texorpdfstring{$\ast$}{*}event) override
+\item 
+void \mbox{\hyperlink{class_q_paint_box_a50d88c99115bd19817f0b64763133ce1}{mouse\+Press\+Event}} (QMouse\+Event \texorpdfstring{$\ast$}{*}event) override
+\item 
+void \mbox{\hyperlink{class_q_paint_box_a6001944e5e9d3d4c4527f7f022dc52aa}{mouse\+Double\+Click\+Event}} (QMouse\+Event \texorpdfstring{$\ast$}{*}event) override
+\item 
+void \mbox{\hyperlink{class_q_paint_box_aa69e2e8c0abe5252d95a8a7daaad8ebb}{mouse\+Release\+Event}} (QMouse\+Event \texorpdfstring{$\ast$}{*}event) override
+\item 
+void \mbox{\hyperlink{class_q_paint_box_aff1c567352be35f9497e3667c34b6795}{mouse\+Move\+Event}} (QMouse\+Event \texorpdfstring{$\ast$}{*}event) override
+\item 
+void \mbox{\hyperlink{class_q_paint_box_a356dd40440f2a2759a87985e5fc13806}{wheel\+Event}} (QWheel\+Event \texorpdfstring{$\ast$}{*}event) override
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{class_q_paint_box_a55d1f94f05db0ce7b65a1fc483479540}\label{class_q_paint_box_a55d1f94f05db0ce7b65a1fc483479540} 
+\index{QPaintBox@{QPaintBox}!QPaintBox@{QPaintBox}}
+\index{QPaintBox@{QPaintBox}!QPaintBox@{QPaintBox}}
+\doxysubsubsection{\texorpdfstring{QPaintBox()}{QPaintBox()}}
+{\footnotesize\ttfamily QPaint\+Box\+::\+QPaint\+Box (\begin{DoxyParamCaption}\item[{int}]{a\+Width = {\ttfamily 200},  }\item[{int}]{a\+Heigth = {\ttfamily 200},  }\item[{QWidget \texorpdfstring{$\ast$}{*}}]{parent = {\ttfamily nullptr} }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [explicit]}}
+
+
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_q_paint_box_a9d0e967e2375412374d4f4a377d7f89f}\label{class_q_paint_box_a9d0e967e2375412374d4f4a377d7f89f} 
+\index{QPaintBox@{QPaintBox}!getCanvas@{getCanvas}}
+\index{getCanvas@{getCanvas}!QPaintBox@{QPaintBox}}
+\doxysubsubsection{\texorpdfstring{getCanvas()}{getCanvas()}}
+{\footnotesize\ttfamily QPixmap \texorpdfstring{$\ast$}{*} QPaint\+Box\+::get\+Canvas (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+\Hypertarget{class_q_paint_box_a6001944e5e9d3d4c4527f7f022dc52aa}\label{class_q_paint_box_a6001944e5e9d3d4c4527f7f022dc52aa} 
+\index{QPaintBox@{QPaintBox}!mouseDoubleClickEvent@{mouseDoubleClickEvent}}
+\index{mouseDoubleClickEvent@{mouseDoubleClickEvent}!QPaintBox@{QPaintBox}}
+\doxysubsubsection{\texorpdfstring{mouseDoubleClickEvent()}{mouseDoubleClickEvent()}}
+{\footnotesize\ttfamily void QPaint\+Box\+::mouse\+Double\+Click\+Event (\begin{DoxyParamCaption}\item[{QMouse\+Event \texorpdfstring{$\ast$}{*}}]{event }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [protected]}}
+
+\Hypertarget{class_q_paint_box_aff1c567352be35f9497e3667c34b6795}\label{class_q_paint_box_aff1c567352be35f9497e3667c34b6795} 
+\index{QPaintBox@{QPaintBox}!mouseMoveEvent@{mouseMoveEvent}}
+\index{mouseMoveEvent@{mouseMoveEvent}!QPaintBox@{QPaintBox}}
+\doxysubsubsection{\texorpdfstring{mouseMoveEvent()}{mouseMoveEvent()}}
+{\footnotesize\ttfamily void QPaint\+Box\+::mouse\+Move\+Event (\begin{DoxyParamCaption}\item[{QMouse\+Event \texorpdfstring{$\ast$}{*}}]{event }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [protected]}}
+
+\Hypertarget{class_q_paint_box_a50d88c99115bd19817f0b64763133ce1}\label{class_q_paint_box_a50d88c99115bd19817f0b64763133ce1} 
+\index{QPaintBox@{QPaintBox}!mousePressEvent@{mousePressEvent}}
+\index{mousePressEvent@{mousePressEvent}!QPaintBox@{QPaintBox}}
+\doxysubsubsection{\texorpdfstring{mousePressEvent()}{mousePressEvent()}}
+{\footnotesize\ttfamily void QPaint\+Box\+::mouse\+Press\+Event (\begin{DoxyParamCaption}\item[{QMouse\+Event \texorpdfstring{$\ast$}{*}}]{event }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [protected]}}
+
+\Hypertarget{class_q_paint_box_aa69e2e8c0abe5252d95a8a7daaad8ebb}\label{class_q_paint_box_aa69e2e8c0abe5252d95a8a7daaad8ebb} 
+\index{QPaintBox@{QPaintBox}!mouseReleaseEvent@{mouseReleaseEvent}}
+\index{mouseReleaseEvent@{mouseReleaseEvent}!QPaintBox@{QPaintBox}}
+\doxysubsubsection{\texorpdfstring{mouseReleaseEvent()}{mouseReleaseEvent()}}
+{\footnotesize\ttfamily void QPaint\+Box\+::mouse\+Release\+Event (\begin{DoxyParamCaption}\item[{QMouse\+Event \texorpdfstring{$\ast$}{*}}]{event }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [protected]}}
+
+\Hypertarget{class_q_paint_box_af6e75eb164e96adbf08a64be97dd542e}\label{class_q_paint_box_af6e75eb164e96adbf08a64be97dd542e} 
+\index{QPaintBox@{QPaintBox}!OnMouseDoubleClick@{OnMouseDoubleClick}}
+\index{OnMouseDoubleClick@{OnMouseDoubleClick}!QPaintBox@{QPaintBox}}
+\doxysubsubsection{\texorpdfstring{OnMouseDoubleClick}{OnMouseDoubleClick}}
+{\footnotesize\ttfamily void QPaint\+Box\+::\+On\+Mouse\+Double\+Click (\begin{DoxyParamCaption}\item[{QMouse\+Event \texorpdfstring{$\ast$}{*}}]{event }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [signal]}}
+
+
+
+On\+Mouse\+Double\+Click Señal que indica cuando un boton del mouse se presiono 2 veces. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em event} & out\+: event \\
+\hline
+\end{DoxyParams}
+\Hypertarget{class_q_paint_box_ab8cfc738a66ab3ad17c4c54fe5f2f18a}\label{class_q_paint_box_ab8cfc738a66ab3ad17c4c54fe5f2f18a} 
+\index{QPaintBox@{QPaintBox}!OnMouseMove@{OnMouseMove}}
+\index{OnMouseMove@{OnMouseMove}!QPaintBox@{QPaintBox}}
+\doxysubsubsection{\texorpdfstring{OnMouseMove}{OnMouseMove}}
+{\footnotesize\ttfamily void QPaint\+Box\+::\+On\+Mouse\+Move (\begin{DoxyParamCaption}\item[{QMouse\+Event \texorpdfstring{$\ast$}{*}}]{event }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [signal]}}
+
+
+
+On\+Mouse\+Move Señal que se emite cuando el mouse se mueve por el canvas del painter. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em event} & \\
+\hline
+\end{DoxyParams}
+\Hypertarget{class_q_paint_box_a98e411357cdacde58682a8a7b1b4a426}\label{class_q_paint_box_a98e411357cdacde58682a8a7b1b4a426} 
+\index{QPaintBox@{QPaintBox}!OnMousePress@{OnMousePress}}
+\index{OnMousePress@{OnMousePress}!QPaintBox@{QPaintBox}}
+\doxysubsubsection{\texorpdfstring{OnMousePress}{OnMousePress}}
+{\footnotesize\ttfamily void QPaint\+Box\+::\+On\+Mouse\+Press (\begin{DoxyParamCaption}\item[{QMouse\+Event \texorpdfstring{$\ast$}{*}}]{event }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [signal]}}
+
+
+
+On\+Mouse\+Press Señal que indica cuando un boton del mouse se presiono. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em event} & out\+: event \\
+\hline
+\end{DoxyParams}
+\Hypertarget{class_q_paint_box_a3125eab82c93b14913d46bd6ed2fe2b7}\label{class_q_paint_box_a3125eab82c93b14913d46bd6ed2fe2b7} 
+\index{QPaintBox@{QPaintBox}!OnMouseRelease@{OnMouseRelease}}
+\index{OnMouseRelease@{OnMouseRelease}!QPaintBox@{QPaintBox}}
+\doxysubsubsection{\texorpdfstring{OnMouseRelease}{OnMouseRelease}}
+{\footnotesize\ttfamily void QPaint\+Box\+::\+On\+Mouse\+Release (\begin{DoxyParamCaption}\item[{QMouse\+Event \texorpdfstring{$\ast$}{*}}]{event }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [signal]}}
+
+
+
+On\+Mouse\+Release Señal que se emite cuando el boton del mouse es liberado. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em event} & \\
+\hline
+\end{DoxyParams}
+\Hypertarget{class_q_paint_box_ae5de72047ce7fe733a8f2941749cc7e2}\label{class_q_paint_box_ae5de72047ce7fe733a8f2941749cc7e2} 
+\index{QPaintBox@{QPaintBox}!OnWheelMove@{OnWheelMove}}
+\index{OnWheelMove@{OnWheelMove}!QPaintBox@{QPaintBox}}
+\doxysubsubsection{\texorpdfstring{OnWheelMove}{OnWheelMove}}
+{\footnotesize\ttfamily void QPaint\+Box\+::\+On\+Wheel\+Move (\begin{DoxyParamCaption}\item[{QWheel\+Event \texorpdfstring{$\ast$}{*}}]{event }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [signal]}}
+
+
+
+On\+Mouse\+Move Señal que se emite cuando se mueve la rueda del mouse. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em event} & \\
+\hline
+\end{DoxyParams}
+\Hypertarget{class_q_paint_box_a0c61cc8b68dded89ae9ef6b99611e198}\label{class_q_paint_box_a0c61cc8b68dded89ae9ef6b99611e198} 
+\index{QPaintBox@{QPaintBox}!paintEvent@{paintEvent}}
+\index{paintEvent@{paintEvent}!QPaintBox@{QPaintBox}}
+\doxysubsubsection{\texorpdfstring{paintEvent()}{paintEvent()}}
+{\footnotesize\ttfamily void QPaint\+Box\+::paint\+Event (\begin{DoxyParamCaption}\item[{QPaint\+Event \texorpdfstring{$\ast$}{*}}]{event }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}}
+
+\Hypertarget{class_q_paint_box_a2372b80be23beefb509fe41b89d11e27}\label{class_q_paint_box_a2372b80be23beefb509fe41b89d11e27} 
+\index{QPaintBox@{QPaintBox}!resizeEvent@{resizeEvent}}
+\index{resizeEvent@{resizeEvent}!QPaintBox@{QPaintBox}}
+\doxysubsubsection{\texorpdfstring{resizeEvent()}{resizeEvent()}}
+{\footnotesize\ttfamily void QPaint\+Box\+::resize\+Event (\begin{DoxyParamCaption}\item[{QResize\+Event \texorpdfstring{$\ast$}{*}}]{event }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [protected]}}
+
+\Hypertarget{class_q_paint_box_a191311aa45f8ef333d59d3037c2bc4f4}\label{class_q_paint_box_a191311aa45f8ef333d59d3037c2bc4f4} 
+\index{QPaintBox@{QPaintBox}!setHeight@{setHeight}}
+\index{setHeight@{setHeight}!QPaintBox@{QPaintBox}}
+\doxysubsubsection{\texorpdfstring{setHeight()}{setHeight()}}
+{\footnotesize\ttfamily void QPaint\+Box\+::set\+Height (\begin{DoxyParamCaption}\item[{int}]{aheight }\end{DoxyParamCaption})}
+
+\Hypertarget{class_q_paint_box_a687a56545ce26e71b0f0d006d333cf22}\label{class_q_paint_box_a687a56545ce26e71b0f0d006d333cf22} 
+\index{QPaintBox@{QPaintBox}!setWidth@{setWidth}}
+\index{setWidth@{setWidth}!QPaintBox@{QPaintBox}}
+\doxysubsubsection{\texorpdfstring{setWidth()}{setWidth()}}
+{\footnotesize\ttfamily void QPaint\+Box\+::set\+Width (\begin{DoxyParamCaption}\item[{int}]{awidth }\end{DoxyParamCaption})}
+
+\Hypertarget{class_q_paint_box_a356dd40440f2a2759a87985e5fc13806}\label{class_q_paint_box_a356dd40440f2a2759a87985e5fc13806} 
+\index{QPaintBox@{QPaintBox}!wheelEvent@{wheelEvent}}
+\index{wheelEvent@{wheelEvent}!QPaintBox@{QPaintBox}}
+\doxysubsubsection{\texorpdfstring{wheelEvent()}{wheelEvent()}}
+{\footnotesize\ttfamily void QPaint\+Box\+::wheel\+Event (\begin{DoxyParamCaption}\item[{QWheel\+Event \texorpdfstring{$\ast$}{*}}]{event }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [protected]}}
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{qpaintbox_8h}{qpaintbox.\+h}}\item 
+\mbox{\hyperlink{qpaintbox_8cpp}{qpaintbox.\+cpp}}\end{DoxyCompactItemize}

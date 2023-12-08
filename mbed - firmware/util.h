@@ -146,6 +146,7 @@ typedef enum{
     PATHLENGHT = 0xA8, //utilizada para enviar la longitud del camino a Qt
     CURRMODE = 0xA9, // utilizada para enviar la posicion actual
     CURRLEVEL = 0x20, //Utilizada para pasar el nivel del camino
+    CURRMSSERVO = 0x21, //Utilizada para enviar el angulo del servo en ms a Qt
     MOTORTEST = 0xA1,
     SERVOANGLE = 0xA2,
     CONFIGSERVO = 0xA5,

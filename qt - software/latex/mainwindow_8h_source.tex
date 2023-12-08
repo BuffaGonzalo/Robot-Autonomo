@@ -1,0 +1,216 @@
+\doxysection{mainwindow.\+h}
+\hypertarget{mainwindow_8h_source}{}\label{mainwindow_8h_source}\mbox{\hyperlink{mainwindow_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ MAINWINDOW\_H}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ MAINWINDOW\_H}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <QMainWindow>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <QMessageBox>}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <QResizeEvent>}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <QtSerialPort/QSerialPort>}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ <QtNetwork/QUdpSocket>}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ <QLabel>}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ <QInputDialog>}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ <QTimer>}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ <QTime>}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#include\ <QSerialPortInfo>}}
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#include\ <\mbox{\hyperlink{qpaintbox_8h}{qpaintbox.h}}>}}
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{debug_8h}{debug.h}}"{}}}
+\DoxyCodeLine{00017\ }
+\DoxyCodeLine{00018\ QT\_BEGIN\_NAMESPACE}
+\DoxyCodeLine{00019\ \textcolor{keyword}{namespace\ }\mbox{\hyperlink{namespace_ui}{Ui}}\ \{\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_main_window}{MainWindow}};\ \}}
+\DoxyCodeLine{00020\ QT\_END\_NAMESPACE}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_main_window}{MainWindow}}\ :\ \textcolor{keyword}{public}\ QMainWindow}
+\DoxyCodeLine{00023\ \{}
+\DoxyCodeLine{00024\ \ \ \ \ Q\_OBJECT}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00027\ \ \ \ \ \mbox{\hyperlink{class_main_window}{MainWindow}}(QWidget\ *parent\ =\ \textcolor{keyword}{nullptr});}
+\DoxyCodeLine{00028\ \ \ \ \ \mbox{\hyperlink{class_main_window_ae98d00a93bc118200eeef9f9bba1dba7}{\string~MainWindow}}();}
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00030\ \textcolor{keyword}{private}\ slots:}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00032\ \ \ \ \ \textcolor{keywordtype}{void}\ dataReceived();}
+\DoxyCodeLine{00033\ }
+\DoxyCodeLine{00034\ \ \ \ \ \textcolor{keywordtype}{void}\ decodeData(uint8\_t\ *datosRx,\ uint8\_t\ source);}
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00036\ \ \ \ \ \textcolor{keywordtype}{void}\ sendDataSerial();}
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00038\ \ \ \ \ \textcolor{keywordtype}{void}\ timeOut();}
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00040\ \ \ \ \ \textcolor{keywordtype}{void}\ sendDataUDP();}
+\DoxyCodeLine{00041\ }
+\DoxyCodeLine{00042\ \ \ \ \ \textcolor{keywordtype}{void}\ OnUdpRxData();}
+\DoxyCodeLine{00043\ }
+\DoxyCodeLine{00044\ \ \ \ \ \textcolor{keywordtype}{void}\ on\_pushButton\_connectSerial\_clicked();}
+\DoxyCodeLine{00045\ }
+\DoxyCodeLine{00046\ \ \ \ \ \textcolor{keywordtype}{void}\ on\_pushButton\_sendSerial\_clicked();}
+\DoxyCodeLine{00047\ }
+\DoxyCodeLine{00048\ \ \ \ \ \textcolor{keywordtype}{void}\ on\_pushButton\_connectUdp\_clicked();}
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00050\ \ \ \ \ \textcolor{keywordtype}{void}\ on\_pushButton\_sendUdp\_clicked();}
+\DoxyCodeLine{00051\ }
+\DoxyCodeLine{00058\ \ \ \ \ \textcolor{keywordtype}{void}\ sendSerial(uint8\_t\ *buf,\ uint8\_t\ length);}
+\DoxyCodeLine{00059\ }
+\DoxyCodeLine{00065\ \ \ \ \ \textcolor{keywordtype}{void}\ sendUdp(uint8\_t\ *buf,\ uint8\_t\ length);}
+\DoxyCodeLine{00066\ }
+\DoxyCodeLine{00067\ \ \ \ \ \textcolor{keywordtype}{void}\ getData();}
+\DoxyCodeLine{00068\ }
+\DoxyCodeLine{00069\ \ \ \ \ \textcolor{keywordtype}{bool}\ eventFilter(QObject\ *watched,\ QEvent\ *event);}
+\DoxyCodeLine{00070\ }
+\DoxyCodeLine{00071\ \ \ \ \ \textcolor{keywordtype}{void}\ on\_pushButton\_actRadar\_clicked();}
+\DoxyCodeLine{00072\ }
+\DoxyCodeLine{00077\ \ \ \ \ \textcolor{keywordtype}{void}\ radar();}
+\DoxyCodeLine{00078\ }
+\DoxyCodeLine{00079\ \ \ \ \ \textcolor{keywordtype}{void}\ carStatus();}
+\DoxyCodeLine{00080\ }
+\DoxyCodeLine{00085\ \ \ \ \ \textcolor{keywordtype}{void}\ onTimer4();}
+\DoxyCodeLine{00086\ }
+\DoxyCodeLine{00091\ \ \ \ \ \textcolor{keywordtype}{void}\ onTimer5();}
+\DoxyCodeLine{00092\ }
+\DoxyCodeLine{00096\ \ \ \ \ \textcolor{keywordtype}{void}\ onTimer7();}
+\DoxyCodeLine{00097\ }
+\DoxyCodeLine{00102\ \ \ \ \ \textcolor{keywordtype}{void}\ resizeEvent(QResizeEvent\ *event)\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00103\ }
+\DoxyCodeLine{00109\ \ \ \ \ \textcolor{keywordtype}{void}\ paintEvent(QPaintEvent\ *event)\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00110\ }
+\DoxyCodeLine{00111\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00112\ \ \ \ \ Ui::MainWindow\ *ui;}
+\DoxyCodeLine{00113\ \ \ \ \ QSerialPort\ *QSerialPort1;}
+\DoxyCodeLine{00114\ \ \ \ \ \mbox{\hyperlink{class_q_paint_box}{QPaintBox}}\ *QPaintBox1;}
+\DoxyCodeLine{00115\ \ \ \ \ \mbox{\hyperlink{class_q_paint_box}{QPaintBox}}\ *QPaintBox2;}
+\DoxyCodeLine{00116\ \ \ \ \ QLabel\ *statusMode;}
+\DoxyCodeLine{00117\ }
+\DoxyCodeLine{00118\ \ \ \ \ \mbox{\hyperlink{class_debug}{Debug}}\ *myDebug;}
+\DoxyCodeLine{00119\ }
+\DoxyCodeLine{00120\ \ \ \ \ \textcolor{comment}{//timers}}
+\DoxyCodeLine{00121\ \ \ \ \ QTimer\ \ *timer1;}
+\DoxyCodeLine{00122\ \ \ \ \ QTimer\ \ *timer2;}
+\DoxyCodeLine{00123\ \ \ \ \ QTimer\ \ *timer3;}
+\DoxyCodeLine{00124\ \ \ \ \ QTimer\ \ *timer4;}
+\DoxyCodeLine{00125\ \ \ \ \ QTimer\ \ *timer5;}
+\DoxyCodeLine{00126\ \ \ \ \ QTimer\ \ *timer6;}
+\DoxyCodeLine{00127\ \ \ \ \ QTimer\ \ *timer7;}
+\DoxyCodeLine{00128\ }
+\DoxyCodeLine{00129\ \ \ \ \ \textcolor{comment}{//variables\ comunicacion\ udp}}
+\DoxyCodeLine{00130\ \ \ \ \ QUdpSocket\ *QUdpSocket1;}
+\DoxyCodeLine{00131\ \ \ \ \ QHostAddress\ RemoteAddress;}
+\DoxyCodeLine{00132\ \ \ \ \ quint16\ RemotePort;}
+\DoxyCodeLine{00133\ \ \ \ \ QHostAddress\ clientAddress;}
+\DoxyCodeLine{00134\ \ \ \ \ \textcolor{keywordtype}{int}\ puertoremoto;}
+\DoxyCodeLine{00135\ }
+\DoxyCodeLine{00136\ \ \ \ \ \textcolor{comment}{//otras}}
+\DoxyCodeLine{00137\ \ \ \ \ \textcolor{keywordtype}{bool}\ firExe;\ \textcolor{comment}{//bool\ utilizado\ para\ dibujar\ el\ fondo\ del\ radar}}
+\DoxyCodeLine{00138\ \ \ \ \ \textcolor{keywordtype}{bool}\ servoDir;\ \textcolor{comment}{//bool\ utilizado\ para\ modificar\ el\ sentido\ de\ giro\ del\ servo}}
+\DoxyCodeLine{00139\ \ \ \ \ \textcolor{keywordtype}{bool}\ firRadarExe;}
+\DoxyCodeLine{00140\ \ \ \ \ \textcolor{keywordtype}{int}\ contadorAlive=0;}
+\DoxyCodeLine{00141\ \ \ \ \ \textcolor{keywordtype}{int}\ angle;}
+\DoxyCodeLine{00142\ \ \ \ \ int32\_t\ servoAngle;\ \textcolor{comment}{//variable\ utilizada\ para\ controlar\ el\ angulo\ del\ servo\ en\ la\ animacion}}
+\DoxyCodeLine{00143\ \ \ \ \ uint32\_t\ distance;}
+\DoxyCodeLine{00144\ \ \ \ \ uint16\_t\ lftIrValue;}
+\DoxyCodeLine{00145\ \ \ \ \ uint16\_t\ cntIrValue;}
+\DoxyCodeLine{00146\ \ \ \ \ uint16\_t\ rhtIrValue;}
+\DoxyCodeLine{00147\ \ \ \ \ uint16\_t\ blackIrValue;}
+\DoxyCodeLine{00148\ \ \ \ \ uint16\_t\ whiteIrValue;}
+\DoxyCodeLine{00149\ }
+\DoxyCodeLine{00150\ \ \ \ \ uint32\_t\ lftEncData;}
+\DoxyCodeLine{00151\ \ \ \ \ uint32\_t\ rhtEncData;}
+\DoxyCodeLine{00152\ }
+\DoxyCodeLine{00153\ \ \ \ \ \textcolor{comment}{//variables\ del\ servo}}
+\DoxyCodeLine{00154\ \ \ \ \ uint16\_t\ minMsServo;}
+\DoxyCodeLine{00155\ \ \ \ \ uint16\_t\ maxMsServo;}
+\DoxyCodeLine{00156\ }
+\DoxyCodeLine{00157\ \ \ \ \ \textcolor{comment}{//canales\ de\ RGB\ utilizados\ para\ pintar\ la\ velocidad\ de\ las\ ruedas}}
+\DoxyCodeLine{00158\ \ \ \ \ uint8\_t\ redChannel;}
+\DoxyCodeLine{00159\ \ \ \ \ uint8\_t\ greenChannel;}
+\DoxyCodeLine{00160\ }
+\DoxyCodeLine{00161\ \ \ \ \ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\{}
+\DoxyCodeLine{00162\ \ \ \ \ \ \ \ \ START,}
+\DoxyCodeLine{00163\ \ \ \ \ \ \ \ \ HEADER\_1,}
+\DoxyCodeLine{00164\ \ \ \ \ \ \ \ \ HEADER\_2,}
+\DoxyCodeLine{00165\ \ \ \ \ \ \ \ \ HEADER\_3,}
+\DoxyCodeLine{00166\ \ \ \ \ \ \ \ \ NBYTES,}
+\DoxyCodeLine{00167\ \ \ \ \ \ \ \ \ TOKEN,}
+\DoxyCodeLine{00168\ \ \ \ \ \ \ \ \ PAYLOAD}
+\DoxyCodeLine{00169\ \ \ \ \ \}\_eProtocolo;}
+\DoxyCodeLine{00170\ }
+\DoxyCodeLine{00171\ \ \ \ \ \_eProtocolo\ estadoProtocolo,estadoProtocoloUdp;}
+\DoxyCodeLine{00172\ }
+\DoxyCodeLine{00173\ \ \ \ \ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\{}
+\DoxyCodeLine{00174\ \ \ \ \ \ \ \ \ UDP=0,}
+\DoxyCodeLine{00175\ \ \ \ \ \ \ \ \ SERIE=1,}
+\DoxyCodeLine{00176\ \ \ \ \ \ \ \ \ ACK=0x0D,}
+\DoxyCodeLine{00177\ \ \ \ \ \ \ \ \ GETALIVE=0xF0,}
+\DoxyCodeLine{00178\ \ \ \ \ \ \ \ \ GETFIRMWARE=0xF1,}
+\DoxyCodeLine{00179\ \ \ \ \ \ \ \ \ UNKNOWCMD=0xFF,}
+\DoxyCodeLine{00180\ \ \ \ \ \ \ \ \ SETLEDS=0x10,}
+\DoxyCodeLine{00181\ \ \ \ \ \ \ \ \ GETSWITCHES=0x12,}
+\DoxyCodeLine{00182\ \ \ \ \ \ \ \ \ GETANALOGSENSORS=0xA0,}
+\DoxyCodeLine{00183\ \ \ \ \ \ \ \ \ SETMOTORTEST=0xA1,}
+\DoxyCodeLine{00184\ \ \ \ \ \ \ \ \ SETSERVOANGLE=0xA2,}
+\DoxyCodeLine{00185\ \ \ \ \ \ \ \ \ SERVOMOVESTOP=0x0A,}
+\DoxyCodeLine{00186\ \ \ \ \ \ \ \ \ GETDISTANCE=0xA3,}
+\DoxyCodeLine{00187\ \ \ \ \ \ \ \ \ GETSPEED=0xA4,}
+\DoxyCodeLine{00188\ \ \ \ \ \ \ \ \ SETSERVOLIMITS=0xA5,}
+\DoxyCodeLine{00189\ \ \ \ \ \ \ \ \ SETBLACKCOLOR=0xA6,}
+\DoxyCodeLine{00190\ \ \ \ \ \ \ \ \ SETWHITECOLOR=0xA7,}
+\DoxyCodeLine{00191\ \ \ \ \ \ \ \ \ PATHLENGHT=0xA8,}
+\DoxyCodeLine{00192\ \ \ \ \ \ \ \ \ CURRMODE=0xA9,}
+\DoxyCodeLine{00193\ \ \ \ \ \ \ \ \ CURRLEVEL=0x20,}
+\DoxyCodeLine{00194\ \ \ \ \ \ \ \ \ CURRMSSERVO\ =\ 0x21,}
+\DoxyCodeLine{00195\ \ \ \ \ \ \ \ \ OTHERS}
+\DoxyCodeLine{00196\ \ \ \ \ \}\_eCmd;}
+\DoxyCodeLine{00197\ }
+\DoxyCodeLine{00198\ }
+\DoxyCodeLine{00199\ \ \ \ \ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\{}
+\DoxyCodeLine{00200\ \ \ \ \ \ \ \ \ INROTATE,}
+\DoxyCodeLine{00201\ \ \ \ \ \ \ \ \ GOAHEAD,}
+\DoxyCodeLine{00202\ \ \ \ \ \ \ \ \ INCIRCLE,}
+\DoxyCodeLine{00203\ \ \ \ \ \ \ \ \ ONPATH,}
+\DoxyCodeLine{00204\ \ \ \ \ \ \ \ \ INLINE,}
+\DoxyCodeLine{00205\ \ \ \ \ \ \ \ \ FSTLNCORR,}
+\DoxyCodeLine{00206\ \ \ \ \ \ \ \ \ FSWAIT,}
+\DoxyCodeLine{00207\ \ \ \ \ \ \ \ \ FSTMARK,}
+\DoxyCodeLine{00208\ \ \ \ \ \ \ \ \ FLWLINE,}
+\DoxyCodeLine{00209\ \ \ \ \ \ \ \ \ SNDLNCORR,}
+\DoxyCodeLine{00210\ \ \ \ \ \ \ \ \ SDWAIT,}
+\DoxyCodeLine{00211\ \ \ \ \ \ \ \ \ SNDMARK,}
+\DoxyCodeLine{00212\ \ \ \ \ \ \ \ \ OUTLINE,}
+\DoxyCodeLine{00213\ \ \ \ \ \ \ \ \ ENTRY,}
+\DoxyCodeLine{00214\ \ \ \ \ \ \ \ \ ENTRCIRC,}
+\DoxyCodeLine{00215\ \ \ \ \ \ \ \ \ BCKCIRC,}
+\DoxyCodeLine{00216\ \ \ \ \ \ \ \ \ BCKOUTLINE}
+\DoxyCodeLine{00217\ \ \ \ \ \ \ \ \ \textcolor{comment}{//FINALROTATE\ ??}}
+\DoxyCodeLine{00218\ \ \ \ \ \}\_eMazePathModes;}
+\DoxyCodeLine{00219\ }
+\DoxyCodeLine{00220\ }
+\DoxyCodeLine{00221\ \ \ \ \ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct}\{}
+\DoxyCodeLine{00222\ \ \ \ \ \ \ \ \ uint8\_t\ timeOut;}
+\DoxyCodeLine{00223\ \ \ \ \ \ \ \ \ uint8\_t\ cheksum;}
+\DoxyCodeLine{00224\ \ \ \ \ \ \ \ \ uint8\_t\ payLoad[256];}
+\DoxyCodeLine{00225\ \ \ \ \ \ \ \ \ uint8\_t\ nBytes;}
+\DoxyCodeLine{00226\ \ \ \ \ \ \ \ \ uint8\_t\ index;}
+\DoxyCodeLine{00227\ \ \ \ \ \}\_sDatos\ ;}
+\DoxyCodeLine{00228\ }
+\DoxyCodeLine{00229\ \ \ \ \ \_sDatos\ rxData,\ rxDataUdp;}
+\DoxyCodeLine{00230\ }
+\DoxyCodeLine{00231\ \ \ \ \ \textcolor{keyword}{typedef}\ \textcolor{keyword}{union\ }\{}
+\DoxyCodeLine{00232\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ \ d32;}
+\DoxyCodeLine{00233\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ f32;}
+\DoxyCodeLine{00234\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ i32;}
+\DoxyCodeLine{00235\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ ui32;}
+\DoxyCodeLine{00236\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{short}\ ui16[2];}
+\DoxyCodeLine{00237\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{short}\ i16[2];}
+\DoxyCodeLine{00238\ \ \ \ \ \ \ \ \ uint8\_t\ ui8[4];}
+\DoxyCodeLine{00239\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{char}\ chr[4];}
+\DoxyCodeLine{00240\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ uchr[4];}
+\DoxyCodeLine{00241\ \ \ \ \ \ \ \ \ int8\_t\ \ i8[4];}
+\DoxyCodeLine{00242\ \ \ \ \ \}\_udat;}
+\DoxyCodeLine{00243\ }
+\DoxyCodeLine{00244\ \ \ \ \ \_udat\ myWord;}
+\DoxyCodeLine{00245\ \};}
+\DoxyCodeLine{00246\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ MAINWINDOW\_H}}
+
+\end{DoxyCode}

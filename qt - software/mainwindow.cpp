@@ -15,7 +15,7 @@ MainWindow::MainWindow(QWidget *parent)
     timer7 = new QTimer(this); //Utilizado para pintar el radar al inicio
 
     //dibujo
-    QPaintBox1 = new QPaintBox(0,0,ui->widget); //el padre es el widget
+    QPaintBox1 = new QPaintBox(0,0,ui->radarWidget); //el padre es el widget
     QPaintBox2 = new QPaintBox(0,0,ui->carWidget);
 
     //comunicacion
@@ -84,6 +84,7 @@ MainWindow::MainWindow(QWidget *parent)
     //como inicializamos las velocidades de encoders en 0, entonces definimos el canel verde en maximo y el rojo en minimo
     greenChannel = 255;
     redChannel = 0;
+    firRadarExe = true;
 
 
     //desabilitamos los botones con el fin de que no puedan ser presionados si no esta conectado
@@ -1099,7 +1100,7 @@ void MainWindow::radar(){
     QPen pen;
     QBrush brush; //
 
-    ui->widget->setAttribute(Qt::WA_TranslucentBackground);
+    ui->radarWidget->setAttribute(Qt::WA_TranslucentBackground);
 
     pen.setWidth(2);
     brush.setStyle(Qt::SolidPattern);
@@ -1115,8 +1116,8 @@ void MainWindow::radar(){
         paint.setBrush(brush);
         paint.resetTransform();
         paint.save();
-        paint.translate(-ui->widget->width()/2,-ui->widget->height()/2);
-        paint.drawEllipse(0,0,ui->widget->width()*2,ui->widget->height()*2);
+        paint.translate(-ui->radarWidget->width()/2,-ui->radarWidget->height()/2);
+        paint.drawEllipse(0,0,ui->radarWidget->width()*2,ui->radarWidget->height()*2);
         paint.restore();
         paint.save();
     }
@@ -1130,26 +1131,26 @@ void MainWindow::radar(){
     paint.setPen(pen);
     brush.setColor(QColor::fromRgb(0, 220, 0));
     paint.setBrush(brush);
-    paint.drawEllipse(0,0,ui->widget->width(),ui->widget->width());
+    paint.drawEllipse(0,0,ui->radarWidget->width(),ui->radarWidget->width());
 
     //circunferencia que le sigue en tamaño
     paint.save();
-    paint.translate(ui->widget->width()/8,ui->widget->height()/4);//ui->widget->height(),ui->widget->height());
-    paint.drawEllipse(0,0,ui->widget->width()*3/4,ui->widget->width()*3/4);
+    paint.translate(ui->radarWidget->width()/8,ui->radarWidget->height()/4);//ui->widget->height(),ui->widget->height());
+    paint.drawEllipse(0,0,ui->radarWidget->width()*3/4,ui->radarWidget->width()*3/4);
     paint.restore();
     paint.save();
 
     //siguente circunferencia
     paint.save();
-    paint.translate(ui->widget->width()/4,ui->widget->height()/2);//ui->widget->height(),ui->widget->height());
-    paint.drawEllipse(0,0,ui->widget->width()/2,ui->widget->width()/2);
+    paint.translate(ui->radarWidget->width()/4,ui->radarWidget->height()/2);//ui->widget->height(),ui->widget->height());
+    paint.drawEllipse(0,0,ui->radarWidget->width()/2,ui->radarWidget->width()/2);
     paint.restore();
     paint.save();
 
     //circunferencia mas pequeña
     paint.save();
-    paint.translate(ui->widget->width()*3/8,ui->widget->height()*3/4);//ui->widget->height(),ui->widget->height());
-    paint.drawEllipse(0,0,ui->widget->width()/4,ui->widget->width()/4);
+    paint.translate(ui->radarWidget->width()*3/8,ui->radarWidget->height()*3/4);//ui->widget->height(),ui->widget->height());
+    paint.drawEllipse(0,0,ui->radarWidget->width()/4,ui->radarWidget->width()/4);
     paint.restore();
     paint.save();
 
@@ -1158,12 +1159,12 @@ void MainWindow::radar(){
     paint.setPen(pen);
 
     paint.save();
-    paint.translate(ui->widget->width()/2,ui->widget->height());
+    paint.translate(ui->radarWidget->width()/2,ui->radarWidget->height());
 
     for(int i=1;i<=60;i++){
         paint.rotate(30);
         if(i%5==0){
-            paint.drawLine(0,0,ui->widget->width(),0);
+            paint.drawLine(0,0,ui->radarWidget->width(),0);
         }
     }
 
@@ -1179,9 +1180,9 @@ void MainWindow::radar(){
     paint.opacity();
 
     paint.save();
-    paint.translate(ui->widget->width()/2,ui->widget->height());
+    paint.translate(ui->radarWidget->width()/2,ui->radarWidget->height());
     paint.rotate(angle);
-    paint.drawLine(0,0,ui->widget->width(),0);
+    paint.drawLine(0,0,ui->radarWidget->width(),0);
     paint.restore();
     paint.save();
 
@@ -1191,7 +1192,7 @@ void MainWindow::radar(){
     paint.opacity();
 
     paint.save();
-    paint.translate(ui->widget->width()/2,ui->widget->height());
+    paint.translate(ui->radarWidget->width()/2,ui->radarWidget->height());
     paint.rotate(angle);
     paint.drawLine(0,0,distance*10,0);
     paint.restore();
@@ -1534,3 +1535,39 @@ void MainWindow::onTimer7(){
     timer3->stop();
     timer7->stop();
 }
+
+void MainWindow::resizeEvent(QResizeEvent *event){
+    QPaintBox1->resize(ui->radarWidget->width(),ui->radarWidget->height());
+    QPaintBox1->getCanvas()->fill(Qt::black);
+    QPaintBox1->update();
+
+    QPaintBox2->resize(ui->carWidget->width(), ui->carWidget->height());
+    QPaintBox2->getCanvas()->fill(Qt::black);
+    QPaintBox2->update();
+
+    firRadarExe = true;
+    timer3->start();
+}
+
+
+void MainWindow::paintEvent(QPaintEvent *event){
+    Q_UNUSED(event);
+
+    static bool first = false;
+
+    if(!first){
+        first = true;
+
+        QPaintBox1->resize(ui->radarWidget->width(), ui->radarWidget->height());
+        QPaintBox1->getCanvas()->fill(Qt::black);
+        QPaintBox1->update();
+
+        QPaintBox2->resize(ui->carWidget->width(), ui->carWidget->height());
+        QPaintBox2->getCanvas()->fill(Qt::black);
+        QPaintBox2->update();
+
+        firRadarExe = true;
+        timer3->start();
+    }
+}
+

@@ -1,0 +1,107 @@
+\doxysection{\+\_\+s\+Dato\+Config Struct Reference}
+\hypertarget{struct__s_dato_config}{}\label{struct__s_dato_config}\index{\_sDatoConfig@{\_sDatoConfig}}
+
+
+Estructura para manejar la trasnmisión, recepción de datos del ESP.  
+
+
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+uint8\+\_\+t \mbox{\hyperlink{struct__s_dato_config_a3527038584a4a5320efff0444dbf0899}{estado}}
+\begin{DoxyCompactList}\small\item\em Indica cual es el estado de la transmisión durante la configuración. \end{DoxyCompactList}\item 
+uint8\+\_\+t \mbox{\hyperlink{struct__s_dato_config_a400e9d83af113d1b0920bbd0cdec77f5}{index\+Write\+Rx}}
+\begin{DoxyCompactList}\small\item\em Indice de escritura del buffer circular de recepción. \end{DoxyCompactList}\item 
+uint8\+\_\+t \mbox{\hyperlink{struct__s_dato_config_ac1024a9dac599932424e389d168da075}{index\+Read\+Rx}}
+\begin{DoxyCompactList}\small\item\em Indice de lectura del buffer circular de recepción. \end{DoxyCompactList}\item 
+uint8\+\_\+t \mbox{\hyperlink{struct__s_dato_config_a6408c8e7502da4f00cdf4b133bc383e9}{index\+Write\+Tx}}
+\begin{DoxyCompactList}\small\item\em Indice de escritura del buffer circular de transmisión. \end{DoxyCompactList}\item 
+uint8\+\_\+t \mbox{\hyperlink{struct__s_dato_config_a7a7ab595a1677a38aa1d1222e2e4b07f}{index\+Read\+Tx}}
+\begin{DoxyCompactList}\small\item\em Indice de lectura del buffer circular de transmisión. \end{DoxyCompactList}\item 
+uint8\+\_\+t \mbox{\hyperlink{struct__s_dato_config_a76382f515c66d40d5aa00260aa8e2257}{buffer\+Rx}} \mbox{[}256\mbox{]}
+\begin{DoxyCompactList}\small\item\em Buffer circular de recepción. \end{DoxyCompactList}\item 
+uint8\+\_\+t \mbox{\hyperlink{struct__s_dato_config_a50f628b47624943a0cf7c618a5c3bf95}{buffer\+Tx}} \mbox{[}256\mbox{]}
+\begin{DoxyCompactList}\small\item\em Buffer circular de transmisión. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Estructura para manejar la trasnmisión, recepción de datos del ESP. 
+
+
+
+\doxysubsection{Member Data Documentation}
+\Hypertarget{struct__s_dato_config_a76382f515c66d40d5aa00260aa8e2257}\label{struct__s_dato_config_a76382f515c66d40d5aa00260aa8e2257} 
+\index{\_sDatoConfig@{\_sDatoConfig}!bufferRx@{bufferRx}}
+\index{bufferRx@{bufferRx}!\_sDatoConfig@{\_sDatoConfig}}
+\doxysubsubsection{\texorpdfstring{bufferRx}{bufferRx}}
+{\footnotesize\ttfamily uint8\+\_\+t \+\_\+s\+Dato\+Config\+::buffer\+Rx\mbox{[}256\mbox{]}}
+
+
+
+Buffer circular de recepción. 
+
+\Hypertarget{struct__s_dato_config_a50f628b47624943a0cf7c618a5c3bf95}\label{struct__s_dato_config_a50f628b47624943a0cf7c618a5c3bf95} 
+\index{\_sDatoConfig@{\_sDatoConfig}!bufferTx@{bufferTx}}
+\index{bufferTx@{bufferTx}!\_sDatoConfig@{\_sDatoConfig}}
+\doxysubsubsection{\texorpdfstring{bufferTx}{bufferTx}}
+{\footnotesize\ttfamily uint8\+\_\+t \+\_\+s\+Dato\+Config\+::buffer\+Tx\mbox{[}256\mbox{]}}
+
+
+
+Buffer circular de transmisión. 
+
+\Hypertarget{struct__s_dato_config_a3527038584a4a5320efff0444dbf0899}\label{struct__s_dato_config_a3527038584a4a5320efff0444dbf0899} 
+\index{\_sDatoConfig@{\_sDatoConfig}!estado@{estado}}
+\index{estado@{estado}!\_sDatoConfig@{\_sDatoConfig}}
+\doxysubsubsection{\texorpdfstring{estado}{estado}}
+{\footnotesize\ttfamily uint8\+\_\+t \+\_\+s\+Dato\+Config\+::estado}
+
+
+
+Indica cual es el estado de la transmisión durante la configuración. 
+
+\Hypertarget{struct__s_dato_config_ac1024a9dac599932424e389d168da075}\label{struct__s_dato_config_ac1024a9dac599932424e389d168da075} 
+\index{\_sDatoConfig@{\_sDatoConfig}!indexReadRx@{indexReadRx}}
+\index{indexReadRx@{indexReadRx}!\_sDatoConfig@{\_sDatoConfig}}
+\doxysubsubsection{\texorpdfstring{indexReadRx}{indexReadRx}}
+{\footnotesize\ttfamily uint8\+\_\+t \+\_\+s\+Dato\+Config\+::index\+Read\+Rx}
+
+
+
+Indice de lectura del buffer circular de recepción. 
+
+\Hypertarget{struct__s_dato_config_a7a7ab595a1677a38aa1d1222e2e4b07f}\label{struct__s_dato_config_a7a7ab595a1677a38aa1d1222e2e4b07f} 
+\index{\_sDatoConfig@{\_sDatoConfig}!indexReadTx@{indexReadTx}}
+\index{indexReadTx@{indexReadTx}!\_sDatoConfig@{\_sDatoConfig}}
+\doxysubsubsection{\texorpdfstring{indexReadTx}{indexReadTx}}
+{\footnotesize\ttfamily uint8\+\_\+t \+\_\+s\+Dato\+Config\+::index\+Read\+Tx}
+
+
+
+Indice de lectura del buffer circular de transmisión. 
+
+\Hypertarget{struct__s_dato_config_a400e9d83af113d1b0920bbd0cdec77f5}\label{struct__s_dato_config_a400e9d83af113d1b0920bbd0cdec77f5} 
+\index{\_sDatoConfig@{\_sDatoConfig}!indexWriteRx@{indexWriteRx}}
+\index{indexWriteRx@{indexWriteRx}!\_sDatoConfig@{\_sDatoConfig}}
+\doxysubsubsection{\texorpdfstring{indexWriteRx}{indexWriteRx}}
+{\footnotesize\ttfamily uint8\+\_\+t \+\_\+s\+Dato\+Config\+::index\+Write\+Rx}
+
+
+
+Indice de escritura del buffer circular de recepción. 
+
+\Hypertarget{struct__s_dato_config_a6408c8e7502da4f00cdf4b133bc383e9}\label{struct__s_dato_config_a6408c8e7502da4f00cdf4b133bc383e9} 
+\index{\_sDatoConfig@{\_sDatoConfig}!indexWriteTx@{indexWriteTx}}
+\index{indexWriteTx@{indexWriteTx}!\_sDatoConfig@{\_sDatoConfig}}
+\doxysubsubsection{\texorpdfstring{indexWriteTx}{indexWriteTx}}
+{\footnotesize\ttfamily uint8\+\_\+t \+\_\+s\+Dato\+Config\+::index\+Write\+Tx}
+
+
+
+Indice de escritura del buffer circular de transmisión. 
+
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{wifi_8cpp}{wifi.\+cpp}}\end{DoxyCompactItemize}

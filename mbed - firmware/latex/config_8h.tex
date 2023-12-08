@@ -1,0 +1,100 @@
+\doxysection{config.\+h File Reference}
+\hypertarget{config_8h}{}\label{config_8h}\index{config.h@{config.h}}
+\doxysubsubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{config_8h_a8ca84fa721311790c3430eb5b8e05b9d}{AUTOCONNECTWIFI}}~1
+\item 
+\#define \mbox{\hyperlink{config_8h_ab3db2255b6b91795cdadbff993465f92}{ALIVEAUTOINTERVAL}}~15000
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+const unsigned char \mbox{\hyperlink{config_8h_ad6accdfc118d84aebd92bd62f41a2925}{data\+Cwmode}} \mbox{[}$\,$\mbox{]} =\"{}AT+\mbox{\hyperlink{wifi_8cpp_aaeb05e17d3ebe08abbced38a324afc33aec61241b3c97fa7b0951ddef414cdd86}{CWMODE\+\_\+\+DEF}}=1\textbackslash{}r\textbackslash{}n\"{}
+\begin{DoxyCompactList}\small\item\em Cadena constante para configurar el \doxylink{class_wifi}{Wifi} Automaticamente sin enviar datos desde la PC. \end{DoxyCompactList}\item 
+const unsigned char \mbox{\hyperlink{config_8h_ad18ec229d2ac15c3541459be5a572c18}{data\+Cwdhcp}} \mbox{[}$\,$\mbox{]} =\"{}AT+\mbox{\hyperlink{wifi_8cpp_aaeb05e17d3ebe08abbced38a324afc33a3b8e3ef1378263b294399c6e10863c96}{CWDHCP\+\_\+\+DEF}}=1,1\textbackslash{}r\textbackslash{}n\"{}
+\item 
+const unsigned char \mbox{\hyperlink{config_8h_a61f5b66e95817fa46a7268b1240b2bfd}{data\+Cipmode}} \mbox{[}$\,$\mbox{]} =\"{}AT+\mbox{\hyperlink{wifi_8cpp_aaeb05e17d3ebe08abbced38a324afc33accef6b62a993133317caad96e065c001}{CIPMODE}}=1\textbackslash{}r\textbackslash{}n\"{}
+\item 
+const unsigned char \mbox{\hyperlink{config_8h_aa70b8267ffa862094a35892168d795d0}{data\+Cipsend}} \mbox{[}$\,$\mbox{]} =\"{}AT+CIPSEND\textbackslash{}r\textbackslash{}n\"{}
+\item 
+const unsigned char \mbox{\hyperlink{config_8h_a485497578d981ecf7cf62b827d74eb94}{data\+Cipmux}} \mbox{[}$\,$\mbox{]} =\"{}AT+\mbox{\hyperlink{wifi_8cpp_aaeb05e17d3ebe08abbced38a324afc33a40f8bf9bc0f3d4043fc3053784591043}{CIPMUX}}=0\textbackslash{}r\textbackslash{}n\"{}
+\item 
+const unsigned char \mbox{\hyperlink{config_8h_a7d3c2129c391a0d21493f4d42895d528}{data\+Cwjap}} \mbox{[}$\,$\mbox{]} =\"{}AT+\mbox{\hyperlink{wifi_8cpp_aaeb05e17d3ebe08abbced38a324afc33af5b2510ae7274257b54e0c9638dd9187}{CWJAP\+\_\+\+DEF}}=\textbackslash{}\"{}FCAL\textbackslash{}\"{},\textbackslash{}\"{}fcalconcordia.\+06-\/2019\textbackslash{}\"{}\textbackslash{}r\textbackslash{}n\"{}
+\begin{DoxyCompactList}\small\item\em se debe colocar la SSID y el PASS de la red a la que queremos conectarnos \end{DoxyCompactList}\item 
+const unsigned char \mbox{\hyperlink{config_8h_a1f53fc7556f0e3093f53a990ef37137e}{data\+Cipstart}} \mbox{[}$\,$\mbox{]} =\"{}AT+\mbox{\hyperlink{wifi_8cpp_aaeb05e17d3ebe08abbced38a324afc33a4ebe840ea473edb9e4c588dfe5bb390c}{CIPSTART}}=\textbackslash{}\"{}UDP\textbackslash{}\"{},\textbackslash{}\"{}172.\+23.\+214.\+181\textbackslash{}\"{},30010,30001,0\textbackslash{}r\textbackslash{}n\"{}
+\begin{DoxyCompactList}\small\item\em se debe colocar la IP de la PC a la que se quiere conectar const unsigned char data\+Cipstart\mbox{[}\mbox{]}=\"{}\+AT+\+CIPSTART=\textbackslash{}\"{}\+UDP\textbackslash{}\"{},\textbackslash{}\"{}\+IP\+\_\+de\+\_\+la\+:\+PC\textbackslash{}\"{},30010,30001,0\textbackslash{}r\textbackslash{}n\"{}; \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Macro Definition Documentation}
+\Hypertarget{config_8h_ab3db2255b6b91795cdadbff993465f92}\label{config_8h_ab3db2255b6b91795cdadbff993465f92} 
+\index{config.h@{config.h}!ALIVEAUTOINTERVAL@{ALIVEAUTOINTERVAL}}
+\index{ALIVEAUTOINTERVAL@{ALIVEAUTOINTERVAL}!config.h@{config.h}}
+\doxysubsubsection{\texorpdfstring{ALIVEAUTOINTERVAL}{ALIVEAUTOINTERVAL}}
+{\footnotesize\ttfamily \#define ALIVEAUTOINTERVAL~15000}
+
+\Hypertarget{config_8h_a8ca84fa721311790c3430eb5b8e05b9d}\label{config_8h_a8ca84fa721311790c3430eb5b8e05b9d} 
+\index{config.h@{config.h}!AUTOCONNECTWIFI@{AUTOCONNECTWIFI}}
+\index{AUTOCONNECTWIFI@{AUTOCONNECTWIFI}!config.h@{config.h}}
+\doxysubsubsection{\texorpdfstring{AUTOCONNECTWIFI}{AUTOCONNECTWIFI}}
+{\footnotesize\ttfamily \#define AUTOCONNECTWIFI~1}
+
+
+
+\doxysubsection{Variable Documentation}
+\Hypertarget{config_8h_a61f5b66e95817fa46a7268b1240b2bfd}\label{config_8h_a61f5b66e95817fa46a7268b1240b2bfd} 
+\index{config.h@{config.h}!dataCipmode@{dataCipmode}}
+\index{dataCipmode@{dataCipmode}!config.h@{config.h}}
+\doxysubsubsection{\texorpdfstring{dataCipmode}{dataCipmode}}
+{\footnotesize\ttfamily const unsigned char data\+Cipmode\mbox{[}$\,$\mbox{]} =\"{}AT+\mbox{\hyperlink{wifi_8cpp_aaeb05e17d3ebe08abbced38a324afc33accef6b62a993133317caad96e065c001}{CIPMODE}}=1\textbackslash{}r\textbackslash{}n\"{}}
+
+\Hypertarget{config_8h_a485497578d981ecf7cf62b827d74eb94}\label{config_8h_a485497578d981ecf7cf62b827d74eb94} 
+\index{config.h@{config.h}!dataCipmux@{dataCipmux}}
+\index{dataCipmux@{dataCipmux}!config.h@{config.h}}
+\doxysubsubsection{\texorpdfstring{dataCipmux}{dataCipmux}}
+{\footnotesize\ttfamily const unsigned char data\+Cipmux\mbox{[}$\,$\mbox{]} =\"{}AT+\mbox{\hyperlink{wifi_8cpp_aaeb05e17d3ebe08abbced38a324afc33a40f8bf9bc0f3d4043fc3053784591043}{CIPMUX}}=0\textbackslash{}r\textbackslash{}n\"{}}
+
+\Hypertarget{config_8h_aa70b8267ffa862094a35892168d795d0}\label{config_8h_aa70b8267ffa862094a35892168d795d0} 
+\index{config.h@{config.h}!dataCipsend@{dataCipsend}}
+\index{dataCipsend@{dataCipsend}!config.h@{config.h}}
+\doxysubsubsection{\texorpdfstring{dataCipsend}{dataCipsend}}
+{\footnotesize\ttfamily const unsigned char data\+Cipsend\mbox{[}$\,$\mbox{]} =\"{}AT+CIPSEND\textbackslash{}r\textbackslash{}n\"{}}
+
+\Hypertarget{config_8h_a1f53fc7556f0e3093f53a990ef37137e}\label{config_8h_a1f53fc7556f0e3093f53a990ef37137e} 
+\index{config.h@{config.h}!dataCipstart@{dataCipstart}}
+\index{dataCipstart@{dataCipstart}!config.h@{config.h}}
+\doxysubsubsection{\texorpdfstring{dataCipstart}{dataCipstart}}
+{\footnotesize\ttfamily const unsigned char data\+Cipstart\mbox{[}$\,$\mbox{]} =\"{}AT+\mbox{\hyperlink{wifi_8cpp_aaeb05e17d3ebe08abbced38a324afc33a4ebe840ea473edb9e4c588dfe5bb390c}{CIPSTART}}=\textbackslash{}\"{}UDP\textbackslash{}\"{},\textbackslash{}\"{}172.\+23.\+214.\+181\textbackslash{}\"{},30010,30001,0\textbackslash{}r\textbackslash{}n\"{}}
+
+
+
+se debe colocar la IP de la PC a la que se quiere conectar const unsigned char data\+Cipstart\mbox{[}\mbox{]}=\"{}\+AT+\+CIPSTART=\textbackslash{}\"{}\+UDP\textbackslash{}\"{},\textbackslash{}\"{}\+IP\+\_\+de\+\_\+la\+:\+PC\textbackslash{}\"{},30010,30001,0\textbackslash{}r\textbackslash{}n\"{}; 
+
+\Hypertarget{config_8h_ad18ec229d2ac15c3541459be5a572c18}\label{config_8h_ad18ec229d2ac15c3541459be5a572c18} 
+\index{config.h@{config.h}!dataCwdhcp@{dataCwdhcp}}
+\index{dataCwdhcp@{dataCwdhcp}!config.h@{config.h}}
+\doxysubsubsection{\texorpdfstring{dataCwdhcp}{dataCwdhcp}}
+{\footnotesize\ttfamily const unsigned char data\+Cwdhcp\mbox{[}$\,$\mbox{]} =\"{}AT+\mbox{\hyperlink{wifi_8cpp_aaeb05e17d3ebe08abbced38a324afc33a3b8e3ef1378263b294399c6e10863c96}{CWDHCP\+\_\+\+DEF}}=1,1\textbackslash{}r\textbackslash{}n\"{}}
+
+\Hypertarget{config_8h_a7d3c2129c391a0d21493f4d42895d528}\label{config_8h_a7d3c2129c391a0d21493f4d42895d528} 
+\index{config.h@{config.h}!dataCwjap@{dataCwjap}}
+\index{dataCwjap@{dataCwjap}!config.h@{config.h}}
+\doxysubsubsection{\texorpdfstring{dataCwjap}{dataCwjap}}
+{\footnotesize\ttfamily const unsigned char data\+Cwjap\mbox{[}$\,$\mbox{]} =\"{}AT+\mbox{\hyperlink{wifi_8cpp_aaeb05e17d3ebe08abbced38a324afc33af5b2510ae7274257b54e0c9638dd9187}{CWJAP\+\_\+\+DEF}}=\textbackslash{}\"{}FCAL\textbackslash{}\"{},\textbackslash{}\"{}fcalconcordia.\+06-\/2019\textbackslash{}\"{}\textbackslash{}r\textbackslash{}n\"{}}
+
+
+
+se debe colocar la SSID y el PASS de la red a la que queremos conectarnos 
+
+const unsigned char data\+Cwjap\mbox{[}\mbox{]}=\"{}\+AT+\+CWJAP\+\_\+\+DEF=\textbackslash{}\"{}\+Galaxy A21s\+E426\textbackslash{}\"{},\textbackslash{}\"{}tyva7426\textbackslash{}\"{}\textbackslash{}r\textbackslash{}n\"{}; const unsigned char data\+Cwjap\mbox{[}\mbox{]}=\"{}\+AT+\+CWJAP\+\_\+\+DEF=\textbackslash{}\"{}\+FCAL\textbackslash{}\"{},\textbackslash{}\"{}fcalconcordia.\+06-\/2019\textbackslash{}\"{}\textbackslash{}r\textbackslash{}n\"{};
+
+const unsigned char data\+Cwjap\mbox{[}\mbox{]}=\"{}\+AT+\+CWJAP\+\_\+\+DEF=\textbackslash{}\"{}\+SSID\textbackslash{}\"{},\textbackslash{}\"{}\+PASS\textbackslash{}\"{}\textbackslash{}r\textbackslash{}n\"{}; \Hypertarget{config_8h_ad6accdfc118d84aebd92bd62f41a2925}\label{config_8h_ad6accdfc118d84aebd92bd62f41a2925} 
+\index{config.h@{config.h}!dataCwmode@{dataCwmode}}
+\index{dataCwmode@{dataCwmode}!config.h@{config.h}}
+\doxysubsubsection{\texorpdfstring{dataCwmode}{dataCwmode}}
+{\footnotesize\ttfamily const unsigned char data\+Cwmode\mbox{[}$\,$\mbox{]} =\"{}AT+\mbox{\hyperlink{wifi_8cpp_aaeb05e17d3ebe08abbced38a324afc33aec61241b3c97fa7b0951ddef414cdd86}{CWMODE\+\_\+\+DEF}}=1\textbackslash{}r\textbackslash{}n\"{}}
+
+
+
+Cadena constante para configurar el \doxylink{class_wifi}{Wifi} Automaticamente sin enviar datos desde la PC. 
+

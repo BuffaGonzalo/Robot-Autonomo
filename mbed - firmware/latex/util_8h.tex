@@ -1,0 +1,440 @@
+\doxysection{util.\+h File Reference}
+\hypertarget{util_8h}{}\label{util_8h}\index{util.h@{util.h}}
+{\ttfamily \#include \"{}my\+Delay.\+h\"{}}\newline
+{\ttfamily \#include $<$stdlib.\+h$>$}\newline
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+union \mbox{\hyperlink{union__u_flag}{\+\_\+u\+Flag}}
+\begin{DoxyCompactList}\small\item\em Mapa de bits para declarar banderas. \end{DoxyCompactList}\item 
+union \mbox{\hyperlink{union__u_word}{\+\_\+u\+Word}}
+\begin{DoxyCompactList}\small\item\em Unión ara la descomposición/composición de números mayores a 1 byte. \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{struct__s_rx}{\+\_\+s\+Rx}}
+\begin{DoxyCompactList}\small\item\em estructura para la recepción de datos por puerto serie \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{struct__s_tx}{\+\_\+s\+Tx}}
+\begin{DoxyCompactList}\small\item\em Estructura para la transmisión de datos por el puerto serie. \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{struct__s_sensor}{\+\_\+s\+Sensor}}
+\begin{DoxyCompactList}\small\item\em estructura para el manejo de sensores \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{struct__s_servo}{\+\_\+s\+Servo}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \mbox{\hyperlink{util_8h_ad21e16d74a232edf49d5d058f38cd1dd}{\+\_\+e\+Decode}} \{ \newline
+\mbox{\hyperlink{util_8h_ad21e16d74a232edf49d5d058f38cd1ddab7875c3491a47307d4661d3f6aeac81b}{HEADER\+\_\+U}}
+, \mbox{\hyperlink{util_8h_ad21e16d74a232edf49d5d058f38cd1ddac7830e832b05b02d669346ec772d5cee}{HEADER\+\_\+N}}
+, \mbox{\hyperlink{util_8h_ad21e16d74a232edf49d5d058f38cd1dda8145203438c52dabc48cf15d4c339026}{HEADER\+\_\+E}}
+, \mbox{\hyperlink{util_8h_ad21e16d74a232edf49d5d058f38cd1ddade6c7efad424d5710e780ae5258b9b0a}{HEADER\+\_\+R}}
+, \newline
+\mbox{\hyperlink{util_8h_ad21e16d74a232edf49d5d058f38cd1ddab17ae6afccbbc8f8efc251eb72cfcf53}{NBYTES}}
+, \mbox{\hyperlink{util_8h_ad21e16d74a232edf49d5d058f38cd1dda07fe54e18c187cac6548db45a3f3676a}{TOKEN}}
+, \mbox{\hyperlink{util_8h_ad21e16d74a232edf49d5d058f38cd1dda14aa1c5c4852ea2d61eef4d73772ea65}{PAYLOAD}}
+ \}
+\begin{DoxyCompactList}\small\item\em Enumeración para la maquina de estados que se encarga de decodificar el protocolo de comunicación. \end{DoxyCompactList}\item 
+enum \mbox{\hyperlink{util_8h_a914da92242d04381391fee2bb1c936df}{\+\_\+e\+Cmd}} \{ \newline
+\mbox{\hyperlink{util_8h_a914da92242d04381391fee2bb1c936dfa4f34c5c191d6e0d028ca831b6c0b1571}{ALIVE}} = 0x\+F0
+, \mbox{\hyperlink{util_8h_a914da92242d04381391fee2bb1c936dfa865a558f3ba75815d3e16750c1efc611}{FIRMWARE}} = 0x\+F1
+, \mbox{\hyperlink{util_8h_a914da92242d04381391fee2bb1c936dfa9abaeb93b3d9603ff62173a6d71dc425}{LEDSTATUS}} = 0x10
+, \mbox{\hyperlink{util_8h_a914da92242d04381391fee2bb1c936dfaca828ec26cabbc2964148acfab523b75}{BUTTONSTATUS}} = 0x12
+, \newline
+\mbox{\hyperlink{util_8h_a914da92242d04381391fee2bb1c936dfafb78d3af9d9e58227247dc57b0aecfe1}{ANALOGSENSORS}} = 0x\+A0
+, \mbox{\hyperlink{util_8h_a914da92242d04381391fee2bb1c936dfa1aa77f0d3463a2b8b52d2314a5e72ad6}{SETBLACKCOLOR}} = 0x\+A6
+, \mbox{\hyperlink{util_8h_a914da92242d04381391fee2bb1c936dfae7519f1ebb44c9088103de927a6bc0db}{SETWHITECOLOR}} = 0x\+A7
+, \mbox{\hyperlink{util_8h_a914da92242d04381391fee2bb1c936dfa86a97517d0af318dd5b10d9f6e2e1510}{PATHLENGHT}} = 0x\+A8
+, \newline
+\mbox{\hyperlink{util_8h_a914da92242d04381391fee2bb1c936dfaf28ef24f0b2d965844e9399269ecbb0b}{CURRMODE}} = 0x\+A9
+, \mbox{\hyperlink{util_8h_a914da92242d04381391fee2bb1c936dfaa8e05b4e51503527b815516ef1ed5f84}{CURRLEVEL}} = 0x20
+, \mbox{\hyperlink{util_8h_a914da92242d04381391fee2bb1c936dfa7f85eb9932a521154b78fc207e6039b1}{CURRMSSERVO}} = 0x21
+, \mbox{\hyperlink{util_8h_a914da92242d04381391fee2bb1c936dfa937bd6bfdc31b5ea963ffda0e3816f3e}{MOTORTEST}} = 0x\+A1
+, \newline
+\mbox{\hyperlink{util_8h_a914da92242d04381391fee2bb1c936dfab328dd4fbe58fe21365200828c8a79f7}{SERVOANGLE}} = 0x\+A2
+, \mbox{\hyperlink{util_8h_a914da92242d04381391fee2bb1c936dfa05ae5f8f37e464cb132441b95aa792ac}{CONFIGSERVO}} = 0x\+A5
+, \mbox{\hyperlink{util_8h_a914da92242d04381391fee2bb1c936dfa1f9803fa27f94236685f4c48a4d295a6}{SERVOFINISHMOVE}} = 0x0A
+, \mbox{\hyperlink{util_8h_a914da92242d04381391fee2bb1c936dfa00453ddc67bf6761e11618b90f38de17}{GETDISTANCE}} = 0x\+A3
+, \newline
+\mbox{\hyperlink{util_8h_a914da92242d04381391fee2bb1c936dfad587a89ddd7116e341242f62ca5d48fd}{GETSPEED}} = 0x\+A4
+, \mbox{\hyperlink{util_8h_a914da92242d04381391fee2bb1c936dfa41246e9c8691b7e33bc79b345e06b48e}{ACK}} = 0x0D
+, \mbox{\hyperlink{util_8h_a914da92242d04381391fee2bb1c936dfa6ce26a62afab55d7606ad4e92428b30c}{UNKNOWN}} = 0x\+FF
+ \}
+\begin{DoxyCompactList}\small\item\em Enumeración de los comandos del protocolo. \end{DoxyCompactList}\item 
+enum \mbox{\hyperlink{util_8h_a8aa339381659acb72b9870810f7cd5e6}{\+\_\+e\+Modes}} \{ \newline
+\mbox{\hyperlink{util_8h_a8aa339381659acb72b9870810f7cd5e6afd6a0e4343048b10646dd2976cc5ad18}{IDLE}}
+, \mbox{\hyperlink{util_8h_a8aa339381659acb72b9870810f7cd5e6a618212cecb89a686b8cd71e7f94a5b02}{PREMODE1}}
+, \mbox{\hyperlink{util_8h_a8aa339381659acb72b9870810f7cd5e6a5dbaccb0e5b4f99d4902ff920fe3f823}{EXEMODE1}}
+, \mbox{\hyperlink{util_8h_a8aa339381659acb72b9870810f7cd5e6a979061fddd5363b46f186ffbf88a235a}{ONMODE1}}
+, \newline
+\mbox{\hyperlink{util_8h_a8aa339381659acb72b9870810f7cd5e6a75fb6443d2389a51160baeb843c2fcd9}{PREMODE2}}
+, \mbox{\hyperlink{util_8h_a8aa339381659acb72b9870810f7cd5e6a95c266e5d391f2108b8fdb4e863321cd}{EXEMODE2}}
+, \mbox{\hyperlink{util_8h_a8aa339381659acb72b9870810f7cd5e6a5041da15b8b9c34d77463d8aa584c900}{ONMODE2}}
+, \mbox{\hyperlink{util_8h_a8aa339381659acb72b9870810f7cd5e6ac2372f8148ade459f59c40d799042e3b}{PREMODE3}}
+, \newline
+\mbox{\hyperlink{util_8h_a8aa339381659acb72b9870810f7cd5e6aec389491a56f32cc65dc3aadfb1ff630}{EXEMODE3}}
+, \mbox{\hyperlink{util_8h_a8aa339381659acb72b9870810f7cd5e6a93f1869ce3584ce1134d0b3ae51e5e0d}{ONMODE3}}
+ \}
+\begin{DoxyCompactList}\small\item\em Enumeracion utilizada para los modos del auto y del heartbeat valores idle, premode1, premode2, premode3, onmode1, onmode2, onmode3 utilizadas para el manejo de modos todos son utilizados tambien para los modos del heartbeat. \end{DoxyCompactList}\item 
+enum \mbox{\hyperlink{util_8h_a67ee812ef52af4b90a3d804b8503dd7a}{\+\_\+e\+Maze\+Path\+Modes}} \{ \newline
+\mbox{\hyperlink{util_8h_a67ee812ef52af4b90a3d804b8503dd7aa3c65c9e3ed47773da5e99f853d1f10bf}{INROTATE}}
+, \mbox{\hyperlink{util_8h_a67ee812ef52af4b90a3d804b8503dd7aa1941915805ad784604002ab9d2056b24}{GOAHEAD}}
+, \mbox{\hyperlink{util_8h_a67ee812ef52af4b90a3d804b8503dd7aa9160c15d9b875795f93d1da0b3efeef9}{INCIRCLE}}
+, \mbox{\hyperlink{util_8h_a67ee812ef52af4b90a3d804b8503dd7aad7226120ec8aef76663051b54f633d4d}{ONPATH}}
+, \newline
+\mbox{\hyperlink{util_8h_a67ee812ef52af4b90a3d804b8503dd7aa18c97cbdfea4a3b188d4efe2cf508e5b}{INLINE}}
+, \mbox{\hyperlink{util_8h_a67ee812ef52af4b90a3d804b8503dd7aa2d9c99efc9e702a3f00256d4b7cf9f4c}{FSTLNCORR}}
+, \mbox{\hyperlink{util_8h_a67ee812ef52af4b90a3d804b8503dd7aa5763b91afeb5262b393547f899728bff}{FSWAIT}}
+, \mbox{\hyperlink{util_8h_a67ee812ef52af4b90a3d804b8503dd7aa44ffc61742a6cdb9b677e36a5efefa97}{FSTMARK}}
+, \newline
+\mbox{\hyperlink{util_8h_a67ee812ef52af4b90a3d804b8503dd7aa1e81990809be7700c57d1e1ffbf071bf}{FLWLINE}}
+, \mbox{\hyperlink{util_8h_a67ee812ef52af4b90a3d804b8503dd7aaacc59783d792bcc419a75bc84eb1d9c8}{SNDLNCORR}}
+, \mbox{\hyperlink{util_8h_a67ee812ef52af4b90a3d804b8503dd7aa5946f79d223019ac920eca944ef64b6e}{SDWAIT}}
+, \mbox{\hyperlink{util_8h_a67ee812ef52af4b90a3d804b8503dd7aaba9e76e1035e569903d6e4b9fb3e6439}{SNDMARK}}
+, \newline
+\mbox{\hyperlink{util_8h_a67ee812ef52af4b90a3d804b8503dd7aa6e6262f8d11e39222f4b1e5a68489f94}{OUTLINE}}
+, \mbox{\hyperlink{util_8h_a67ee812ef52af4b90a3d804b8503dd7aaf1ca16f85c38f6843da477ec1aa176a6}{ENTRY}}
+, \mbox{\hyperlink{util_8h_a67ee812ef52af4b90a3d804b8503dd7aa2e155d6c88fc11892a1ca155c3c33b8e}{ENTRCIRC}}
+, \mbox{\hyperlink{util_8h_a67ee812ef52af4b90a3d804b8503dd7aa89c140cfb391efd16e3c5c07a6ca2ef1}{BCKCIRC}}
+, \newline
+\mbox{\hyperlink{util_8h_a67ee812ef52af4b90a3d804b8503dd7aa6ec94285daf5d68e93c8bd0acd173331}{BCKOUTLINE}}
+ \}
+\item 
+enum \mbox{\hyperlink{util_8h_ab1d9ce3e6d9a3bee55dc28735fc0ec3c}{\+\_\+e\+Line\+Search}} \{ \mbox{\hyperlink{util_8h_ab1d9ce3e6d9a3bee55dc28735fc0ec3ca3a5c1f77ab0bdc446f11453490e4190b}{BLACKSEARCH}}
+, \mbox{\hyperlink{util_8h_ab1d9ce3e6d9a3bee55dc28735fc0ec3ca2092252d4c9930b929bec0c8243ad502}{WHITESEARCH}}
+ \}
+\begin{DoxyCompactList}\small\item\em Enumeracion utilizada para encontrar lineas negras y blancas. \end{DoxyCompactList}\item 
+enum \mbox{\hyperlink{util_8h_abe45d6cf774a72f7ec73e05ac3f062d2}{\+\_\+e\+Searching\+Path}} \{ \mbox{\hyperlink{util_8h_abe45d6cf774a72f7ec73e05ac3f062d2a17324ed09fc25508f0e01620b1f5cf77}{CLOSEDIST}}
+, \mbox{\hyperlink{util_8h_abe45d6cf774a72f7ec73e05ac3f062d2a512ebfb5e40302d33323ed9f3388eba3}{FSTWAIT}}
+, \mbox{\hyperlink{util_8h_abe45d6cf774a72f7ec73e05ac3f062d2a99be4b72670abcc649ed16b4e0eb28f5}{FARDIST}}
+, \mbox{\hyperlink{util_8h_abe45d6cf774a72f7ec73e05ac3f062d2a5bd23d9eff42a79fca95f301bac5bb2f}{SNDWAIT}}
+ \}
+\begin{DoxyCompactList}\small\item\em Enumeracion utiliza para salir de la circunferencia. \end{DoxyCompactList}\item 
+enum \mbox{\hyperlink{util_8h_a7b275bae688445c3a96ef2f791094cf6}{\+\_\+e\+Out\+Line}} \{ \mbox{\hyperlink{util_8h_a7b275bae688445c3a96ef2f791094cf6a2e7317ebfaf09260790763b0c2e9ebb8}{OKDIST}}
+, \mbox{\hyperlink{util_8h_a7b275bae688445c3a96ef2f791094cf6abfe281a51e38782809e4b07377a511d6}{ROTCAR}}
+, \mbox{\hyperlink{util_8h_a7b275bae688445c3a96ef2f791094cf6a3a0135e1bc97367feecb04f5789c4bbe}{FLLINE}}
+ \}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Enumeration Type Documentation}
+\Hypertarget{util_8h_a914da92242d04381391fee2bb1c936df}\label{util_8h_a914da92242d04381391fee2bb1c936df} 
+\index{util.h@{util.h}!\_eCmd@{\_eCmd}}
+\index{\_eCmd@{\_eCmd}!util.h@{util.h}}
+\doxysubsubsection{\texorpdfstring{\_eCmd}{\_eCmd}}
+{\footnotesize\ttfamily enum \mbox{\hyperlink{util_8h_a914da92242d04381391fee2bb1c936df}{\+\_\+e\+Cmd}}}
+
+
+
+Enumeración de los comandos del protocolo. 
+
+\begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{ALIVE@{ALIVE}!util.h@{util.h}}\index{util.h@{util.h}!ALIVE@{ALIVE}}}\Hypertarget{util_8h_a914da92242d04381391fee2bb1c936dfa4f34c5c191d6e0d028ca831b6c0b1571}\label{util_8h_a914da92242d04381391fee2bb1c936dfa4f34c5c191d6e0d028ca831b6c0b1571} 
+ALIVE&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{FIRMWARE@{FIRMWARE}!util.h@{util.h}}\index{util.h@{util.h}!FIRMWARE@{FIRMWARE}}}\Hypertarget{util_8h_a914da92242d04381391fee2bb1c936dfa865a558f3ba75815d3e16750c1efc611}\label{util_8h_a914da92242d04381391fee2bb1c936dfa865a558f3ba75815d3e16750c1efc611} 
+FIRMWARE&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{LEDSTATUS@{LEDSTATUS}!util.h@{util.h}}\index{util.h@{util.h}!LEDSTATUS@{LEDSTATUS}}}\Hypertarget{util_8h_a914da92242d04381391fee2bb1c936dfa9abaeb93b3d9603ff62173a6d71dc425}\label{util_8h_a914da92242d04381391fee2bb1c936dfa9abaeb93b3d9603ff62173a6d71dc425} 
+LEDSTATUS&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{BUTTONSTATUS@{BUTTONSTATUS}!util.h@{util.h}}\index{util.h@{util.h}!BUTTONSTATUS@{BUTTONSTATUS}}}\Hypertarget{util_8h_a914da92242d04381391fee2bb1c936dfaca828ec26cabbc2964148acfab523b75}\label{util_8h_a914da92242d04381391fee2bb1c936dfaca828ec26cabbc2964148acfab523b75} 
+BUTTONSTATUS&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{ANALOGSENSORS@{ANALOGSENSORS}!util.h@{util.h}}\index{util.h@{util.h}!ANALOGSENSORS@{ANALOGSENSORS}}}\Hypertarget{util_8h_a914da92242d04381391fee2bb1c936dfafb78d3af9d9e58227247dc57b0aecfe1}\label{util_8h_a914da92242d04381391fee2bb1c936dfafb78d3af9d9e58227247dc57b0aecfe1} 
+ANALOGSENSORS&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{SETBLACKCOLOR@{SETBLACKCOLOR}!util.h@{util.h}}\index{util.h@{util.h}!SETBLACKCOLOR@{SETBLACKCOLOR}}}\Hypertarget{util_8h_a914da92242d04381391fee2bb1c936dfa1aa77f0d3463a2b8b52d2314a5e72ad6}\label{util_8h_a914da92242d04381391fee2bb1c936dfa1aa77f0d3463a2b8b52d2314a5e72ad6} 
+SETBLACKCOLOR&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{SETWHITECOLOR@{SETWHITECOLOR}!util.h@{util.h}}\index{util.h@{util.h}!SETWHITECOLOR@{SETWHITECOLOR}}}\Hypertarget{util_8h_a914da92242d04381391fee2bb1c936dfae7519f1ebb44c9088103de927a6bc0db}\label{util_8h_a914da92242d04381391fee2bb1c936dfae7519f1ebb44c9088103de927a6bc0db} 
+SETWHITECOLOR&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{PATHLENGHT@{PATHLENGHT}!util.h@{util.h}}\index{util.h@{util.h}!PATHLENGHT@{PATHLENGHT}}}\Hypertarget{util_8h_a914da92242d04381391fee2bb1c936dfa86a97517d0af318dd5b10d9f6e2e1510}\label{util_8h_a914da92242d04381391fee2bb1c936dfa86a97517d0af318dd5b10d9f6e2e1510} 
+PATHLENGHT&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{CURRMODE@{CURRMODE}!util.h@{util.h}}\index{util.h@{util.h}!CURRMODE@{CURRMODE}}}\Hypertarget{util_8h_a914da92242d04381391fee2bb1c936dfaf28ef24f0b2d965844e9399269ecbb0b}\label{util_8h_a914da92242d04381391fee2bb1c936dfaf28ef24f0b2d965844e9399269ecbb0b} 
+CURRMODE&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{CURRLEVEL@{CURRLEVEL}!util.h@{util.h}}\index{util.h@{util.h}!CURRLEVEL@{CURRLEVEL}}}\Hypertarget{util_8h_a914da92242d04381391fee2bb1c936dfaa8e05b4e51503527b815516ef1ed5f84}\label{util_8h_a914da92242d04381391fee2bb1c936dfaa8e05b4e51503527b815516ef1ed5f84} 
+CURRLEVEL&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{CURRMSSERVO@{CURRMSSERVO}!util.h@{util.h}}\index{util.h@{util.h}!CURRMSSERVO@{CURRMSSERVO}}}\Hypertarget{util_8h_a914da92242d04381391fee2bb1c936dfa7f85eb9932a521154b78fc207e6039b1}\label{util_8h_a914da92242d04381391fee2bb1c936dfa7f85eb9932a521154b78fc207e6039b1} 
+CURRMSSERVO&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{MOTORTEST@{MOTORTEST}!util.h@{util.h}}\index{util.h@{util.h}!MOTORTEST@{MOTORTEST}}}\Hypertarget{util_8h_a914da92242d04381391fee2bb1c936dfa937bd6bfdc31b5ea963ffda0e3816f3e}\label{util_8h_a914da92242d04381391fee2bb1c936dfa937bd6bfdc31b5ea963ffda0e3816f3e} 
+MOTORTEST&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{SERVOANGLE@{SERVOANGLE}!util.h@{util.h}}\index{util.h@{util.h}!SERVOANGLE@{SERVOANGLE}}}\Hypertarget{util_8h_a914da92242d04381391fee2bb1c936dfab328dd4fbe58fe21365200828c8a79f7}\label{util_8h_a914da92242d04381391fee2bb1c936dfab328dd4fbe58fe21365200828c8a79f7} 
+SERVOANGLE&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{CONFIGSERVO@{CONFIGSERVO}!util.h@{util.h}}\index{util.h@{util.h}!CONFIGSERVO@{CONFIGSERVO}}}\Hypertarget{util_8h_a914da92242d04381391fee2bb1c936dfa05ae5f8f37e464cb132441b95aa792ac}\label{util_8h_a914da92242d04381391fee2bb1c936dfa05ae5f8f37e464cb132441b95aa792ac} 
+CONFIGSERVO&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{SERVOFINISHMOVE@{SERVOFINISHMOVE}!util.h@{util.h}}\index{util.h@{util.h}!SERVOFINISHMOVE@{SERVOFINISHMOVE}}}\Hypertarget{util_8h_a914da92242d04381391fee2bb1c936dfa1f9803fa27f94236685f4c48a4d295a6}\label{util_8h_a914da92242d04381391fee2bb1c936dfa1f9803fa27f94236685f4c48a4d295a6} 
+SERVOFINISHMOVE&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{GETDISTANCE@{GETDISTANCE}!util.h@{util.h}}\index{util.h@{util.h}!GETDISTANCE@{GETDISTANCE}}}\Hypertarget{util_8h_a914da92242d04381391fee2bb1c936dfa00453ddc67bf6761e11618b90f38de17}\label{util_8h_a914da92242d04381391fee2bb1c936dfa00453ddc67bf6761e11618b90f38de17} 
+GETDISTANCE&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{GETSPEED@{GETSPEED}!util.h@{util.h}}\index{util.h@{util.h}!GETSPEED@{GETSPEED}}}\Hypertarget{util_8h_a914da92242d04381391fee2bb1c936dfad587a89ddd7116e341242f62ca5d48fd}\label{util_8h_a914da92242d04381391fee2bb1c936dfad587a89ddd7116e341242f62ca5d48fd} 
+GETSPEED&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{ACK@{ACK}!util.h@{util.h}}\index{util.h@{util.h}!ACK@{ACK}}}\Hypertarget{util_8h_a914da92242d04381391fee2bb1c936dfa41246e9c8691b7e33bc79b345e06b48e}\label{util_8h_a914da92242d04381391fee2bb1c936dfa41246e9c8691b7e33bc79b345e06b48e} 
+ACK&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{UNKNOWN@{UNKNOWN}!util.h@{util.h}}\index{util.h@{util.h}!UNKNOWN@{UNKNOWN}}}\Hypertarget{util_8h_a914da92242d04381391fee2bb1c936dfa6ce26a62afab55d7606ad4e92428b30c}\label{util_8h_a914da92242d04381391fee2bb1c936dfa6ce26a62afab55d7606ad4e92428b30c} 
+UNKNOWN&\\
+\hline
+
+\end{DoxyEnumFields}
+\Hypertarget{util_8h_ad21e16d74a232edf49d5d058f38cd1dd}\label{util_8h_ad21e16d74a232edf49d5d058f38cd1dd} 
+\index{util.h@{util.h}!\_eDecode@{\_eDecode}}
+\index{\_eDecode@{\_eDecode}!util.h@{util.h}}
+\doxysubsubsection{\texorpdfstring{\_eDecode}{\_eDecode}}
+{\footnotesize\ttfamily enum \mbox{\hyperlink{util_8h_ad21e16d74a232edf49d5d058f38cd1dd}{\+\_\+e\+Decode}}}
+
+
+
+Enumeración para la maquina de estados que se encarga de decodificar el protocolo de comunicación. 
+
+\begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{HEADER\_U@{HEADER\_U}!util.h@{util.h}}\index{util.h@{util.h}!HEADER\_U@{HEADER\_U}}}\Hypertarget{util_8h_ad21e16d74a232edf49d5d058f38cd1ddab7875c3491a47307d4661d3f6aeac81b}\label{util_8h_ad21e16d74a232edf49d5d058f38cd1ddab7875c3491a47307d4661d3f6aeac81b} 
+HEADER\+\_\+U&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{HEADER\_N@{HEADER\_N}!util.h@{util.h}}\index{util.h@{util.h}!HEADER\_N@{HEADER\_N}}}\Hypertarget{util_8h_ad21e16d74a232edf49d5d058f38cd1ddac7830e832b05b02d669346ec772d5cee}\label{util_8h_ad21e16d74a232edf49d5d058f38cd1ddac7830e832b05b02d669346ec772d5cee} 
+HEADER\+\_\+N&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{HEADER\_E@{HEADER\_E}!util.h@{util.h}}\index{util.h@{util.h}!HEADER\_E@{HEADER\_E}}}\Hypertarget{util_8h_ad21e16d74a232edf49d5d058f38cd1dda8145203438c52dabc48cf15d4c339026}\label{util_8h_ad21e16d74a232edf49d5d058f38cd1dda8145203438c52dabc48cf15d4c339026} 
+HEADER\+\_\+E&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{HEADER\_R@{HEADER\_R}!util.h@{util.h}}\index{util.h@{util.h}!HEADER\_R@{HEADER\_R}}}\Hypertarget{util_8h_ad21e16d74a232edf49d5d058f38cd1ddade6c7efad424d5710e780ae5258b9b0a}\label{util_8h_ad21e16d74a232edf49d5d058f38cd1ddade6c7efad424d5710e780ae5258b9b0a} 
+HEADER\+\_\+R&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{NBYTES@{NBYTES}!util.h@{util.h}}\index{util.h@{util.h}!NBYTES@{NBYTES}}}\Hypertarget{util_8h_ad21e16d74a232edf49d5d058f38cd1ddab17ae6afccbbc8f8efc251eb72cfcf53}\label{util_8h_ad21e16d74a232edf49d5d058f38cd1ddab17ae6afccbbc8f8efc251eb72cfcf53} 
+NBYTES&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{TOKEN@{TOKEN}!util.h@{util.h}}\index{util.h@{util.h}!TOKEN@{TOKEN}}}\Hypertarget{util_8h_ad21e16d74a232edf49d5d058f38cd1dda07fe54e18c187cac6548db45a3f3676a}\label{util_8h_ad21e16d74a232edf49d5d058f38cd1dda07fe54e18c187cac6548db45a3f3676a} 
+TOKEN&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{PAYLOAD@{PAYLOAD}!util.h@{util.h}}\index{util.h@{util.h}!PAYLOAD@{PAYLOAD}}}\Hypertarget{util_8h_ad21e16d74a232edf49d5d058f38cd1dda14aa1c5c4852ea2d61eef4d73772ea65}\label{util_8h_ad21e16d74a232edf49d5d058f38cd1dda14aa1c5c4852ea2d61eef4d73772ea65} 
+PAYLOAD&\\
+\hline
+
+\end{DoxyEnumFields}
+\Hypertarget{util_8h_ab1d9ce3e6d9a3bee55dc28735fc0ec3c}\label{util_8h_ab1d9ce3e6d9a3bee55dc28735fc0ec3c} 
+\index{util.h@{util.h}!\_eLineSearch@{\_eLineSearch}}
+\index{\_eLineSearch@{\_eLineSearch}!util.h@{util.h}}
+\doxysubsubsection{\texorpdfstring{\_eLineSearch}{\_eLineSearch}}
+{\footnotesize\ttfamily enum \mbox{\hyperlink{util_8h_ab1d9ce3e6d9a3bee55dc28735fc0ec3c}{\+\_\+e\+Line\+Search}}}
+
+
+
+Enumeracion utilizada para encontrar lineas negras y blancas. 
+
+\begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{BLACKSEARCH@{BLACKSEARCH}!util.h@{util.h}}\index{util.h@{util.h}!BLACKSEARCH@{BLACKSEARCH}}}\Hypertarget{util_8h_ab1d9ce3e6d9a3bee55dc28735fc0ec3ca3a5c1f77ab0bdc446f11453490e4190b}\label{util_8h_ab1d9ce3e6d9a3bee55dc28735fc0ec3ca3a5c1f77ab0bdc446f11453490e4190b} 
+BLACKSEARCH&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{WHITESEARCH@{WHITESEARCH}!util.h@{util.h}}\index{util.h@{util.h}!WHITESEARCH@{WHITESEARCH}}}\Hypertarget{util_8h_ab1d9ce3e6d9a3bee55dc28735fc0ec3ca2092252d4c9930b929bec0c8243ad502}\label{util_8h_ab1d9ce3e6d9a3bee55dc28735fc0ec3ca2092252d4c9930b929bec0c8243ad502} 
+WHITESEARCH&\\
+\hline
+
+\end{DoxyEnumFields}
+\Hypertarget{util_8h_a67ee812ef52af4b90a3d804b8503dd7a}\label{util_8h_a67ee812ef52af4b90a3d804b8503dd7a} 
+\index{util.h@{util.h}!\_eMazePathModes@{\_eMazePathModes}}
+\index{\_eMazePathModes@{\_eMazePathModes}!util.h@{util.h}}
+\doxysubsubsection{\texorpdfstring{\_eMazePathModes}{\_eMazePathModes}}
+{\footnotesize\ttfamily enum \mbox{\hyperlink{util_8h_a67ee812ef52af4b90a3d804b8503dd7a}{\+\_\+e\+Maze\+Path\+Modes}}}
+
+Enumeracion utilizada para encontrar el camino mas corto del laberinto INROTATE -\/\texorpdfstring{$>$}{>} Es la accion de rotacion inicial en el centro de la circunferencia GOAHEAD -\/\texorpdfstring{$>$}{>} Es la accion de avanzar y dejar el auto sobre la circunferencia INCIRCLE -\/\texorpdfstring{$>$}{>} Es la comprobacion de si hay o no un camino a tomar por el auto ONPATH -\/\texorpdfstring{$>$}{>} Es la rotacion del auto con el fin de que quede sobre la linea del camino INLINE -\/\texorpdfstring{$>$}{>} Seguimiento de linea hasta encontrar todos los IR en negro FSTLNCORR -\/\texorpdfstring{$>$}{>} Correccion para que el auto quede recto en la linea FSWAIT -\/\texorpdfstring{$>$}{>} Espera del auto frenado FSTMARK -\/\texorpdfstring{$>$}{>} Contamos el nivel del camino FLWLINE -\/\texorpdfstring{$>$}{>} Seguimiento de linea hasta encontrar la sigueinte marca SNDLNCORR -\/\texorpdfstring{$>$}{>} Correccion en la segunda linea para que el auto quede recto y listo para leer SDWAIT -\/\texorpdfstring{$>$}{>} Espera del auto previo a la lectura SNDMARK -\/\texorpdfstring{$>$}{>} Contamos los niveles del camino OUTLINE -\/\texorpdfstring{$>$}{>} Salida de la linea interna e ingreso a la externa ENTRY -\/\texorpdfstring{$>$}{>} Entrada en caso de encontrar una pared ENTRCIRC -\/\texorpdfstring{$>$}{>} Reingreso del auto al centro \begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{INROTATE@{INROTATE}!util.h@{util.h}}\index{util.h@{util.h}!INROTATE@{INROTATE}}}\Hypertarget{util_8h_a67ee812ef52af4b90a3d804b8503dd7aa3c65c9e3ed47773da5e99f853d1f10bf}\label{util_8h_a67ee812ef52af4b90a3d804b8503dd7aa3c65c9e3ed47773da5e99f853d1f10bf} 
+INROTATE&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{GOAHEAD@{GOAHEAD}!util.h@{util.h}}\index{util.h@{util.h}!GOAHEAD@{GOAHEAD}}}\Hypertarget{util_8h_a67ee812ef52af4b90a3d804b8503dd7aa1941915805ad784604002ab9d2056b24}\label{util_8h_a67ee812ef52af4b90a3d804b8503dd7aa1941915805ad784604002ab9d2056b24} 
+GOAHEAD&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{INCIRCLE@{INCIRCLE}!util.h@{util.h}}\index{util.h@{util.h}!INCIRCLE@{INCIRCLE}}}\Hypertarget{util_8h_a67ee812ef52af4b90a3d804b8503dd7aa9160c15d9b875795f93d1da0b3efeef9}\label{util_8h_a67ee812ef52af4b90a3d804b8503dd7aa9160c15d9b875795f93d1da0b3efeef9} 
+INCIRCLE&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{ONPATH@{ONPATH}!util.h@{util.h}}\index{util.h@{util.h}!ONPATH@{ONPATH}}}\Hypertarget{util_8h_a67ee812ef52af4b90a3d804b8503dd7aad7226120ec8aef76663051b54f633d4d}\label{util_8h_a67ee812ef52af4b90a3d804b8503dd7aad7226120ec8aef76663051b54f633d4d} 
+ONPATH&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{INLINE@{INLINE}!util.h@{util.h}}\index{util.h@{util.h}!INLINE@{INLINE}}}\Hypertarget{util_8h_a67ee812ef52af4b90a3d804b8503dd7aa18c97cbdfea4a3b188d4efe2cf508e5b}\label{util_8h_a67ee812ef52af4b90a3d804b8503dd7aa18c97cbdfea4a3b188d4efe2cf508e5b} 
+INLINE&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{FSTLNCORR@{FSTLNCORR}!util.h@{util.h}}\index{util.h@{util.h}!FSTLNCORR@{FSTLNCORR}}}\Hypertarget{util_8h_a67ee812ef52af4b90a3d804b8503dd7aa2d9c99efc9e702a3f00256d4b7cf9f4c}\label{util_8h_a67ee812ef52af4b90a3d804b8503dd7aa2d9c99efc9e702a3f00256d4b7cf9f4c} 
+FSTLNCORR&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{FSWAIT@{FSWAIT}!util.h@{util.h}}\index{util.h@{util.h}!FSWAIT@{FSWAIT}}}\Hypertarget{util_8h_a67ee812ef52af4b90a3d804b8503dd7aa5763b91afeb5262b393547f899728bff}\label{util_8h_a67ee812ef52af4b90a3d804b8503dd7aa5763b91afeb5262b393547f899728bff} 
+FSWAIT&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{FSTMARK@{FSTMARK}!util.h@{util.h}}\index{util.h@{util.h}!FSTMARK@{FSTMARK}}}\Hypertarget{util_8h_a67ee812ef52af4b90a3d804b8503dd7aa44ffc61742a6cdb9b677e36a5efefa97}\label{util_8h_a67ee812ef52af4b90a3d804b8503dd7aa44ffc61742a6cdb9b677e36a5efefa97} 
+FSTMARK&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{FLWLINE@{FLWLINE}!util.h@{util.h}}\index{util.h@{util.h}!FLWLINE@{FLWLINE}}}\Hypertarget{util_8h_a67ee812ef52af4b90a3d804b8503dd7aa1e81990809be7700c57d1e1ffbf071bf}\label{util_8h_a67ee812ef52af4b90a3d804b8503dd7aa1e81990809be7700c57d1e1ffbf071bf} 
+FLWLINE&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{SNDLNCORR@{SNDLNCORR}!util.h@{util.h}}\index{util.h@{util.h}!SNDLNCORR@{SNDLNCORR}}}\Hypertarget{util_8h_a67ee812ef52af4b90a3d804b8503dd7aaacc59783d792bcc419a75bc84eb1d9c8}\label{util_8h_a67ee812ef52af4b90a3d804b8503dd7aaacc59783d792bcc419a75bc84eb1d9c8} 
+SNDLNCORR&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{SDWAIT@{SDWAIT}!util.h@{util.h}}\index{util.h@{util.h}!SDWAIT@{SDWAIT}}}\Hypertarget{util_8h_a67ee812ef52af4b90a3d804b8503dd7aa5946f79d223019ac920eca944ef64b6e}\label{util_8h_a67ee812ef52af4b90a3d804b8503dd7aa5946f79d223019ac920eca944ef64b6e} 
+SDWAIT&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{SNDMARK@{SNDMARK}!util.h@{util.h}}\index{util.h@{util.h}!SNDMARK@{SNDMARK}}}\Hypertarget{util_8h_a67ee812ef52af4b90a3d804b8503dd7aaba9e76e1035e569903d6e4b9fb3e6439}\label{util_8h_a67ee812ef52af4b90a3d804b8503dd7aaba9e76e1035e569903d6e4b9fb3e6439} 
+SNDMARK&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{OUTLINE@{OUTLINE}!util.h@{util.h}}\index{util.h@{util.h}!OUTLINE@{OUTLINE}}}\Hypertarget{util_8h_a67ee812ef52af4b90a3d804b8503dd7aa6e6262f8d11e39222f4b1e5a68489f94}\label{util_8h_a67ee812ef52af4b90a3d804b8503dd7aa6e6262f8d11e39222f4b1e5a68489f94} 
+OUTLINE&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{ENTRY@{ENTRY}!util.h@{util.h}}\index{util.h@{util.h}!ENTRY@{ENTRY}}}\Hypertarget{util_8h_a67ee812ef52af4b90a3d804b8503dd7aaf1ca16f85c38f6843da477ec1aa176a6}\label{util_8h_a67ee812ef52af4b90a3d804b8503dd7aaf1ca16f85c38f6843da477ec1aa176a6} 
+ENTRY&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{ENTRCIRC@{ENTRCIRC}!util.h@{util.h}}\index{util.h@{util.h}!ENTRCIRC@{ENTRCIRC}}}\Hypertarget{util_8h_a67ee812ef52af4b90a3d804b8503dd7aa2e155d6c88fc11892a1ca155c3c33b8e}\label{util_8h_a67ee812ef52af4b90a3d804b8503dd7aa2e155d6c88fc11892a1ca155c3c33b8e} 
+ENTRCIRC&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{BCKCIRC@{BCKCIRC}!util.h@{util.h}}\index{util.h@{util.h}!BCKCIRC@{BCKCIRC}}}\Hypertarget{util_8h_a67ee812ef52af4b90a3d804b8503dd7aa89c140cfb391efd16e3c5c07a6ca2ef1}\label{util_8h_a67ee812ef52af4b90a3d804b8503dd7aa89c140cfb391efd16e3c5c07a6ca2ef1} 
+BCKCIRC&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{BCKOUTLINE@{BCKOUTLINE}!util.h@{util.h}}\index{util.h@{util.h}!BCKOUTLINE@{BCKOUTLINE}}}\Hypertarget{util_8h_a67ee812ef52af4b90a3d804b8503dd7aa6ec94285daf5d68e93c8bd0acd173331}\label{util_8h_a67ee812ef52af4b90a3d804b8503dd7aa6ec94285daf5d68e93c8bd0acd173331} 
+BCKOUTLINE&\\
+\hline
+
+\end{DoxyEnumFields}
+\Hypertarget{util_8h_a8aa339381659acb72b9870810f7cd5e6}\label{util_8h_a8aa339381659acb72b9870810f7cd5e6} 
+\index{util.h@{util.h}!\_eModes@{\_eModes}}
+\index{\_eModes@{\_eModes}!util.h@{util.h}}
+\doxysubsubsection{\texorpdfstring{\_eModes}{\_eModes}}
+{\footnotesize\ttfamily enum \mbox{\hyperlink{util_8h_a8aa339381659acb72b9870810f7cd5e6}{\+\_\+e\+Modes}}}
+
+
+
+Enumeracion utilizada para los modos del auto y del heartbeat valores idle, premode1, premode2, premode3, onmode1, onmode2, onmode3 utilizadas para el manejo de modos todos son utilizados tambien para los modos del heartbeat. 
+
+\begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{IDLE@{IDLE}!util.h@{util.h}}\index{util.h@{util.h}!IDLE@{IDLE}}}\Hypertarget{util_8h_a8aa339381659acb72b9870810f7cd5e6afd6a0e4343048b10646dd2976cc5ad18}\label{util_8h_a8aa339381659acb72b9870810f7cd5e6afd6a0e4343048b10646dd2976cc5ad18} 
+IDLE&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{PREMODE1@{PREMODE1}!util.h@{util.h}}\index{util.h@{util.h}!PREMODE1@{PREMODE1}}}\Hypertarget{util_8h_a8aa339381659acb72b9870810f7cd5e6a618212cecb89a686b8cd71e7f94a5b02}\label{util_8h_a8aa339381659acb72b9870810f7cd5e6a618212cecb89a686b8cd71e7f94a5b02} 
+PREMODE1&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{EXEMODE1@{EXEMODE1}!util.h@{util.h}}\index{util.h@{util.h}!EXEMODE1@{EXEMODE1}}}\Hypertarget{util_8h_a8aa339381659acb72b9870810f7cd5e6a5dbaccb0e5b4f99d4902ff920fe3f823}\label{util_8h_a8aa339381659acb72b9870810f7cd5e6a5dbaccb0e5b4f99d4902ff920fe3f823} 
+EXEMODE1&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{ONMODE1@{ONMODE1}!util.h@{util.h}}\index{util.h@{util.h}!ONMODE1@{ONMODE1}}}\Hypertarget{util_8h_a8aa339381659acb72b9870810f7cd5e6a979061fddd5363b46f186ffbf88a235a}\label{util_8h_a8aa339381659acb72b9870810f7cd5e6a979061fddd5363b46f186ffbf88a235a} 
+ONMODE1&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{PREMODE2@{PREMODE2}!util.h@{util.h}}\index{util.h@{util.h}!PREMODE2@{PREMODE2}}}\Hypertarget{util_8h_a8aa339381659acb72b9870810f7cd5e6a75fb6443d2389a51160baeb843c2fcd9}\label{util_8h_a8aa339381659acb72b9870810f7cd5e6a75fb6443d2389a51160baeb843c2fcd9} 
+PREMODE2&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{EXEMODE2@{EXEMODE2}!util.h@{util.h}}\index{util.h@{util.h}!EXEMODE2@{EXEMODE2}}}\Hypertarget{util_8h_a8aa339381659acb72b9870810f7cd5e6a95c266e5d391f2108b8fdb4e863321cd}\label{util_8h_a8aa339381659acb72b9870810f7cd5e6a95c266e5d391f2108b8fdb4e863321cd} 
+EXEMODE2&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{ONMODE2@{ONMODE2}!util.h@{util.h}}\index{util.h@{util.h}!ONMODE2@{ONMODE2}}}\Hypertarget{util_8h_a8aa339381659acb72b9870810f7cd5e6a5041da15b8b9c34d77463d8aa584c900}\label{util_8h_a8aa339381659acb72b9870810f7cd5e6a5041da15b8b9c34d77463d8aa584c900} 
+ONMODE2&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{PREMODE3@{PREMODE3}!util.h@{util.h}}\index{util.h@{util.h}!PREMODE3@{PREMODE3}}}\Hypertarget{util_8h_a8aa339381659acb72b9870810f7cd5e6ac2372f8148ade459f59c40d799042e3b}\label{util_8h_a8aa339381659acb72b9870810f7cd5e6ac2372f8148ade459f59c40d799042e3b} 
+PREMODE3&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{EXEMODE3@{EXEMODE3}!util.h@{util.h}}\index{util.h@{util.h}!EXEMODE3@{EXEMODE3}}}\Hypertarget{util_8h_a8aa339381659acb72b9870810f7cd5e6aec389491a56f32cc65dc3aadfb1ff630}\label{util_8h_a8aa339381659acb72b9870810f7cd5e6aec389491a56f32cc65dc3aadfb1ff630} 
+EXEMODE3&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{ONMODE3@{ONMODE3}!util.h@{util.h}}\index{util.h@{util.h}!ONMODE3@{ONMODE3}}}\Hypertarget{util_8h_a8aa339381659acb72b9870810f7cd5e6a93f1869ce3584ce1134d0b3ae51e5e0d}\label{util_8h_a8aa339381659acb72b9870810f7cd5e6a93f1869ce3584ce1134d0b3ae51e5e0d} 
+ONMODE3&\\
+\hline
+
+\end{DoxyEnumFields}
+\Hypertarget{util_8h_a7b275bae688445c3a96ef2f791094cf6}\label{util_8h_a7b275bae688445c3a96ef2f791094cf6} 
+\index{util.h@{util.h}!\_eOutLine@{\_eOutLine}}
+\index{\_eOutLine@{\_eOutLine}!util.h@{util.h}}
+\doxysubsubsection{\texorpdfstring{\_eOutLine}{\_eOutLine}}
+{\footnotesize\ttfamily enum \mbox{\hyperlink{util_8h_a7b275bae688445c3a96ef2f791094cf6}{\+\_\+e\+Out\+Line}}}
+
+\begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{OKDIST@{OKDIST}!util.h@{util.h}}\index{util.h@{util.h}!OKDIST@{OKDIST}}}\Hypertarget{util_8h_a7b275bae688445c3a96ef2f791094cf6a2e7317ebfaf09260790763b0c2e9ebb8}\label{util_8h_a7b275bae688445c3a96ef2f791094cf6a2e7317ebfaf09260790763b0c2e9ebb8} 
+OKDIST&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{ROTCAR@{ROTCAR}!util.h@{util.h}}\index{util.h@{util.h}!ROTCAR@{ROTCAR}}}\Hypertarget{util_8h_a7b275bae688445c3a96ef2f791094cf6abfe281a51e38782809e4b07377a511d6}\label{util_8h_a7b275bae688445c3a96ef2f791094cf6abfe281a51e38782809e4b07377a511d6} 
+ROTCAR&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{FLLINE@{FLLINE}!util.h@{util.h}}\index{util.h@{util.h}!FLLINE@{FLLINE}}}\Hypertarget{util_8h_a7b275bae688445c3a96ef2f791094cf6a3a0135e1bc97367feecb04f5789c4bbe}\label{util_8h_a7b275bae688445c3a96ef2f791094cf6a3a0135e1bc97367feecb04f5789c4bbe} 
+FLLINE&\\
+\hline
+
+\end{DoxyEnumFields}
+\Hypertarget{util_8h_abe45d6cf774a72f7ec73e05ac3f062d2}\label{util_8h_abe45d6cf774a72f7ec73e05ac3f062d2} 
+\index{util.h@{util.h}!\_eSearchingPath@{\_eSearchingPath}}
+\index{\_eSearchingPath@{\_eSearchingPath}!util.h@{util.h}}
+\doxysubsubsection{\texorpdfstring{\_eSearchingPath}{\_eSearchingPath}}
+{\footnotesize\ttfamily enum \mbox{\hyperlink{util_8h_abe45d6cf774a72f7ec73e05ac3f062d2}{\+\_\+e\+Searching\+Path}}}
+
+
+
+Enumeracion utiliza para salir de la circunferencia. 
+
+\begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{CLOSEDIST@{CLOSEDIST}!util.h@{util.h}}\index{util.h@{util.h}!CLOSEDIST@{CLOSEDIST}}}\Hypertarget{util_8h_abe45d6cf774a72f7ec73e05ac3f062d2a17324ed09fc25508f0e01620b1f5cf77}\label{util_8h_abe45d6cf774a72f7ec73e05ac3f062d2a17324ed09fc25508f0e01620b1f5cf77} 
+CLOSEDIST&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{FSTWAIT@{FSTWAIT}!util.h@{util.h}}\index{util.h@{util.h}!FSTWAIT@{FSTWAIT}}}\Hypertarget{util_8h_abe45d6cf774a72f7ec73e05ac3f062d2a512ebfb5e40302d33323ed9f3388eba3}\label{util_8h_abe45d6cf774a72f7ec73e05ac3f062d2a512ebfb5e40302d33323ed9f3388eba3} 
+FSTWAIT&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{FARDIST@{FARDIST}!util.h@{util.h}}\index{util.h@{util.h}!FARDIST@{FARDIST}}}\Hypertarget{util_8h_abe45d6cf774a72f7ec73e05ac3f062d2a99be4b72670abcc649ed16b4e0eb28f5}\label{util_8h_abe45d6cf774a72f7ec73e05ac3f062d2a99be4b72670abcc649ed16b4e0eb28f5} 
+FARDIST&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{SNDWAIT@{SNDWAIT}!util.h@{util.h}}\index{util.h@{util.h}!SNDWAIT@{SNDWAIT}}}\Hypertarget{util_8h_abe45d6cf774a72f7ec73e05ac3f062d2a5bd23d9eff42a79fca95f301bac5bb2f}\label{util_8h_abe45d6cf774a72f7ec73e05ac3f062d2a5bd23d9eff42a79fca95f301bac5bb2f} 
+SNDWAIT&\\
+\hline
+
+\end{DoxyEnumFields}

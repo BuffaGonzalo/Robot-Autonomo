@@ -132,7 +132,7 @@ typedef struct
 #define DODGEDISTANCE        10
 #define REFDISTANCE          20
 
-#define MAXPATH              3 //cantidad total de caminos
+#define MAXPATH              4 //cantidad total de caminos
 
 
 /* END define ----------------------------------------------------------------*/
@@ -408,17 +408,18 @@ uint16_t minMsServo = 700;
 
 uint16_t maxMsServo = 2500;
 
-uint16_t msServo = 0; //variable la cual guarda continuamente el valor del servo y es la encargada de transmitir la posicion del servo en las comunicaciones
+uint16_t msServo = MIDDLESERVO; //variable la cual guarda continuamente el valor del servo y es la encargada de transmitir la posicion del servo en las comunicaciones
 
 //longitudes de los caminos recorridos, estos datos son enviados por Serial o WIFI
 
-uint16_t lntFstPath = 0; //LENGHT FIRST PATH
+int16_t lntFstPath = 0; //LENGHT FIRST PATH
  
-uint16_t lntSndPath = 0;
+int16_t lntSndPath = 0;
 
-uint16_t lntTrdPath = 0;
+int16_t lntTrdPath = 0;
 
-uint16_t lntFthPath = 0;
+int16_t lntFthPath = 0;
+
 
 uint8_t currPath = 0;
 
@@ -783,6 +784,16 @@ void decodeCommand(_sRx *dataRx, _sTx *dataTx)
             //colocamos el checksum
             putByteOnTx(dataTx, dataTx->chk);
         break;
+        case CURRMSSERVO:
+            putHeaderOnTx(dataTx, CURRMSSERVO, 3);
+
+            myWord.ui16[0] = msServo;
+            putByteOnTx(dataTx, myWord.ui8[0]);
+            putByteOnTx(dataTx, myWord.ui8[1]);
+
+            //colocamos el checksum
+            putByteOnTx(dataTx, dataTx->chk);
+        break;
         case MOTORTEST:
             putHeaderOnTx(dataTx, MOTORTEST, 2);
             putByteOnTx(dataTx, ACK );
@@ -819,7 +830,9 @@ void decodeCommand(_sRx *dataRx, _sTx *dataTx)
             if (angleSource<-90 || angleSource>90)
                 break;
             else{
+                //cambiamos los grados a ms
                 miServo.currentValue = (((angleSource - miServo.Y1) * (miServo.X2-miServo.X1))/(miServo.Y2-miServo.Y1))+miServo.X1;
+                msServo = miServo.currentValue; //actualizamos el valor
                 if(miServo.currentValue > (uint16_t)miServo.X2)
                     miServo.currentValue=miServo.X2;
                 if(miServo.currentValue < (uint16_t)miServo.X1)
@@ -1138,14 +1151,15 @@ void shortestMazePath(){
 
     int32_t distance = distanceValue/58; //convertimos a cm los datos
     static uint8_t irValue = 0;
-    static bool isNewPath = true;
+    static bool isNewPath = true; //inicializamos como true porque el primer camino siempre va a ser nuevo
     static bool noLine = false;
     static bool leavCirc = true; //utilizada para saber si estoy entrando o saliendo del circulo
 
     static bool pathCount = false;
-    static uint8_t iPath = 0; //indice de camino recorrido
+    static int8_t iPath = 0; //indice de camino recorrido
     static uint8_t takenPaths[MAXPATH] = {};
     
+    static int8_t Dr = 15; //velocidad referecia
 
     irValue = 0;
     //comprobamos el valor de los sensores
@@ -1175,6 +1189,7 @@ void shortestMazePath(){
                             move(NOSPEED,NOSPEED,ENERGYSTOP,ENERGYSTOP);
                             waitTime = myTimer.read_ms();
                             servo.pulsewidth_us(minMsServo); //colocamos el servo en posicion para realizar las medidas correctas en el sigueinte modo
+                            msServo = minMsServo; //valor para compartir con Qt
                             mazeModes = INCIRCLE;
                             lineSearch = WHITESEARCH;
                         }                        
@@ -1202,6 +1217,7 @@ void shortestMazePath(){
                             distTime = myTimer.read_ms();
                             srchPathModes = FSTWAIT;
                             servo.pulsewidth_us(MIDDLESERVO);
+                            msServo = MIDDLESERVO; //valor a compartir con Qt
                         }
                     break;
                     case FSTWAIT:
@@ -1220,6 +1236,7 @@ void shortestMazePath(){
                             waitTime = myTimer.read_ms();
                         } else {
                             servo.pulsewidth_us(minMsServo);
+                            msServo = minMsServo; //valor a compartir con Qt
                             srchPathModes = SNDWAIT;
                         }                        
                     break;
@@ -1280,6 +1297,8 @@ void shortestMazePath(){
                 pathLevel = 0; //hacemos 0 para tener una medida correcta
                 mazeModes = FSTMARK;
                 lineSearch = WHITESEARCH;
+                servo.pulsewidth_us(minMsServo);
+                msServo = minMsServo;
                 waitTime = myTimer.read_ms();
             } else{
                 if(irValue != 7){ //si frenamos y no es una linea negra retrocedemos
@@ -1290,27 +1309,36 @@ void shortestMazePath(){
             }
         break;
         case FSTMARK: //FIRSTMARK
+            int32_t rWheelSpeed;
+            int32_t lWheelSpeed;
+
             if((irValue == 7) && (pathLevel != 0)){
+                //servo.pulsewidth_us(minMsServo);
+                msServo = MIDDLESERVO;
+
                 //comprobamos si ya no recorrimos el camino analizado
-                for(uint8_t i = 0; i<MAXPATH; i++){
+                for(int8_t i = 0; i<MAXPATH; i++){
                     if(pathLevel == takenPaths[i]){ //si algun camino ya se recorrio
                         if(leavCirc == true){
                             mazeModes = BCKCIRC; //si estamos saliendo, volvemos a la circunferencia
-                        } else {
+                        } else{
                             mazeModes = BCKOUTLINE; //si estamos entrando, volvemos a la linea
                         }
-                        break; //salimos para que la MEF no tome otro estado
+                        return; //salimos para que la MEF no tome otro estado
                     }
                 }
-                //si no lo recorrimos, lo guardamos
-                iPath++;
+
+                //SECCION SE EJECUTA SOLO SI EL CAMINO NO HA SIDO RECORRIDO
                 takenPaths[iPath] = pathLevel; //guardamos el nivel recorrido
+                iPath++;
+                
                 isNewPath = true;
-                pathTime = myTimer.read_ms(); //igualamos al tiempo para luego saber ucal es el camino mas corto
+                pathCount = true;
 
                 mazeModes = FLWLINE;
-                pathCount = true;
+                pathTime = myTimer.read_ms(); //igualamos al tiempo para luego saber ucal es el camino mas corto
                 waitTime = myTimer.read_ms();
+
             } else if(irValue == 1 || irValue == 2 || irValue == 4){
                 pathCount = true;
             } else if((irValue == 0) && (pathCount)){
@@ -1318,14 +1346,71 @@ void shortestMazePath(){
                 pathLevel++;
             }
 
-            move(15*250, 15*250, FORWARD, FORWARD);
+            //movimiento
+            if(distance < 10){
+                rWheelSpeed = 15 + ((Dr - distance)*2);
+                lWheelSpeed = 15 - ((Dr - distance)*2);
+            } else{
+                rWheelSpeed = 15 - ((Dr - distance)*2);
+                lWheelSpeed = 15 + ((Dr - distance)*2);//distanceCoef;
+            }
+
+            if(rWheelSpeed < 15)
+                rWheelSpeed = 15;
+            if(rWheelSpeed > 30)
+                rWheelSpeed = 30;
+
+            if(lWheelSpeed < 15)
+                lWheelSpeed = 15;
+            if(lWheelSpeed > 30)
+                lWheelSpeed = 30;
+
+            //calculamos el valor en pulsos
+            /*
+            25000 ----- 100
+            x-----------rWheelSpeed
+            */
+            //pasamos el porcentaje a pulsos
+
+            rWheelSpeed *= 250;
+            lWheelSpeed *= 250;
+
+            move(lWheelSpeed, rWheelSpeed, FORWARD, FORWARD);
+
+            //move(15*250, 15*250, FORWARD, FORWARD); -> VALOR PREVIO A APLICAR PROPORCIONAL
         break;
         case FLWLINE:
-            lineFollower();
-            
-            if((irValue == 7) && ((myTimer.read_ms() - waitTime) > WAIT1000MS)){ //ponemos la espera con la finalidad de que no pase de estado rapido
+            if((myTimer.read_ms() - waitTime) > WAIT1000MS){
+                lineFollower();
+            } else{
+                if((myTimer.read_ms() - waitTime) > WAIT250MS){
+                    move(NOSPEED,NOSPEED,ENERGYSTOP,ENERGYSTOP);
+                } else{
+                    move(16*250, 16*250, FORWARD, FORWARD);
+                }
+            }
+
+            if((irValue == 7) && ((myTimer.read_ms() - waitTime) > WAIT2000MS)){ //ponemos la espera con la finalidad de que no pase de estado rapido
                 mazeModes = SNDLNCORR;
                 waitTime = myTimer.read_ms();
+                
+                if(isNewPath == true){ //si es un camino nuevo calculamos la distancia en tiempo
+                    isNewPath = false;
+
+                    if(takenPaths[iPath] == 1){
+                        lntFstPath = myTimer.read_ms();
+                        lntFstPath -= pathTime;
+                    } else if(takenPaths[iPath] == 2){
+                        lntSndPath = myTimer.read_ms();
+                        lntSndPath -= pathTime;
+                    } else if(takenPaths[iPath] == 3){
+                        lntTrdPath = myTimer.read_ms();
+                        lntTrdPath -= pathTime;
+                    } else if(takenPaths[iPath] == 4){
+                        lntFthPath = myTimer.read_ms();
+                        lntFthPath -= pathTime;
+                    }
+                }
             }
         break;
         case SNDLNCORR: //correccion para llegar recto a la marca de nivel
@@ -1355,7 +1440,7 @@ void shortestMazePath(){
         break;
         case SNDMARK: //SECONDMARK
             //nos movemos hasta encontrar el blanco una vez, en caso que lo encontremos empezamosa buscar negro y si encontramos desidimos que hacer
-            if((irValue == 7) && (!pathCount)){ 
+            if((irValue == 7) && (!pathCount) && (distance < 100)){ 
                 if(leavCirc == false){ //significa que estoy entrando en el circulo y no saliendo
                     mazeModes = ENTRCIRC; //entramos en el circulo central
                     leavCirc = true;
@@ -1367,44 +1452,64 @@ void shortestMazePath(){
                     //pathLevel = 0; //llevamos la variable a 0 para control
                     leavCirc = false;
                 }
-                if(isNewPath == true){ //si es un camino nuevo calculamos la distancia en tiempo
-                    switch(takenPaths[iPath]){
-                        case 1:
-                            lntFstPath = myTimer.read() - pathTime;
-                        break;
-                        case 2:
-                            lntSndPath = myTimer.read() - pathTime;
-                        break;
-                        case 3:
-                            lntTrdPath = myTimer.read() - pathTime;
-                        break;
-                        case 4:
-                            lntFthPath = myTimer.read() - pathTime;
-                        break;
-                    }
-                }
                 pathCount = true;
                 waitTime = myTimer.read_ms();
             } else if((irValue == 0) && (pathCount)){
                 pathCount = false;
             }
+
+            //movimiento
+            if(distance < 10){
+                rWheelSpeed = 15 + ((Dr - distance)*2);
+                lWheelSpeed = 15 - ((Dr - distance)*2);
+            } else{
+                rWheelSpeed = 15 - ((Dr - distance)*2);
+                lWheelSpeed = 15 + ((Dr - distance)*2);//distanceCoef;
+            }
+
+            if(rWheelSpeed < 15)
+                rWheelSpeed = 15;
+            if(rWheelSpeed > 30)
+                rWheelSpeed = 30;
+
+            if(lWheelSpeed < 15)
+                lWheelSpeed = 15;
+            if(lWheelSpeed > 30)
+                lWheelSpeed = 30;
+
+            //calculamos el valor en pulsos
+            /*
+            25000 ----- 100
+            x-----------rWheelSpeed
+            */
+            //pasamos el porcentaje a pulsos
+
+            rWheelSpeed *= 250;
+            lWheelSpeed *= 250;
+
+            move(lWheelSpeed, rWheelSpeed, FORWARD, FORWARD);
             
-            move(15*250, 15*250, FORWARD, FORWARD);
+            //move(15*250, 15*250, FORWARD, FORWARD); -> VALOR PREVIO AL PROPORCIONAL
         break;
         case OUTLINE: //LINEA EXTERNA
             switch(outLineModes){
                 case OKDIST:
-                    if(distance < 10){
-                        outLineModes = ROTCAR;
-                        servo.pulsewidth_us(maxMsServo);
-                        waitTime = myTimer.read_ms();
+                    if(distance > 100){
+                        if((myTimer.read_ms() - waitTime) > WAIT500MS){          
+                            outLineModes = ROTCAR;
+                            servo.pulsewidth_us(maxMsServo);
+                            msServo = maxMsServo; //valor compatido con Qt
+                            waitTime = myTimer.read_ms();
+                        } else{
+                            move(NOSPEED,NOSPEED,ENERGYSTOP,ENERGYSTOP);
+                        }
                     } else{
                         move(15*250, 15*250, FORWARD, FORWARD);
                     }
                 break; 
                 case ROTCAR:
                     if((myTimer.read_ms() - waitTime) > WAIT100MS){
-                        move(40*250, 0, FORWARD, STOP); //previo (60,20)
+                        move(50*250, 16*250, FORWARD, FORWARD); //previo (60,20) - preProporcional (40*250, 0, FORWARD, STOP)
                         if(((myTimer.read_ms() - waitTime) > WAIT200MS)){
                             outLineModes = FLLINE;
                             lastIrValue = 4; //insertamos un valor falso
@@ -1417,9 +1522,10 @@ void shortestMazePath(){
                 case FLLINE:
                     lineFollower();
 
-                    if(distance < 15){
+                    if((distance < 15) && ((myTimer.read_ms() - waitTime) > WAIT1000MS)){
                         mazeModes = ENTRY;
                         servo.pulsewidth_us(MIDDLESERVO);
+                        msServo = MIDDLESERVO; //valor compartido
                         waitTime = myTimer.read_ms();
                     }
                 break;
@@ -1447,10 +1553,10 @@ void shortestMazePath(){
         case ENTRCIRC: //entrando al circulo
             move(80*250, 15*250, FORWARD,FORWARD);
             if((myTimer.read_ms() - waitTime) > WAIT750MS){
-                    mazeModes = INCIRCLE;
-                    lastIrValue = 4;
-                    waitTime = myTimer.read_ms();
-                }
+                mazeModes = INCIRCLE;
+                lastIrValue = 4;
+                waitTime = myTimer.read_ms();
+            }
         break;
         case BCKCIRC:
             if((myTimer.read_ms() - waitTime) > WAIT250MS){
@@ -1464,9 +1570,11 @@ void shortestMazePath(){
             }
         break;
         case BCKOUTLINE:
-            mazeModes = OUTLINE;
+            mazeModes = OUTLINE;    
             outLineModes = ROTCAR;
+            waitTime = myTimer.read_ms();
         break;
+
     }
 }
 
@@ -1680,7 +1788,7 @@ int main()
         }
         
         //wait_ms(10);
-        //shortestMazePath();
+        shortestMazePath();
         //contamos encoder y si un encoder va mas rapido que el otro, a uno le pongo mas velocidad que al otro
         //move(17*250, 17*250, FORWARD, FORWARD);
         //lineFollower();

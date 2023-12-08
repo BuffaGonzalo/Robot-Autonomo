@@ -1,0 +1,101 @@
+\doxysection{wifi\+Data Struct Reference}
+\hypertarget{structwifi_data}{}\label{structwifi_data}\index{wifiData@{wifiData}}
+
+
+{\ttfamily \#include $<$wifi.\+h$>$}
+
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+uint8\+\_\+t \mbox{\hyperlink{structwifi_data_a82bd96d5cf996436ba653005beaa83ce}{cwmode}} \mbox{[}17\mbox{]}
+\begin{DoxyCompactList}\small\item\em AT+\+CWMODE\+\_\+\+DEF=$<$mode$>$ 1,2,3 -\/ Ap, soft\+Station -\/ Ambos modos. \end{DoxyCompactList}\item 
+uint8\+\_\+t \mbox{\hyperlink{structwifi_data_aa0d1b289c9ab2d501703d3756d63864b}{cwdhcp}} \mbox{[}19\mbox{]}
+\begin{DoxyCompactList}\small\item\em AT+\+CWDHCP\+\_\+\+DEF=\texorpdfstring{$<$}{<}$<$mode$>$,$<$en$>$ \end{DoxyCompactList}\item 
+uint8\+\_\+t \mbox{\hyperlink{structwifi_data_a7e6bb0cd7c1d73efd895469e8d34f061}{cwjap}} \mbox{[}100\mbox{]}
+\begin{DoxyCompactList}\small\item\em AT+\+CWJAP\+\_\+\+DEF=$<$ssid$>$,$<$pwd$>$\mbox{[},$<$bssid$>$\mbox{]}. \end{DoxyCompactList}\item 
+uint8\+\_\+t \mbox{\hyperlink{structwifi_data_acae99ea645a3e0b43ed66134ee8d1545}{cipmux}} \mbox{[}13\mbox{]}
+\begin{DoxyCompactList}\small\item\em AT+\+CIPMUX=$<$mode$>$ \end{DoxyCompactList}\item 
+uint8\+\_\+t \mbox{\hyperlink{structwifi_data_a01a604768352b838c90580cbde16a469}{cipstart}} \mbox{[}58\mbox{]}
+\begin{DoxyCompactList}\small\item\em AT+\+CIPSTART=$<$type$>$,$<$remote IP$>$,$<$remote port$>$\mbox{[}($<$\+UDP local port$>$),($<$\+UDP mode$>$)\mbox{]} Single connection (AT+\+CIPMUX=0)\+: \end{DoxyCompactList}\item 
+uint8\+\_\+t \mbox{\hyperlink{structwifi_data_adc6fe8f7c22ca885ea9849d889e0b4b8}{cipmode}} \mbox{[}14\mbox{]}
+\begin{DoxyCompactList}\small\item\em AT+\+CIPMODE=$<$mode$>$ 0,1 -\/modo normal -\/ modo transparente(\+Wifi pas\+Thrue) \end{DoxyCompactList}\item 
+uint8\+\_\+t \mbox{\hyperlink{structwifi_data_aa8c296fbed7eda24b057a2766f25c565}{cipsend}} \mbox{[}12\mbox{]}
+\begin{DoxyCompactList}\small\item\em AT+\+CIPSEND -\/ modo transparente(\+Wifi pas\+Thrue) \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Member Data Documentation}
+\Hypertarget{structwifi_data_adc6fe8f7c22ca885ea9849d889e0b4b8}\label{structwifi_data_adc6fe8f7c22ca885ea9849d889e0b4b8} 
+\index{wifiData@{wifiData}!cipmode@{cipmode}}
+\index{cipmode@{cipmode}!wifiData@{wifiData}}
+\doxysubsubsection{\texorpdfstring{cipmode}{cipmode}}
+{\footnotesize\ttfamily uint8\+\_\+t wifi\+Data\+::cipmode\mbox{[}14\mbox{]}}
+
+
+
+AT+\+CIPMODE=$<$mode$>$ 0,1 -\/modo normal -\/ modo transparente(\+Wifi pas\+Thrue) 
+
+\Hypertarget{structwifi_data_acae99ea645a3e0b43ed66134ee8d1545}\label{structwifi_data_acae99ea645a3e0b43ed66134ee8d1545} 
+\index{wifiData@{wifiData}!cipmux@{cipmux}}
+\index{cipmux@{cipmux}!wifiData@{wifiData}}
+\doxysubsubsection{\texorpdfstring{cipmux}{cipmux}}
+{\footnotesize\ttfamily uint8\+\_\+t wifi\+Data\+::cipmux\mbox{[}13\mbox{]}}
+
+
+
+AT+\+CIPMUX=$<$mode$>$ 
+
+\Hypertarget{structwifi_data_aa8c296fbed7eda24b057a2766f25c565}\label{structwifi_data_aa8c296fbed7eda24b057a2766f25c565} 
+\index{wifiData@{wifiData}!cipsend@{cipsend}}
+\index{cipsend@{cipsend}!wifiData@{wifiData}}
+\doxysubsubsection{\texorpdfstring{cipsend}{cipsend}}
+{\footnotesize\ttfamily uint8\+\_\+t wifi\+Data\+::cipsend\mbox{[}12\mbox{]}}
+
+
+
+AT+\+CIPSEND -\/ modo transparente(\+Wifi pas\+Thrue) 
+
+\Hypertarget{structwifi_data_a01a604768352b838c90580cbde16a469}\label{structwifi_data_a01a604768352b838c90580cbde16a469} 
+\index{wifiData@{wifiData}!cipstart@{cipstart}}
+\index{cipstart@{cipstart}!wifiData@{wifiData}}
+\doxysubsubsection{\texorpdfstring{cipstart}{cipstart}}
+{\footnotesize\ttfamily uint8\+\_\+t wifi\+Data\+::cipstart\mbox{[}58\mbox{]}}
+
+
+
+AT+\+CIPSTART=$<$type$>$,$<$remote IP$>$,$<$remote port$>$\mbox{[}($<$\+UDP local port$>$),($<$\+UDP mode$>$)\mbox{]} Single connection (AT+\+CIPMUX=0)\+: 
+
+\Hypertarget{structwifi_data_aa0d1b289c9ab2d501703d3756d63864b}\label{structwifi_data_aa0d1b289c9ab2d501703d3756d63864b} 
+\index{wifiData@{wifiData}!cwdhcp@{cwdhcp}}
+\index{cwdhcp@{cwdhcp}!wifiData@{wifiData}}
+\doxysubsubsection{\texorpdfstring{cwdhcp}{cwdhcp}}
+{\footnotesize\ttfamily uint8\+\_\+t wifi\+Data\+::cwdhcp\mbox{[}19\mbox{]}}
+
+
+
+AT+\+CWDHCP\+\_\+\+DEF=\texorpdfstring{$<$}{<}$<$mode$>$,$<$en$>$ 
+
+\Hypertarget{structwifi_data_a7e6bb0cd7c1d73efd895469e8d34f061}\label{structwifi_data_a7e6bb0cd7c1d73efd895469e8d34f061} 
+\index{wifiData@{wifiData}!cwjap@{cwjap}}
+\index{cwjap@{cwjap}!wifiData@{wifiData}}
+\doxysubsubsection{\texorpdfstring{cwjap}{cwjap}}
+{\footnotesize\ttfamily uint8\+\_\+t wifi\+Data\+::cwjap\mbox{[}100\mbox{]}}
+
+
+
+AT+\+CWJAP\+\_\+\+DEF=$<$ssid$>$,$<$pwd$>$\mbox{[},$<$bssid$>$\mbox{]}. 
+
+\Hypertarget{structwifi_data_a82bd96d5cf996436ba653005beaa83ce}\label{structwifi_data_a82bd96d5cf996436ba653005beaa83ce} 
+\index{wifiData@{wifiData}!cwmode@{cwmode}}
+\index{cwmode@{cwmode}!wifiData@{wifiData}}
+\doxysubsubsection{\texorpdfstring{cwmode}{cwmode}}
+{\footnotesize\ttfamily uint8\+\_\+t wifi\+Data\+::cwmode\mbox{[}17\mbox{]}}
+
+
+
+AT+\+CWMODE\+\_\+\+DEF=$<$mode$>$ 1,2,3 -\/ Ap, soft\+Station -\/ Ambos modos. 
+
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{wifi_8h}{wifi.\+h}}\end{DoxyCompactItemize}

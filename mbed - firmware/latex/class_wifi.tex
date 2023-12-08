@@ -1,0 +1,143 @@
+\doxysection{Wifi Class Reference}
+\hypertarget{class_wifi}{}\label{class_wifi}\index{Wifi@{Wifi}}
+
+
+{\ttfamily \#include $<$wifi.\+h$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_wifi_a48bab6c2ab609e7c9798738f3082ad2c}{Wifi}} (uint8\+\_\+t \texorpdfstring{$\ast$}{*}buff, uint8\+\_\+t \texorpdfstring{$\ast$}{*}index\+WRx, uint32\+\_\+t length\+Buff)
+\begin{DoxyCompactList}\small\item\em Construct a new \doxylink{class_wifi}{Wifi} object. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_wifi_af9c0bb40082e1b5dd2907be907b94418}{\texorpdfstring{$\sim$}{\string~}\+Wifi}} ()
+\begin{DoxyCompactList}\small\item\em Destroy the \doxylink{class_wifi}{Wifi} object. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_wifi_ac599aea29e221a61547513413a8b7d2c}{config\+Wifi}} (\mbox{\hyperlink{structwifi_data}{wifi\+Data}} \texorpdfstring{$\ast$}{*})
+\begin{DoxyCompactList}\small\item\em Configura el ESP8266 para su funcionamiento. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_wifi_ac36fffaff4dd6b7a65dc96538776692b}{write\+Wifi\+Data}} (uint8\+\_\+t \texorpdfstring{$\ast$}{*}buff, uint8\+\_\+t n\+Bytes)
+\begin{DoxyCompactList}\small\item\em Escribe los datos para enviar por wifi en el buffer de transmisión. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_wifi_aacdc9b5e04cb93b8a74647371e1c15f9}{task\+Wifi}} ()
+\begin{DoxyCompactList}\small\item\em Tareas períodicas que ejecuta la clase. \end{DoxyCompactList}\item 
+uint8\+\_\+t \mbox{\hyperlink{class_wifi_a2032991f092778a344d7c87b5d8f653b}{is\+Wifi\+Ready}} ()
+\begin{DoxyCompactList}\small\item\em Consulta si el dispositivo \doxylink{class_wifi}{Wifi} está listo. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_wifi_a60c1b35e5c02cdd52ce1b4b6a9788181}{init\+Task}} ()
+\begin{DoxyCompactList}\small\item\em Iniciliza las tareas comunes. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_wifi_ab37d9a30bbfb315a158ba87ee367faae}{reset\+Wifi}} ()
+\begin{DoxyCompactList}\small\item\em Resetea el \doxylink{class_wifi}{Wifi} para comenzar nuevamente a cargar los datos de conexion. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{class_wifi_a48bab6c2ab609e7c9798738f3082ad2c}\label{class_wifi_a48bab6c2ab609e7c9798738f3082ad2c} 
+\index{Wifi@{Wifi}!Wifi@{Wifi}}
+\index{Wifi@{Wifi}!Wifi@{Wifi}}
+\doxysubsubsection{\texorpdfstring{Wifi()}{Wifi()}}
+{\footnotesize\ttfamily Wifi\+::\+Wifi (\begin{DoxyParamCaption}\item[{uint8\+\_\+t \texorpdfstring{$\ast$}{*}}]{buff,  }\item[{uint8\+\_\+t \texorpdfstring{$\ast$}{*}}]{index\+WRx,  }\item[{uint32\+\_\+t}]{length\+Buff }\end{DoxyParamCaption})}
+
+
+
+Construct a new \doxylink{class_wifi}{Wifi} object. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em buff} & Puntero al buffer circular de recepción \\
+\hline
+{\em index\+WRx} & Puntero al indice de escritura del buffer circular de recepción \\
+\hline
+{\em length\+Buff} & Tamaño del buffer \\
+\hline
+\end{DoxyParams}
+\Hypertarget{class_wifi_af9c0bb40082e1b5dd2907be907b94418}\label{class_wifi_af9c0bb40082e1b5dd2907be907b94418} 
+\index{Wifi@{Wifi}!````~Wifi@{\texorpdfstring{$\sim$}{\string~}Wifi}}
+\index{````~Wifi@{\texorpdfstring{$\sim$}{\string~}Wifi}!Wifi@{Wifi}}
+\doxysubsubsection{\texorpdfstring{\texorpdfstring{$\sim$}{\string~}Wifi()}{\string~Wifi()}}
+{\footnotesize\ttfamily Wifi\+::\texorpdfstring{$\sim$}{\string~}\+Wifi (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Destroy the \doxylink{class_wifi}{Wifi} object. 
+
+
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_wifi_ac599aea29e221a61547513413a8b7d2c}\label{class_wifi_ac599aea29e221a61547513413a8b7d2c} 
+\index{Wifi@{Wifi}!configWifi@{configWifi}}
+\index{configWifi@{configWifi}!Wifi@{Wifi}}
+\doxysubsubsection{\texorpdfstring{configWifi()}{configWifi()}}
+{\footnotesize\ttfamily void Wifi\+::config\+Wifi (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structwifi_data}{wifi\+Data}} \texorpdfstring{$\ast$}{*}}]{dataconfig }\end{DoxyParamCaption})}
+
+
+
+Configura el ESP8266 para su funcionamiento. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em puntero} & a \doxylink{structwifi_data}{wifi\+Data} \+: se pasan los parámetros de configuración mediante la estructura \doxylink{structwifi_data}{wifi\+Data} \\
+\hline
+\end{DoxyParams}
+\Hypertarget{class_wifi_a60c1b35e5c02cdd52ce1b4b6a9788181}\label{class_wifi_a60c1b35e5c02cdd52ce1b4b6a9788181} 
+\index{Wifi@{Wifi}!initTask@{initTask}}
+\index{initTask@{initTask}!Wifi@{Wifi}}
+\doxysubsubsection{\texorpdfstring{initTask()}{initTask()}}
+{\footnotesize\ttfamily void Wifi\+::init\+Task (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Iniciliza las tareas comunes. 
+
+\Hypertarget{class_wifi_a2032991f092778a344d7c87b5d8f653b}\label{class_wifi_a2032991f092778a344d7c87b5d8f653b} 
+\index{Wifi@{Wifi}!isWifiReady@{isWifiReady}}
+\index{isWifiReady@{isWifiReady}!Wifi@{Wifi}}
+\doxysubsubsection{\texorpdfstring{isWifiReady()}{isWifiReady()}}
+{\footnotesize\ttfamily uint8\+\_\+t Wifi\+::is\+Wifi\+Ready (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Consulta si el dispositivo \doxylink{class_wifi}{Wifi} está listo. 
+
+\begin{DoxyReturn}{Returns}
+true 
+
+false 
+\end{DoxyReturn}
+\Hypertarget{class_wifi_ab37d9a30bbfb315a158ba87ee367faae}\label{class_wifi_ab37d9a30bbfb315a158ba87ee367faae} 
+\index{Wifi@{Wifi}!resetWifi@{resetWifi}}
+\index{resetWifi@{resetWifi}!Wifi@{Wifi}}
+\doxysubsubsection{\texorpdfstring{resetWifi()}{resetWifi()}}
+{\footnotesize\ttfamily void Wifi\+::reset\+Wifi (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Resetea el \doxylink{class_wifi}{Wifi} para comenzar nuevamente a cargar los datos de conexion. 
+
+\Hypertarget{class_wifi_aacdc9b5e04cb93b8a74647371e1c15f9}\label{class_wifi_aacdc9b5e04cb93b8a74647371e1c15f9} 
+\index{Wifi@{Wifi}!taskWifi@{taskWifi}}
+\index{taskWifi@{taskWifi}!Wifi@{Wifi}}
+\doxysubsubsection{\texorpdfstring{taskWifi()}{taskWifi()}}
+{\footnotesize\ttfamily void Wifi\+::task\+Wifi (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Tareas períodicas que ejecuta la clase. 
+
+\Hypertarget{class_wifi_ac36fffaff4dd6b7a65dc96538776692b}\label{class_wifi_ac36fffaff4dd6b7a65dc96538776692b} 
+\index{Wifi@{Wifi}!writeWifiData@{writeWifiData}}
+\index{writeWifiData@{writeWifiData}!Wifi@{Wifi}}
+\doxysubsubsection{\texorpdfstring{writeWifiData()}{writeWifiData()}}
+{\footnotesize\ttfamily void Wifi\+::write\+Wifi\+Data (\begin{DoxyParamCaption}\item[{uint8\+\_\+t \texorpdfstring{$\ast$}{*}}]{buff,  }\item[{uint8\+\_\+t}]{n\+Bytes }\end{DoxyParamCaption})}
+
+
+
+Escribe los datos para enviar por wifi en el buffer de transmisión. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em buff} & Puntero al buffer que contiene los datos para ser enviados por wifi \\
+\hline
+{\em n\+Bytes} & Cantidad de datos que se quieren enviar \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{wifi_8h}{wifi.\+h}}\item 
+\mbox{\hyperlink{wifi_8cpp}{wifi.\+cpp}}\end{DoxyCompactItemize}

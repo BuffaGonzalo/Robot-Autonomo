@@ -1,0 +1,260 @@
+\doxysection{wifi.\+cpp File Reference}
+\hypertarget{wifi_8cpp}{}\label{wifi_8cpp}\index{wifi.cpp@{wifi.cpp}}
+{\ttfamily \#include \"{}wifi.\+h\"{}}\newline
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{struct__s_dato_config}{\+\_\+s\+Dato\+Config}}
+\begin{DoxyCompactList}\small\item\em Estructura para manejar la trasnmisión, recepción de datos del ESP. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{wifi_8cpp_a061ca739795f10fe89c5aaaf3f26b561}{STARTUPTIME}}~10000
+\item 
+\#define \mbox{\hyperlink{wifi_8cpp_a843d7ac1b5606fb82ac18dc725772678}{TIMETOCHECK}}~8000
+\item 
+\#define \mbox{\hyperlink{wifi_8cpp_a750f37a98734882c43e0428b0f4fb8d8}{RESETTIME}}~500
+\item 
+\#define \mbox{\hyperlink{wifi_8cpp_a79355bfe998a269786e72568595144f9}{DELAYRESPONSE}}~delayrespuesta
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \mbox{\hyperlink{wifi_8cpp_aaeb05e17d3ebe08abbced38a324afc33}{\+\_\+e\+Estado\+ESP}} \{ \newline
+\mbox{\hyperlink{wifi_8cpp_aaeb05e17d3ebe08abbced38a324afc33aec61241b3c97fa7b0951ddef414cdd86}{CWMODE\+\_\+\+DEF}}
+, \mbox{\hyperlink{wifi_8cpp_aaeb05e17d3ebe08abbced38a324afc33a3b8e3ef1378263b294399c6e10863c96}{CWDHCP\+\_\+\+DEF}}
+, \mbox{\hyperlink{wifi_8cpp_aaeb05e17d3ebe08abbced38a324afc33af5b2510ae7274257b54e0c9638dd9187}{CWJAP\+\_\+\+DEF}}
+, \mbox{\hyperlink{wifi_8cpp_aaeb05e17d3ebe08abbced38a324afc33a40f8bf9bc0f3d4043fc3053784591043}{CIPMUX}}
+, \newline
+\mbox{\hyperlink{wifi_8cpp_aaeb05e17d3ebe08abbced38a324afc33a053ff18f9e50747ef005ab3961db348a}{CIFSR}}
+, \mbox{\hyperlink{wifi_8cpp_aaeb05e17d3ebe08abbced38a324afc33a4ebe840ea473edb9e4c588dfe5bb390c}{CIPSTART}}
+, \mbox{\hyperlink{wifi_8cpp_aaeb05e17d3ebe08abbced38a324afc33accef6b62a993133317caad96e065c001}{CIPMODE}}
+, \mbox{\hyperlink{wifi_8cpp_aaeb05e17d3ebe08abbced38a324afc33a37d1602125b750063c3a74910d10934b}{CIPSEND}}
+, \newline
+\mbox{\hyperlink{wifi_8cpp_aaeb05e17d3ebe08abbced38a324afc33afb2f1a55914c30f3804e9ca594fce909}{AWAITINGRESPONSE}}
+, \mbox{\hyperlink{wifi_8cpp_aaeb05e17d3ebe08abbced38a324afc33a1983c1b3f63321f9ba3c7421b9fa3a7f}{INCOMMINGRESPONSE}}
+, \mbox{\hyperlink{wifi_8cpp_aaeb05e17d3ebe08abbced38a324afc33a53bd0fbfa57504b8438bfbcec38ab160}{READYTOTRASMIT}}
+, \mbox{\hyperlink{wifi_8cpp_aaeb05e17d3ebe08abbced38a324afc33a0a831c2bc18e8354fe3e30ec0f3cdcda}{AUTOMATIC}}
+, \newline
+\mbox{\hyperlink{wifi_8cpp_aaeb05e17d3ebe08abbced38a324afc33a4f34c5c191d6e0d028ca831b6c0b1571}{ALIVE}} =0x\+F0
+ \}
+\begin{DoxyCompactList}\small\item\em Enumeración para la MEF de configuración del ESP. \end{DoxyCompactList}\item 
+enum \mbox{\hyperlink{wifi_8cpp_ad26312505d76723fc5be431ff80cc1f9}{\+\_\+e\+State\+Task}} \{ \newline
+\mbox{\hyperlink{wifi_8cpp_ad26312505d76723fc5be431ff80cc1f9a040f8adbe87afb6f33ee1cf969f16c97}{RESETWIFI}}
+, \mbox{\hyperlink{wifi_8cpp_ad26312505d76723fc5be431ff80cc1f9a56f275913421aac16b5efff541f5dfc4}{STARTUP}}
+, \mbox{\hyperlink{wifi_8cpp_ad26312505d76723fc5be431ff80cc1f9ad8267084d7935e287ac12b8b2b517bc9}{STANBY}}
+, \mbox{\hyperlink{wifi_8cpp_ad26312505d76723fc5be431ff80cc1f9a702582f7f825ca83bdb076b15b4c0fc2}{CONFIG}}
+, \newline
+\mbox{\hyperlink{wifi_8cpp_ad26312505d76723fc5be431ff80cc1f9a6564f2f3e15be06b670547bbcaaf0798}{READY}}
+ \}
+\begin{DoxyCompactList}\small\item\em Enumeración de la MEF de las tareas comunes de la clase \doxylink{class_wifi}{Wifi}. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+Digital\+Out \mbox{\hyperlink{wifi_8cpp_ade82ea26398f1a407ee13b124a81abdc}{chip\+Enable\+ESP}} (PA\+\_\+3)
+\item 
+Raw\+Serial \mbox{\hyperlink{wifi_8cpp_a6c45acd23897f66b3acd35400811f3b6}{wifi\+Com}} (PB\+\_\+10, PB\+\_\+11, 115200)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+uint8\+\_\+t \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{wifi_8cpp_af97b1dca8241b0113c535cde53c1ebaa}{buff\+Rxw}}
+\begin{DoxyCompactList}\small\item\em Puntero local al bufer circular de recepción. \end{DoxyCompactList}\item 
+uint8\+\_\+t \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{wifi_8cpp_a3cd24b0306817abe3eec163e08b36d06}{index\+Rx\+Write}}
+\begin{DoxyCompactList}\small\item\em Puntero local al indice de escritura del bufer circular de recepción. \end{DoxyCompactList}\item 
+Timer \mbox{\hyperlink{wifi_8cpp_a8094ee676eb3467a270d76a7f577452e}{timer\+Wifi}}
+\item 
+uint32\+\_\+t \mbox{\hyperlink{wifi_8cpp_ac0a0be17ba62acbd5c1bd51c89f7ca52}{time\+Wifi}} =0
+\item 
+uint32\+\_\+t \mbox{\hyperlink{wifi_8cpp_af9021e84d2b7e278436d031ca6abf2e9}{timestart\+Up}} =0
+\item 
+uint32\+\_\+t \mbox{\hyperlink{wifi_8cpp_ad4b03cc49dbe4e6b13e32f8a7603ce4e}{timer\+Reset}} =0
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Macro Definition Documentation}
+\Hypertarget{wifi_8cpp_a79355bfe998a269786e72568595144f9}\label{wifi_8cpp_a79355bfe998a269786e72568595144f9} 
+\index{wifi.cpp@{wifi.cpp}!DELAYRESPONSE@{DELAYRESPONSE}}
+\index{DELAYRESPONSE@{DELAYRESPONSE}!wifi.cpp@{wifi.cpp}}
+\doxysubsubsection{\texorpdfstring{DELAYRESPONSE}{DELAYRESPONSE}}
+{\footnotesize\ttfamily \#define DELAYRESPONSE~delayrespuesta}
+
+\Hypertarget{wifi_8cpp_a750f37a98734882c43e0428b0f4fb8d8}\label{wifi_8cpp_a750f37a98734882c43e0428b0f4fb8d8} 
+\index{wifi.cpp@{wifi.cpp}!RESETTIME@{RESETTIME}}
+\index{RESETTIME@{RESETTIME}!wifi.cpp@{wifi.cpp}}
+\doxysubsubsection{\texorpdfstring{RESETTIME}{RESETTIME}}
+{\footnotesize\ttfamily \#define RESETTIME~500}
+
+\Hypertarget{wifi_8cpp_a061ca739795f10fe89c5aaaf3f26b561}\label{wifi_8cpp_a061ca739795f10fe89c5aaaf3f26b561} 
+\index{wifi.cpp@{wifi.cpp}!STARTUPTIME@{STARTUPTIME}}
+\index{STARTUPTIME@{STARTUPTIME}!wifi.cpp@{wifi.cpp}}
+\doxysubsubsection{\texorpdfstring{STARTUPTIME}{STARTUPTIME}}
+{\footnotesize\ttfamily \#define STARTUPTIME~10000}
+
+\Hypertarget{wifi_8cpp_a843d7ac1b5606fb82ac18dc725772678}\label{wifi_8cpp_a843d7ac1b5606fb82ac18dc725772678} 
+\index{wifi.cpp@{wifi.cpp}!TIMETOCHECK@{TIMETOCHECK}}
+\index{TIMETOCHECK@{TIMETOCHECK}!wifi.cpp@{wifi.cpp}}
+\doxysubsubsection{\texorpdfstring{TIMETOCHECK}{TIMETOCHECK}}
+{\footnotesize\ttfamily \#define TIMETOCHECK~8000}
+
+
+
+\doxysubsection{Enumeration Type Documentation}
+\Hypertarget{wifi_8cpp_aaeb05e17d3ebe08abbced38a324afc33}\label{wifi_8cpp_aaeb05e17d3ebe08abbced38a324afc33} 
+\index{wifi.cpp@{wifi.cpp}!\_eEstadoESP@{\_eEstadoESP}}
+\index{\_eEstadoESP@{\_eEstadoESP}!wifi.cpp@{wifi.cpp}}
+\doxysubsubsection{\texorpdfstring{\_eEstadoESP}{\_eEstadoESP}}
+{\footnotesize\ttfamily enum \mbox{\hyperlink{wifi_8cpp_aaeb05e17d3ebe08abbced38a324afc33}{\+\_\+e\+Estado\+ESP}}}
+
+
+
+Enumeración para la MEF de configuración del ESP. 
+
+\begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{CWMODE\_DEF@{CWMODE\_DEF}!wifi.cpp@{wifi.cpp}}\index{wifi.cpp@{wifi.cpp}!CWMODE\_DEF@{CWMODE\_DEF}}}\Hypertarget{wifi_8cpp_aaeb05e17d3ebe08abbced38a324afc33aec61241b3c97fa7b0951ddef414cdd86}\label{wifi_8cpp_aaeb05e17d3ebe08abbced38a324afc33aec61241b3c97fa7b0951ddef414cdd86} 
+CWMODE\+\_\+\+DEF&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{CWDHCP\_DEF@{CWDHCP\_DEF}!wifi.cpp@{wifi.cpp}}\index{wifi.cpp@{wifi.cpp}!CWDHCP\_DEF@{CWDHCP\_DEF}}}\Hypertarget{wifi_8cpp_aaeb05e17d3ebe08abbced38a324afc33a3b8e3ef1378263b294399c6e10863c96}\label{wifi_8cpp_aaeb05e17d3ebe08abbced38a324afc33a3b8e3ef1378263b294399c6e10863c96} 
+CWDHCP\+\_\+\+DEF&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{CWJAP\_DEF@{CWJAP\_DEF}!wifi.cpp@{wifi.cpp}}\index{wifi.cpp@{wifi.cpp}!CWJAP\_DEF@{CWJAP\_DEF}}}\Hypertarget{wifi_8cpp_aaeb05e17d3ebe08abbced38a324afc33af5b2510ae7274257b54e0c9638dd9187}\label{wifi_8cpp_aaeb05e17d3ebe08abbced38a324afc33af5b2510ae7274257b54e0c9638dd9187} 
+CWJAP\+\_\+\+DEF&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{CIPMUX@{CIPMUX}!wifi.cpp@{wifi.cpp}}\index{wifi.cpp@{wifi.cpp}!CIPMUX@{CIPMUX}}}\Hypertarget{wifi_8cpp_aaeb05e17d3ebe08abbced38a324afc33a40f8bf9bc0f3d4043fc3053784591043}\label{wifi_8cpp_aaeb05e17d3ebe08abbced38a324afc33a40f8bf9bc0f3d4043fc3053784591043} 
+CIPMUX&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{CIFSR@{CIFSR}!wifi.cpp@{wifi.cpp}}\index{wifi.cpp@{wifi.cpp}!CIFSR@{CIFSR}}}\Hypertarget{wifi_8cpp_aaeb05e17d3ebe08abbced38a324afc33a053ff18f9e50747ef005ab3961db348a}\label{wifi_8cpp_aaeb05e17d3ebe08abbced38a324afc33a053ff18f9e50747ef005ab3961db348a} 
+CIFSR&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{CIPSTART@{CIPSTART}!wifi.cpp@{wifi.cpp}}\index{wifi.cpp@{wifi.cpp}!CIPSTART@{CIPSTART}}}\Hypertarget{wifi_8cpp_aaeb05e17d3ebe08abbced38a324afc33a4ebe840ea473edb9e4c588dfe5bb390c}\label{wifi_8cpp_aaeb05e17d3ebe08abbced38a324afc33a4ebe840ea473edb9e4c588dfe5bb390c} 
+CIPSTART&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{CIPMODE@{CIPMODE}!wifi.cpp@{wifi.cpp}}\index{wifi.cpp@{wifi.cpp}!CIPMODE@{CIPMODE}}}\Hypertarget{wifi_8cpp_aaeb05e17d3ebe08abbced38a324afc33accef6b62a993133317caad96e065c001}\label{wifi_8cpp_aaeb05e17d3ebe08abbced38a324afc33accef6b62a993133317caad96e065c001} 
+CIPMODE&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{CIPSEND@{CIPSEND}!wifi.cpp@{wifi.cpp}}\index{wifi.cpp@{wifi.cpp}!CIPSEND@{CIPSEND}}}\Hypertarget{wifi_8cpp_aaeb05e17d3ebe08abbced38a324afc33a37d1602125b750063c3a74910d10934b}\label{wifi_8cpp_aaeb05e17d3ebe08abbced38a324afc33a37d1602125b750063c3a74910d10934b} 
+CIPSEND&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{AWAITINGRESPONSE@{AWAITINGRESPONSE}!wifi.cpp@{wifi.cpp}}\index{wifi.cpp@{wifi.cpp}!AWAITINGRESPONSE@{AWAITINGRESPONSE}}}\Hypertarget{wifi_8cpp_aaeb05e17d3ebe08abbced38a324afc33afb2f1a55914c30f3804e9ca594fce909}\label{wifi_8cpp_aaeb05e17d3ebe08abbced38a324afc33afb2f1a55914c30f3804e9ca594fce909} 
+AWAITINGRESPONSE&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{INCOMMINGRESPONSE@{INCOMMINGRESPONSE}!wifi.cpp@{wifi.cpp}}\index{wifi.cpp@{wifi.cpp}!INCOMMINGRESPONSE@{INCOMMINGRESPONSE}}}\Hypertarget{wifi_8cpp_aaeb05e17d3ebe08abbced38a324afc33a1983c1b3f63321f9ba3c7421b9fa3a7f}\label{wifi_8cpp_aaeb05e17d3ebe08abbced38a324afc33a1983c1b3f63321f9ba3c7421b9fa3a7f} 
+INCOMMINGRESPONSE&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{READYTOTRASMIT@{READYTOTRASMIT}!wifi.cpp@{wifi.cpp}}\index{wifi.cpp@{wifi.cpp}!READYTOTRASMIT@{READYTOTRASMIT}}}\Hypertarget{wifi_8cpp_aaeb05e17d3ebe08abbced38a324afc33a53bd0fbfa57504b8438bfbcec38ab160}\label{wifi_8cpp_aaeb05e17d3ebe08abbced38a324afc33a53bd0fbfa57504b8438bfbcec38ab160} 
+READYTOTRASMIT&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{AUTOMATIC@{AUTOMATIC}!wifi.cpp@{wifi.cpp}}\index{wifi.cpp@{wifi.cpp}!AUTOMATIC@{AUTOMATIC}}}\Hypertarget{wifi_8cpp_aaeb05e17d3ebe08abbced38a324afc33a0a831c2bc18e8354fe3e30ec0f3cdcda}\label{wifi_8cpp_aaeb05e17d3ebe08abbced38a324afc33a0a831c2bc18e8354fe3e30ec0f3cdcda} 
+AUTOMATIC&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{ALIVE@{ALIVE}!wifi.cpp@{wifi.cpp}}\index{wifi.cpp@{wifi.cpp}!ALIVE@{ALIVE}}}\Hypertarget{wifi_8cpp_aaeb05e17d3ebe08abbced38a324afc33a4f34c5c191d6e0d028ca831b6c0b1571}\label{wifi_8cpp_aaeb05e17d3ebe08abbced38a324afc33a4f34c5c191d6e0d028ca831b6c0b1571} 
+ALIVE&\\
+\hline
+
+\end{DoxyEnumFields}
+\Hypertarget{wifi_8cpp_ad26312505d76723fc5be431ff80cc1f9}\label{wifi_8cpp_ad26312505d76723fc5be431ff80cc1f9} 
+\index{wifi.cpp@{wifi.cpp}!\_eStateTask@{\_eStateTask}}
+\index{\_eStateTask@{\_eStateTask}!wifi.cpp@{wifi.cpp}}
+\doxysubsubsection{\texorpdfstring{\_eStateTask}{\_eStateTask}}
+{\footnotesize\ttfamily enum \mbox{\hyperlink{wifi_8cpp_ad26312505d76723fc5be431ff80cc1f9}{\+\_\+e\+State\+Task}}}
+
+
+
+Enumeración de la MEF de las tareas comunes de la clase \doxylink{class_wifi}{Wifi}. 
+
+\begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{RESETWIFI@{RESETWIFI}!wifi.cpp@{wifi.cpp}}\index{wifi.cpp@{wifi.cpp}!RESETWIFI@{RESETWIFI}}}\Hypertarget{wifi_8cpp_ad26312505d76723fc5be431ff80cc1f9a040f8adbe87afb6f33ee1cf969f16c97}\label{wifi_8cpp_ad26312505d76723fc5be431ff80cc1f9a040f8adbe87afb6f33ee1cf969f16c97} 
+RESETWIFI&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{STARTUP@{STARTUP}!wifi.cpp@{wifi.cpp}}\index{wifi.cpp@{wifi.cpp}!STARTUP@{STARTUP}}}\Hypertarget{wifi_8cpp_ad26312505d76723fc5be431ff80cc1f9a56f275913421aac16b5efff541f5dfc4}\label{wifi_8cpp_ad26312505d76723fc5be431ff80cc1f9a56f275913421aac16b5efff541f5dfc4} 
+STARTUP&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{STANBY@{STANBY}!wifi.cpp@{wifi.cpp}}\index{wifi.cpp@{wifi.cpp}!STANBY@{STANBY}}}\Hypertarget{wifi_8cpp_ad26312505d76723fc5be431ff80cc1f9ad8267084d7935e287ac12b8b2b517bc9}\label{wifi_8cpp_ad26312505d76723fc5be431ff80cc1f9ad8267084d7935e287ac12b8b2b517bc9} 
+STANBY&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{CONFIG@{CONFIG}!wifi.cpp@{wifi.cpp}}\index{wifi.cpp@{wifi.cpp}!CONFIG@{CONFIG}}}\Hypertarget{wifi_8cpp_ad26312505d76723fc5be431ff80cc1f9a702582f7f825ca83bdb076b15b4c0fc2}\label{wifi_8cpp_ad26312505d76723fc5be431ff80cc1f9a702582f7f825ca83bdb076b15b4c0fc2} 
+CONFIG&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{READY@{READY}!wifi.cpp@{wifi.cpp}}\index{wifi.cpp@{wifi.cpp}!READY@{READY}}}\Hypertarget{wifi_8cpp_ad26312505d76723fc5be431ff80cc1f9a6564f2f3e15be06b670547bbcaaf0798}\label{wifi_8cpp_ad26312505d76723fc5be431ff80cc1f9a6564f2f3e15be06b670547bbcaaf0798} 
+READY&\\
+\hline
+
+\end{DoxyEnumFields}
+
+
+\doxysubsection{Function Documentation}
+\Hypertarget{wifi_8cpp_ade82ea26398f1a407ee13b124a81abdc}\label{wifi_8cpp_ade82ea26398f1a407ee13b124a81abdc} 
+\index{wifi.cpp@{wifi.cpp}!chipEnableESP@{chipEnableESP}}
+\index{chipEnableESP@{chipEnableESP}!wifi.cpp@{wifi.cpp}}
+\doxysubsubsection{\texorpdfstring{chipEnableESP()}{chipEnableESP()}}
+{\footnotesize\ttfamily Digital\+Out chip\+Enable\+ESP (\begin{DoxyParamCaption}\item[{PA\+\_\+3}]{ }\end{DoxyParamCaption})}
+
+\Hypertarget{wifi_8cpp_a6c45acd23897f66b3acd35400811f3b6}\label{wifi_8cpp_a6c45acd23897f66b3acd35400811f3b6} 
+\index{wifi.cpp@{wifi.cpp}!wifiCom@{wifiCom}}
+\index{wifiCom@{wifiCom}!wifi.cpp@{wifi.cpp}}
+\doxysubsubsection{\texorpdfstring{wifiCom()}{wifiCom()}}
+{\footnotesize\ttfamily Raw\+Serial wifi\+Com (\begin{DoxyParamCaption}\item[{PB\+\_\+10}]{,  }\item[{PB\+\_\+11}]{,  }\item[{115200}]{ }\end{DoxyParamCaption})}
+
+
+
+\doxysubsection{Variable Documentation}
+\Hypertarget{wifi_8cpp_af97b1dca8241b0113c535cde53c1ebaa}\label{wifi_8cpp_af97b1dca8241b0113c535cde53c1ebaa} 
+\index{wifi.cpp@{wifi.cpp}!buffRxw@{buffRxw}}
+\index{buffRxw@{buffRxw}!wifi.cpp@{wifi.cpp}}
+\doxysubsubsection{\texorpdfstring{buffRxw}{buffRxw}}
+{\footnotesize\ttfamily uint8\+\_\+t\texorpdfstring{$\ast$}{*} buff\+Rxw}
+
+
+
+Puntero local al bufer circular de recepción. 
+
+\Hypertarget{wifi_8cpp_a3cd24b0306817abe3eec163e08b36d06}\label{wifi_8cpp_a3cd24b0306817abe3eec163e08b36d06} 
+\index{wifi.cpp@{wifi.cpp}!indexRxWrite@{indexRxWrite}}
+\index{indexRxWrite@{indexRxWrite}!wifi.cpp@{wifi.cpp}}
+\doxysubsubsection{\texorpdfstring{indexRxWrite}{indexRxWrite}}
+{\footnotesize\ttfamily uint8\+\_\+t\texorpdfstring{$\ast$}{*} index\+Rx\+Write}
+
+
+
+Puntero local al indice de escritura del bufer circular de recepción. 
+
+\Hypertarget{wifi_8cpp_ad4b03cc49dbe4e6b13e32f8a7603ce4e}\label{wifi_8cpp_ad4b03cc49dbe4e6b13e32f8a7603ce4e} 
+\index{wifi.cpp@{wifi.cpp}!timerReset@{timerReset}}
+\index{timerReset@{timerReset}!wifi.cpp@{wifi.cpp}}
+\doxysubsubsection{\texorpdfstring{timerReset}{timerReset}}
+{\footnotesize\ttfamily uint32\+\_\+t timer\+Reset =0}
+
+\Hypertarget{wifi_8cpp_a8094ee676eb3467a270d76a7f577452e}\label{wifi_8cpp_a8094ee676eb3467a270d76a7f577452e} 
+\index{wifi.cpp@{wifi.cpp}!timerWifi@{timerWifi}}
+\index{timerWifi@{timerWifi}!wifi.cpp@{wifi.cpp}}
+\doxysubsubsection{\texorpdfstring{timerWifi}{timerWifi}}
+{\footnotesize\ttfamily Timer timer\+Wifi}
+
+\Hypertarget{wifi_8cpp_af9021e84d2b7e278436d031ca6abf2e9}\label{wifi_8cpp_af9021e84d2b7e278436d031ca6abf2e9} 
+\index{wifi.cpp@{wifi.cpp}!timestartUp@{timestartUp}}
+\index{timestartUp@{timestartUp}!wifi.cpp@{wifi.cpp}}
+\doxysubsubsection{\texorpdfstring{timestartUp}{timestartUp}}
+{\footnotesize\ttfamily uint32\+\_\+t timestart\+Up =0}
+
+\Hypertarget{wifi_8cpp_ac0a0be17ba62acbd5c1bd51c89f7ca52}\label{wifi_8cpp_ac0a0be17ba62acbd5c1bd51c89f7ca52} 
+\index{wifi.cpp@{wifi.cpp}!timeWifi@{timeWifi}}
+\index{timeWifi@{timeWifi}!wifi.cpp@{wifi.cpp}}
+\doxysubsubsection{\texorpdfstring{timeWifi}{timeWifi}}
+{\footnotesize\ttfamily uint32\+\_\+t time\+Wifi =0}
+

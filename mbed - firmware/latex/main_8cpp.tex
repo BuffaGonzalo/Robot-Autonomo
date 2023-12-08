@@ -1,0 +1,1552 @@
+\doxysection{main.\+cpp File Reference}
+\hypertarget{main_8cpp}{}\label{main_8cpp}\index{main.cpp@{main.cpp}}
+{\ttfamily \#include \"{}mbed.\+h\"{}}\newline
+{\ttfamily \#include \"{}util.\+h\"{}}\newline
+{\ttfamily \#include \"{}my\+Delay.\+h\"{}}\newline
+{\ttfamily \#include \"{}config.\+h\"{}}\newline
+{\ttfamily \#include \"{}wifi.\+h\"{}}\newline
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{struct__s_button}{\+\_\+s\+Button}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{main_8cpp_a4a941b75a2cf56698a1e769d8214fd50}{RXBUFSIZE}}~256
+\item 
+\#define \mbox{\hyperlink{main_8cpp_a9a01f28179d1f97c65ac28919f6f1cdb}{TXBUFSIZE}}~256
+\item 
+\#define \mbox{\hyperlink{main_8cpp_a171ef18ea7b584f85234640a918da857}{DEBOUNCE}}~40
+\item 
+\#define \mbox{\hyperlink{main_8cpp_aafd00751d8b1042ebaedb0ed0817a4d6}{HEARBEATIME}}~100
+\item 
+\#define \mbox{\hyperlink{main_8cpp_a28e20ac7d375b70e5e06a17df6a08969}{GENERALTIME}}~10
+\item 
+\#define \mbox{\hyperlink{main_8cpp_a81a205bd2c6e38ff47725346a7765d78}{NUMBUTTONS}}~1
+\item 
+\#define \mbox{\hyperlink{main_8cpp_a8e41f4e5e50b46d026c7e8fa9bfe115e}{DISTANCEINTERVAL}}~300
+\item 
+\#define \mbox{\hyperlink{main_8cpp_ae7520c5477c11965aabeedc033c9862b}{MASK}}~0x01
+\item 
+\#define \mbox{\hyperlink{main_8cpp_a362930fedbc2755a9ee8ab49c54c3ada}{SERIE}}~0
+\item 
+\#define \mbox{\hyperlink{main_8cpp_a14ed8168071c3bb8602b38ecb1b28178}{WIFI}}~1
+\item 
+\#define \mbox{\hyperlink{main_8cpp_a46d67cee3f4ab9e09815cb5f3e5494f6}{WAIT100\+MS}}~100
+\item 
+\#define \mbox{\hyperlink{main_8cpp_a5c5e2c93c64f8b3e3771d27288339840}{WAIT150\+MS}}~150
+\item 
+\#define \mbox{\hyperlink{main_8cpp_ae13b0e5297e2b0fb5df0dd6ed045c1fa}{WAIT200\+MS}}~200
+\item 
+\#define \mbox{\hyperlink{main_8cpp_ace9c0d3dcb958d5bea72c9a1ff4600f5}{WAIT250\+MS}}~250
+\item 
+\#define \mbox{\hyperlink{main_8cpp_ad45a45700017938733cc68c0c93fe491}{WAIT300\+MS}}~300
+\item 
+\#define \mbox{\hyperlink{main_8cpp_aa4aecee1dd77c10908dd09205decb163}{WAIT400\+MS}}~400
+\item 
+\#define \mbox{\hyperlink{main_8cpp_a1bf5427687f6a392b723b0da2fdfec60}{WAIT500\+MS}}~500
+\item 
+\#define \mbox{\hyperlink{main_8cpp_abac921d1b119cc4db21ab1222e51580e}{WAIT750\+MS}}~750
+\item 
+\#define \mbox{\hyperlink{main_8cpp_a9788212d5807360b8a9317e9982677f6}{WAIT1000\+MS}}~1000
+\item 
+\#define \mbox{\hyperlink{main_8cpp_ae669258b332077dc4a2cbcb4cc21b08c}{WAIT1250\+MS}}~1250
+\item 
+\#define \mbox{\hyperlink{main_8cpp_a61dbd9cca0ba99a6fdb39944754ae52b}{WAIT1500\+MS}}~1500
+\item 
+\#define \mbox{\hyperlink{main_8cpp_aba9966e88c33fe9eafb4740595c99933}{WAIT2000\+MS}}~2000
+\item 
+\#define \mbox{\hyperlink{main_8cpp_ad385945388a28061dcd0dda17b712b1c}{WAIT3000\+MS}}~3000
+\item 
+\#define \mbox{\hyperlink{main_8cpp_a22f8181ab844f80b6d91d167bf34cada}{WAIT4000\+MS}}~4000
+\item 
+\#define \mbox{\hyperlink{main_8cpp_a076a343d697d1c57ae16a5da47ba1663}{WAIT5000\+MS}}~5000
+\item 
+\#define \mbox{\hyperlink{main_8cpp_a7e49c0004749dd2461e791b4c4a97895}{MAXSPEED}}~12000
+\item 
+\#define \mbox{\hyperlink{main_8cpp_ab6c86c5960d93ea465707e8751c00674}{MEDSPEED}}~7000
+\item 
+\#define \mbox{\hyperlink{main_8cpp_a5521c82effd93707c3a8f7420ba5881c}{MINSPEED}}~5000
+\item 
+\#define \mbox{\hyperlink{main_8cpp_a68f19c90ab1da05d928e40069ff5abd5}{TURNSPEED}}~6000
+\item 
+\#define \mbox{\hyperlink{main_8cpp_af6418866b9c8f49ad00dbd40efb5c62c}{NOSPEED}}~0
+\item 
+\#define \mbox{\hyperlink{main_8cpp_ad4e1a3c6ee938895320d47786ee61f73}{SPEEDERROR}}~1000
+\item 
+\#define \mbox{\hyperlink{main_8cpp_a6ddfdda7a062d10cff4a72b76b44aeb8}{FORWARD}}~2
+\item 
+\#define \mbox{\hyperlink{main_8cpp_adf445abfe1b77fa63f89e315ccc2f7f2}{BACKWARD}}~1
+\item 
+\#define \mbox{\hyperlink{main_8cpp_a11c338e14b4700b1c18d86859596d5f3}{ENERGYSTOP}}~3
+\item 
+\#define \mbox{\hyperlink{main_8cpp_ae19b6bb2940d2fbe0a79852b070eeafd}{STOP}}~0
+\item 
+\#define \mbox{\hyperlink{main_8cpp_a67f9ea6fec6e4af709ba74256cc0e1e0}{RESETFLAGS}}~flags.\+bytes
+\item 
+\#define \mbox{\hyperlink{main_8cpp_acc990f73f64e16e01e5ff3bc7af46ed7}{ISCOMAND}}~flags.\+bits.\+bit0
+\item 
+\#define \mbox{\hyperlink{main_8cpp_afafc3d3e2d702a1931e8a681a2f79629}{SERVOMOVING}}~flags.\+bits.\+bit1
+\item 
+\#define \mbox{\hyperlink{main_8cpp_a0872d3a34671295065b38aedd62f7eb3}{SERVODIRECT}}~flags.\+bits.\+bit2
+\item 
+\#define \mbox{\hyperlink{main_8cpp_a77dc5a273c087fcc5b448f7ad6af11ce}{MEDIRDISTANCIA}}~flags.\+bits.\+bit3
+\item 
+\#define \mbox{\hyperlink{main_8cpp_a0c1b4831727321b9c1be7c33d07bc340}{LOOKTIME}}~600
+\item 
+\#define \mbox{\hyperlink{main_8cpp_a4c825b295fb8546e6b1b35a53960b793}{MIDDLESERVO}}~1500
+\item 
+\#define \mbox{\hyperlink{main_8cpp_a4c9c6fbd3c82a159d524a6390e5300a6}{MINMOVEDISTANCE}}~9
+\item 
+\#define \mbox{\hyperlink{main_8cpp_a010fa716ced1170c05d8fc9da46a5d34}{MAXDISTANCE}}
+\item 
+\#define \mbox{\hyperlink{main_8cpp_a1bc023d8cf3bb829616a4d6c85a30f67}{MOTORTIME}}~200
+\item 
+\#define \mbox{\hyperlink{main_8cpp_a82cfa836f77d3a997bdfc083b4b90f41}{SERVOTIME}}~500
+\item 
+\#define \mbox{\hyperlink{main_8cpp_a094789b253ce3d376a7f6361f81e8597}{INTERVALO}}~10
+\item 
+\#define \mbox{\hyperlink{main_8cpp_a5977928b042d0a4b2ce93baa979e5f5c}{LIMIT}}~0x0F
+\item 
+\#define \mbox{\hyperlink{main_8cpp_aabf9c516001d8e5c7c9e593e5a25d249}{DERECHA}}~1
+\item 
+\#define \mbox{\hyperlink{main_8cpp_ad9ef6961fb41b000be06f50ff545f55d}{IZQUIERDA}}~0
+\item 
+\#define \mbox{\hyperlink{main_8cpp_a36c893e6d98bad8a13b23b47e8105839}{DODGEDISTANCE}}~10
+\item 
+\#define \mbox{\hyperlink{main_8cpp_abdc7e6385c5d586f9d10968791630268}{REFDISTANCE}}~20
+\item 
+\#define \mbox{\hyperlink{main_8cpp_a2d1edde91ea515b363277f4bbdc3244d}{MAXPATH}}~4
+\item 
+\#define \mbox{\hyperlink{main_8cpp_ab39fec97d85960796efedec442f38004}{INTERVAL}}~1000
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef void(\texorpdfstring{$\ast$}{*} \mbox{\hyperlink{main_8cpp_a0376438b3b667f21047260723c1aa492}{ptr\+Func}}) (void \texorpdfstring{$\ast$}{*}param)
+\begin{DoxyCompactList}\small\item\em Tipo de datos de puntero a función, sirve para declarar los distintos callbacks.-\/. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \mbox{\hyperlink{main_8cpp_a6de6f3d8e74aa6ec71bf5cb6bae49e98}{\+\_\+e\+Button\+State}} \{ \mbox{\hyperlink{main_8cpp_a6de6f3d8e74aa6ec71bf5cb6bae49e98a0c7746cfbcac16484b2266e6f51e5e0b}{BUTTON\+\_\+\+DOWN}}
+, \mbox{\hyperlink{main_8cpp_a6de6f3d8e74aa6ec71bf5cb6bae49e98a37666936297216dce293b0aa31c474b8}{BUTTON\+\_\+\+UP}}
+, \mbox{\hyperlink{main_8cpp_a6de6f3d8e74aa6ec71bf5cb6bae49e98a5783aad8af274c748e903acf713c430f}{BUTTON\+\_\+\+RISING}}
+, \mbox{\hyperlink{main_8cpp_a6de6f3d8e74aa6ec71bf5cb6bae49e98a4c5560be280ccf3e4ef5a385a6dd62dc}{BUTTON\+\_\+\+FALLING}}
+ \}
+\item 
+enum \mbox{\hyperlink{main_8cpp_ae01c58988e4d37977423a5aab26ab5fa}{\+\_\+e\+Event}} \{ \mbox{\hyperlink{main_8cpp_ae01c58988e4d37977423a5aab26ab5faa5ef9a100ac8b4b8d6dec477c377b7901}{PRESSED}}
+, \mbox{\hyperlink{main_8cpp_ae01c58988e4d37977423a5aab26ab5faacdb8b9a398ffbd729218a27d00d8fa45}{NOT\+\_\+\+PRESSED}}
+, \mbox{\hyperlink{main_8cpp_ae01c58988e4d37977423a5aab26ab5faa5856f037cd70ecf6fca11999c11a4a0d}{NO\+\_\+\+EVENT}}
+ \}
+\begin{DoxyCompactList}\small\item\em Enumeracion de los estados de los diferentes estados de los botones, como tengo una configuracion Pull\+Down los coloqué de tal forma que me quede el valor de NOT\+\_\+\+PRESSED = 0 y PRESSED = 1. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+Digital\+Out \mbox{\hyperlink{main_8cpp_ae87cfd08d3fe6bf68d277bae4d1e22b9}{HEARTBEAT}} (PC\+\_\+13)
+\begin{DoxyCompactList}\small\item\em Led de Hearbeat. \end{DoxyCompactList}\item 
+Digital\+In \mbox{\hyperlink{main_8cpp_a7c64ed939a23ec89885afe621fbdeee7}{BUTTON}} (PA\+\_\+4)
+\item 
+Raw\+Serial \mbox{\hyperlink{main_8cpp_a9f1c202c0f0835ceb16ab66b94c095bc}{PC}} (PA\+\_\+9, PA\+\_\+10)
+\begin{DoxyCompactList}\small\item\em Configuración del puerto serie, la velocidad (115200) tiene que ser la misma en QT. \end{DoxyCompactList}\item 
+Digital\+Out \mbox{\hyperlink{main_8cpp_a78582976c1ee31e6b98fb88bdd66f5ea}{trigger}} (PB\+\_\+13)
+\begin{DoxyCompactList}\small\item\em Salida para el trigger del sensor Ultrasonico. \end{DoxyCompactList}\item 
+Interrupt\+In \mbox{\hyperlink{main_8cpp_a2a6dd707114f32ed2177060e7af6eb8b}{hecho}} (PB\+\_\+12)
+\begin{DoxyCompactList}\small\item\em pin de eco del sensor Ultrasonico definido como interrupción \end{DoxyCompactList}\item 
+Pwm\+Out \mbox{\hyperlink{main_8cpp_a38f73a0c8fd57e3e6b59211796832cce}{servo}} (PA\+\_\+8)
+\begin{DoxyCompactList}\small\item\em Pin del Servo debe ser PWM para poder modular el ancho del pulso. \end{DoxyCompactList}\item 
+Analog\+In \mbox{\hyperlink{main_8cpp_ac3a3ad7565eac99447930a95d0b00bc7}{ir\+Left}} (PA\+\_\+0)
+\begin{DoxyCompactList}\small\item\em Sensor infrarrojo para detección de linea. \end{DoxyCompactList}\item 
+Analog\+In \mbox{\hyperlink{main_8cpp_a70f38f5cca810521c9adfd11ff84f370}{ir\+Center}} (PA\+\_\+1)
+\begin{DoxyCompactList}\small\item\em Sensor infrarrojo para detección de linea. \end{DoxyCompactList}\item 
+Analog\+In \mbox{\hyperlink{main_8cpp_ad4e2cc3a28cce7d577029ac2d65259f6}{ir\+Right}} (PA\+\_\+2)
+\begin{DoxyCompactList}\small\item\em Sensor infrarrojo para detección de linea. \end{DoxyCompactList}\item 
+Interrupt\+In \mbox{\hyperlink{main_8cpp_a4e1851c275ea4fc89e208a21efa104fe}{speed\+Left}} (PB\+\_\+9)
+\begin{DoxyCompactList}\small\item\em Sensor de Horquilla para medir velocidad. \end{DoxyCompactList}\item 
+Interrupt\+In \mbox{\hyperlink{main_8cpp_aef9c56a0e0480c467c3cad5136f2ea18}{speed\+Right}} (PB\+\_\+8)
+\begin{DoxyCompactList}\small\item\em Sensor de Horquilla para medir velocidad. \end{DoxyCompactList}\item 
+Bus\+Out \mbox{\hyperlink{main_8cpp_adb32c2ec2c970df4d53fb44ee981d5ce}{dir\+MRight}} (PB\+\_\+14, PB\+\_\+15)
+\begin{DoxyCompactList}\small\item\em Pines para determinara la dirección de giro del motor. \end{DoxyCompactList}\item 
+Bus\+Out \mbox{\hyperlink{main_8cpp_ae7aa3dc0dfd4247aad0802a921e2fc07}{dir\+MLeft}} (PB\+\_\+6, PB\+\_\+7)
+\begin{DoxyCompactList}\small\item\em Pines para determinara la dirección de giro del motor. \end{DoxyCompactList}\item 
+Pwm\+Out \mbox{\hyperlink{main_8cpp_aae57516084be289038d768f1d326c7b8}{speed\+MRight}} (PB\+\_\+1)
+\begin{DoxyCompactList}\small\item\em Pin de habilitación del giro del motor, se usa para controlar velocidad del mismo. \end{DoxyCompactList}\item 
+Pwm\+Out \mbox{\hyperlink{main_8cpp_af989a6796f7aa734edd66e61b7bc7124}{speed\+MLeft}} (PB\+\_\+0)
+\begin{DoxyCompactList}\small\item\em Pin de habilitación del giro del motor, se usa para controlar velocidad del mismo. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{main_8cpp_af00a64932f3de7c9b39931b9ef63e6cd}{hearbeat\+Task}} (\mbox{\hyperlink{struct__delay__t}{\+\_\+delay\+\_\+t}} \texorpdfstring{$\ast$}{*}time\+Heartbeat, uint8\+\_\+t index)
+\begin{DoxyCompactList}\small\item\em Hearbeat, indica el funcionamiento del sistema. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{main_8cpp_a94abb7948548cc6c145107220ab99614}{serial\+Task}} (\mbox{\hyperlink{struct__s_rx}{\+\_\+s\+Rx}} \texorpdfstring{$\ast$}{*}\mbox{\hyperlink{main_8cpp_a4d4ec2522161a614a170a9335410f786}{data\+Rx}}, \mbox{\hyperlink{struct__s_tx}{\+\_\+s\+Tx}} \texorpdfstring{$\ast$}{*}\mbox{\hyperlink{main_8cpp_ab1e6e441c1ec0ab28da489fedb930af4}{data\+Tx}}, uint8\+\_\+t source)
+\begin{DoxyCompactList}\small\item\em Ejecuta las tareas del puerto serie Decodificación/trasnmisión. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{main_8cpp_acdb2ea2d16809ce07ced180e0d09f646}{on\+Rx\+Data}} ()
+\begin{DoxyCompactList}\small\item\em Recepción de datos por el puerto serie. \end{DoxyCompactList}\item 
+uint8\+\_\+t \mbox{\hyperlink{main_8cpp_acdbf6aea2092310f8a273c5722d0f90a}{put\+Header\+On\+Tx}} (\mbox{\hyperlink{struct__s_tx}{\+\_\+s\+Tx}} \texorpdfstring{$\ast$}{*}\mbox{\hyperlink{main_8cpp_ab1e6e441c1ec0ab28da489fedb930af4}{data\+Tx}}, \mbox{\hyperlink{util_8h_a914da92242d04381391fee2bb1c936df}{\+\_\+e\+Cmd}} ID, uint8\+\_\+t frame\+Length)
+\begin{DoxyCompactList}\small\item\em Pone el encabezado del protocolo, el ID y la cantidad de bytes a enviar. \end{DoxyCompactList}\item 
+uint8\+\_\+t \mbox{\hyperlink{main_8cpp_a7f55bf2732dc4bf9e13459e2b043d6a9}{put\+Byte\+On\+Tx}} (\mbox{\hyperlink{struct__s_tx}{\+\_\+s\+Tx}} \texorpdfstring{$\ast$}{*}\mbox{\hyperlink{main_8cpp_ab1e6e441c1ec0ab28da489fedb930af4}{data\+Tx}}, uint8\+\_\+t byte)
+\begin{DoxyCompactList}\small\item\em Agrega un byte al buffer de transmisión. \end{DoxyCompactList}\item 
+uint8\+\_\+t \mbox{\hyperlink{main_8cpp_a65c975cdd96edceb02eeed35611e519b}{put\+Str\+Ontx}} (\mbox{\hyperlink{struct__s_tx}{\+\_\+s\+Tx}} \texorpdfstring{$\ast$}{*}\mbox{\hyperlink{main_8cpp_ab1e6e441c1ec0ab28da489fedb930af4}{data\+Tx}}, const char \texorpdfstring{$\ast$}{*}str)
+\begin{DoxyCompactList}\small\item\em Agrega un String al buffer de transmisión. \end{DoxyCompactList}\item 
+uint8\+\_\+t \mbox{\hyperlink{main_8cpp_a2f7522c197fb11f3b236a125c62e0f5b}{get\+Byte\+From\+Rx}} (\mbox{\hyperlink{struct__s_rx}{\+\_\+s\+Rx}} \texorpdfstring{$\ast$}{*}\mbox{\hyperlink{main_8cpp_a4d4ec2522161a614a170a9335410f786}{data\+Rx}}, uint8\+\_\+t ini\+Pos, uint8\+\_\+t final\+Pos)
+\item 
+void \mbox{\hyperlink{main_8cpp_aa282717f921443ed16532d7cd26c0070}{decode\+Header}} (\mbox{\hyperlink{struct__s_rx}{\+\_\+s\+Rx}} \texorpdfstring{$\ast$}{*}\mbox{\hyperlink{main_8cpp_a4d4ec2522161a614a170a9335410f786}{data\+Rx}})
+\begin{DoxyCompactList}\small\item\em Decodifica la trama recibida. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{main_8cpp_ad7fa38c7b10737f09337331126ecaa62}{decode\+Command}} (\mbox{\hyperlink{struct__s_rx}{\+\_\+s\+Rx}} \texorpdfstring{$\ast$}{*}\mbox{\hyperlink{main_8cpp_a4d4ec2522161a614a170a9335410f786}{data\+Rx}}, \mbox{\hyperlink{struct__s_tx}{\+\_\+s\+Tx}} \texorpdfstring{$\ast$}{*}\mbox{\hyperlink{main_8cpp_ab1e6e441c1ec0ab28da489fedb930af4}{data\+Tx}})
+\begin{DoxyCompactList}\small\item\em Decodifica el comando recibido en la transmisión y ejecuita las tareas asociadas a dicho comando. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{main_8cpp_a71d583cb847a59aaade24df4b91a619b}{auto\+Connect\+Wifi}} ()
+\begin{DoxyCompactList}\small\item\em Función para realizar la autoconexión de los datos de \doxylink{class_wifi}{Wifi}. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{main_8cpp_a2b44749324294e85c1fab65f10b23eb3}{alive\+Auto\+Task}} (\mbox{\hyperlink{struct__delay__t}{\+\_\+delay\+\_\+t}} \texorpdfstring{$\ast$}{*}alive\+Auto\+Time)
+\begin{DoxyCompactList}\small\item\em Envía de manera automática el alive. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{main_8cpp_ac37fa54eaa0bb188435fb98ec9360216}{servo\+Task}} (\mbox{\hyperlink{struct__delay__t}{\+\_\+delay\+\_\+t}} \texorpdfstring{$\ast$}{*}servo\+Time, uint32\+\_\+t \texorpdfstring{$\ast$}{*}interval\+Servo)
+\begin{DoxyCompactList}\small\item\em Rutina para realizar la verificación de mocimiento del servo en caso de que no se mueva envia la respuesta automática a la PC. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{main_8cpp_a1b2fac58b9992cd16cf031b0675c39ed}{speed\+Task}} ()
+\begin{DoxyCompactList}\small\item\em Rutina para medir la velocidad. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{main_8cpp_adaa2bc0beb72843e9b01f374c272fc0d}{ir\+Sensors\+Task}} ()
+\begin{DoxyCompactList}\small\item\em Rutina para hacer la medición de los sensores IR. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{main_8cpp_a8a9e1565f012413c30f77d9a78a1750e}{speed\+Count\+Left}} (void)
+\begin{DoxyCompactList}\small\item\em Función del Sensor de Horquilla Izquierdo cuenta los pulsos del sensor para medir velocidad luego. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{main_8cpp_a1dd9ea2d51194048d0e8757c5310b14c}{speed\+Count\+Right}} (void)
+\begin{DoxyCompactList}\small\item\em Función del Sensor de Horquilla Derecho cuenta los pulsos del sensor para medir velocidad luego. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{main_8cpp_a3565ff182f3313a11716bf5a99740315}{distance\+Init\+Measurement}} (void)
+\begin{DoxyCompactList}\small\item\em toma el valor inicial del Timer para medir distancia una vez que se detecta el evento RISE del pin de eco \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{main_8cpp_a10d698b5127b3e4cfd727f4de3e3a428}{distance\+Measurement}} (void)
+\begin{DoxyCompactList}\small\item\em Completa la medición una vez que se recibió el pulso de regreso en el pin de eco. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{main_8cpp_a5d19b6dbb73493c2f5ba7dc252e31b07}{do100ms}} ()
+\begin{DoxyCompactList}\small\item\em Función encargada de medir la distancia. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{main_8cpp_ae590204d6a496688e08b6f1b537a1567}{do\+Timeout}} ()
+\begin{DoxyCompactList}\small\item\em Función encargada de calcular el tiempo. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{main_8cpp_a6521e08544f1c5c607c5df57f98ad995}{start\+Button}} (\mbox{\hyperlink{struct__s_button}{\+\_\+s\+Button}} \texorpdfstring{$\ast$}{*}button, \mbox{\hyperlink{main_8cpp_a0376438b3b667f21047260723c1aa492}{ptr\+Func}} button\+Func)
+\begin{DoxyCompactList}\small\item\em Función con la cual inicializamos los botones. \end{DoxyCompactList}\item 
+uint8\+\_\+t \mbox{\hyperlink{main_8cpp_af7c4f477f9b957326bbb08d6ca119ac0}{update\+Mef\+Task}} (\mbox{\hyperlink{struct__s_button}{\+\_\+s\+Button}} \texorpdfstring{$\ast$}{*}button)
+\begin{DoxyCompactList}\small\item\em Función utilizada para actualizar la MEF de los botones. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{main_8cpp_ace03eb1887659f8e407567425af18dc1}{button\+Task}} (void \texorpdfstring{$\ast$}{*}param)
+\item 
+void \mbox{\hyperlink{main_8cpp_ac7541b23502ab2f3b5f747f9800d95d1}{move}} (uint32\+\_\+t left\+Speed, uint32\+\_\+t right\+Speed, uint8\+\_\+t left\+Motor, uint8\+\_\+t right\+Motor)
+\begin{DoxyCompactList}\small\item\em Función encargada de mover hacia adelante el robot. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{main_8cpp_a30028319b556f0a3da7af07f4f861afb}{rotate}} (uint8\+\_\+t rotation\+Angle, uint8\+\_\+t direction)
+\item 
+void \mbox{\hyperlink{main_8cpp_afca87e593733b3acab3f03f5897084b4}{line\+Follower}} ()
+\begin{DoxyCompactList}\small\item\em Función utilizada en el modo de seguir linea. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{main_8cpp_a86a2fd5808d14ce920efb8d1c13cebbf}{shortest\+Maze\+Path}} ()
+\item 
+\mbox{\hyperlink{class_wifi}{Wifi}} \mbox{\hyperlink{main_8cpp_a8a5ff82af1375f7feef806ecac31b651}{my\+Wifi}} (\mbox{\hyperlink{main_8cpp_a1c64290c63fa8ef289c76e99cdcad3f6}{wifi\+Buff\+Rx}}, \&wifi\+Rx.\+indexW, \mbox{\hyperlink{main_8cpp_a4a941b75a2cf56698a1e769d8214fd50}{RXBUFSIZE}})
+\begin{DoxyCompactList}\small\item\em Instanciación de la clase \doxylink{class_wifi}{Wifi}, le paso como parametros el buffer de recepción, el indice de escritura para el buffer de recepción y el tamaño del buffer de recepción. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{main_8cpp_ae66f6b31b5ad750f1fe042a706a4e3d4}{main}} ()
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+const char \mbox{\hyperlink{main_8cpp_a8fa95672b43d8980cd9a4cf6d4e6c176}{firmware}} \mbox{[}$\,$\mbox{]} = \"{}EX100923v01\textbackslash{}n\"{}
+\item 
+const uint8\+\_\+t \mbox{\hyperlink{main_8cpp_a97bd1945a06658ccd3dff8f2df5916e6}{ir\+Mask}} = 0x01
+\item 
+uint32\+\_\+t \mbox{\hyperlink{main_8cpp_aa8714e52b7faf9cd0bec6e009005e7c1}{heart\+Beat\+Mask}} \mbox{[}$\,$\mbox{]} = \{0x55555555, 0x1, 0x2010080, 0x5F, 0x5, 0x28140\+A00, 0x15F, 0x15, 0x2\+A150\+A08, 0x55F\}
+\item 
+\mbox{\hyperlink{union__u_flag}{\+\_\+u\+Flag}} \mbox{\hyperlink{main_8cpp_a782c3a13008e3facf282121efc237349}{flags}}
+\item 
+\mbox{\hyperlink{union__u_word}{\+\_\+u\+Word}} \mbox{\hyperlink{main_8cpp_a33b0fd683103c948f1c73feec08961d6}{my\+Word}}
+\item 
+\mbox{\hyperlink{struct__s_tx}{\+\_\+s\+Tx}} \mbox{\hyperlink{main_8cpp_ab1e6e441c1ec0ab28da489fedb930af4}{data\+Tx}}
+\item 
+\mbox{\hyperlink{structwifi_data}{wifi\+Data}} \mbox{\hyperlink{main_8cpp_a39c2d03db7e338ae85b2dc9d6fdc408d}{my\+Wifi\+Data}}
+\item 
+volatile \mbox{\hyperlink{struct__s_rx}{\+\_\+s\+Rx}} \mbox{\hyperlink{main_8cpp_a4d4ec2522161a614a170a9335410f786}{data\+Rx}}
+\item 
+volatile uint8\+\_\+t \mbox{\hyperlink{main_8cpp_a3938a2e3de3d39004a3ba25c1ce1cba2}{buff\+Rx}} \mbox{[}\mbox{\hyperlink{main_8cpp_a4a941b75a2cf56698a1e769d8214fd50}{RXBUFSIZE}}\mbox{]}
+\item 
+uint8\+\_\+t \mbox{\hyperlink{main_8cpp_a412d852176feff57e1f64c12a8a9ab17}{buff\+Tx}} \mbox{[}\mbox{\hyperlink{main_8cpp_a9a01f28179d1f97c65ac28919f6f1cdb}{TXBUFSIZE}}\mbox{]}
+\item 
+uint8\+\_\+t \mbox{\hyperlink{main_8cpp_abfca7b5f980acbf56d538cd773edf5ed}{global\+Index}}
+\item 
+uint8\+\_\+t \mbox{\hyperlink{main_8cpp_a1d346b76bea8c5967478058458188111}{index2}}
+\item 
+\mbox{\hyperlink{struct__s_sensor}{\+\_\+s\+Sensor}} \mbox{\hyperlink{main_8cpp_a35701778b31002207180af8bdb5815c0}{ir\+Sensor}} \mbox{[}3\mbox{]}
+\item 
+\mbox{\hyperlink{struct__s_servo}{\+\_\+s\+Servo}} \mbox{\hyperlink{main_8cpp_a7b31cfc2b23a3973c0105c93a6af5347}{mi\+Servo}}
+\item 
+\mbox{\hyperlink{struct__s_tx}{\+\_\+s\+Tx}} \mbox{\hyperlink{main_8cpp_a493d6d70a7c95487c848936a716dd7ef}{wifi\+Tx}}
+\item 
+\mbox{\hyperlink{struct__s_rx}{\+\_\+s\+Rx}} \mbox{\hyperlink{main_8cpp_aa3f5b52a1d07bae0f52fe61eb2d1faed}{wifi\+Rx}}
+\item 
+uint8\+\_\+t \mbox{\hyperlink{main_8cpp_a1c64290c63fa8ef289c76e99cdcad3f6}{wifi\+Buff\+Rx}} \mbox{[}\mbox{\hyperlink{main_8cpp_a4a941b75a2cf56698a1e769d8214fd50}{RXBUFSIZE}}\mbox{]}
+\item 
+uint8\+\_\+t \mbox{\hyperlink{main_8cpp_a4b2b807dfdeecfa0723ac9b594e4a1dd}{wifi\+Buff\+Tx}} \mbox{[}\mbox{\hyperlink{main_8cpp_a9a01f28179d1f97c65ac28919f6f1cdb}{TXBUFSIZE}}\mbox{]}
+\item 
+volatile uint32\+\_\+t \mbox{\hyperlink{main_8cpp_a45bdcf434ef1a24c7985e05ecbe00f95}{count\+Left\+Value}}
+\item 
+volatile uint32\+\_\+t \mbox{\hyperlink{main_8cpp_a52827aed49d73ef9773d30238dac8994}{count\+Right\+Value}}
+\item 
+volatile int32\+\_\+t \mbox{\hyperlink{main_8cpp_a286088ffc63e62600aefd793107ad74f}{initial\+Value}}
+\item 
+volatile int32\+\_\+t \mbox{\hyperlink{main_8cpp_a9674cba0a0743495ebab9fd737cf38d9}{final\+Value}}
+\item 
+volatile int32\+\_\+t \mbox{\hyperlink{main_8cpp_a15a6df333169722a8b5fd8760bda1b6d}{distance\+Value}}
+\item 
+uint32\+\_\+t \mbox{\hyperlink{main_8cpp_a8d5d8db5d4f133d795c9be0f024c41ad}{speedleft\+Value}}
+\item 
+uint32\+\_\+t \mbox{\hyperlink{main_8cpp_af968eb8272e50c4c2ab1cd7c69479ea8}{speed\+Right\+Value}}
+\item 
+uint16\+\_\+t \mbox{\hyperlink{main_8cpp_a62546c6144654ad4888c0fc659b651b5}{white\+Value}} = 10000
+\item 
+uint16\+\_\+t \mbox{\hyperlink{main_8cpp_a0bb61d401d998bd243027ee23c2473ef}{black\+Value}} = 6000
+\item 
+uint16\+\_\+t \mbox{\hyperlink{main_8cpp_a1a97da69479a44c68341e695527aab84}{min\+Ms\+Servo}} = 700
+\item 
+uint16\+\_\+t \mbox{\hyperlink{main_8cpp_ac060d71a83716e59490cf2df7fbc7229}{max\+Ms\+Servo}} = 2500
+\item 
+uint16\+\_\+t \mbox{\hyperlink{main_8cpp_a6c517626a5de24d333f9671785d73dcc}{ms\+Servo}} = \mbox{\hyperlink{main_8cpp_a4c825b295fb8546e6b1b35a53960b793}{MIDDLESERVO}}
+\item 
+int16\+\_\+t \mbox{\hyperlink{main_8cpp_ab1f39edcf25736dd9c19c5fbfc1468d2}{lnt\+Fst\+Path}} = 0
+\item 
+int16\+\_\+t \mbox{\hyperlink{main_8cpp_a0c956d9327006b0ac0a9b6b2b78a5f6f}{lnt\+Snd\+Path}} = 0
+\item 
+int16\+\_\+t \mbox{\hyperlink{main_8cpp_a3b4502ae6b6d38b6628381f59914a057}{lnt\+Trd\+Path}} = 0
+\item 
+int16\+\_\+t \mbox{\hyperlink{main_8cpp_abf5f6124c29f5e29b5adeb7b40fef2d8}{lnt\+Fth\+Path}} = 0
+\item 
+uint8\+\_\+t \mbox{\hyperlink{main_8cpp_ac71af7b0d7b1859abcd32d7d15aed788}{curr\+Path}} = 0
+\item 
+uint8\+\_\+t \mbox{\hyperlink{main_8cpp_a622bb26ba9b04c995a9894e6f82667d7}{path\+Level}} = 0
+\item 
+uint8\+\_\+t \mbox{\hyperlink{main_8cpp_a96983f6c12f4ee6192732269f06855d3}{last\+Ir\+Value}}
+\item 
+uint8\+\_\+t \mbox{\hyperlink{main_8cpp_a7447694c31aeb1c87ca696aa261b6192}{ir\+Sensor\+Value}} = 0
+\item 
+int32\+\_\+t \mbox{\hyperlink{main_8cpp_a877e24229452650298bfb6d563ac29b5}{time\+Speed}} =0
+\item 
+int32\+\_\+t \mbox{\hyperlink{main_8cpp_a31ca9239cbc0c1fbc4b88ff322748219}{time\+Follow\+Line}} = 0
+\item 
+int32\+\_\+t \mbox{\hyperlink{main_8cpp_ae5752d2eaa00afedc08af90d81263950}{time\+To\+Debounce}} = 0
+\item 
+\mbox{\hyperlink{struct__s_button}{\+\_\+s\+Button}} \mbox{\hyperlink{main_8cpp_a9302c1c2690bc887350bb43f224c9593}{my\+Button}} \mbox{[}\mbox{\hyperlink{main_8cpp_a81a205bd2c6e38ff47725346a7765d78}{NUMBUTTONS}}\mbox{]}
+\item 
+\mbox{\hyperlink{struct__delay__t}{\+\_\+delay\+\_\+t}} \mbox{\hyperlink{main_8cpp_a0c5fdfef96c88db1e51405d171c36e15}{general\+Time}}
+\item 
+Timer \mbox{\hyperlink{main_8cpp_af77e822e69e7b3a5fd88f55ff7de59bc}{my\+Timer}}
+\item 
+Timer \mbox{\hyperlink{main_8cpp_af41e3d477d9907cd26aee1e5fa1fdbd3}{distance\+Timer}}
+\item 
+Ticker \mbox{\hyperlink{main_8cpp_a440c29026a39b8cfeb20ed55e332e135}{timer\+Gral}}
+\item 
+Timeout \mbox{\hyperlink{main_8cpp_a1c555cb8040292c74149cb8ce975f8aa}{trigger\+Timer}}
+\item 
+\mbox{\hyperlink{util_8h_a8aa339381659acb72b9870810f7cd5e6}{\+\_\+e\+Modes}} \mbox{\hyperlink{main_8cpp_ae413024ea83cd4e63d5ba75d6e8b7324}{car\+Modes}}
+\item 
+\mbox{\hyperlink{util_8h_a67ee812ef52af4b90a3d804b8503dd7a}{\+\_\+e\+Maze\+Path\+Modes}} \mbox{\hyperlink{main_8cpp_ace75f046d465efef90e97f16ae484ec4}{maze\+Modes}}
+\item 
+\mbox{\hyperlink{util_8h_ab1d9ce3e6d9a3bee55dc28735fc0ec3c}{\+\_\+e\+Line\+Search}} \mbox{\hyperlink{main_8cpp_af3d4c2e59db880e1eda97844d32cfd29}{line\+Search}}
+\item 
+\mbox{\hyperlink{util_8h_abe45d6cf774a72f7ec73e05ac3f062d2}{\+\_\+e\+Searching\+Path}} \mbox{\hyperlink{main_8cpp_a38210f5c571ee4fd248205c7c6cc852d}{srch\+Path\+Modes}}
+\item 
+\mbox{\hyperlink{util_8h_a7b275bae688445c3a96ef2f791094cf6}{\+\_\+e\+Out\+Line}} \mbox{\hyperlink{main_8cpp_a33246117c51000c7e25408bad9b60258}{out\+Line\+Modes}}
+\item 
+uint8\+\_\+t \mbox{\hyperlink{main_8cpp_a3a2054dcb04c9c220c584021c8153e13}{heart\+Beat\+Index}} = 0
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Macro Definition Documentation}
+\Hypertarget{main_8cpp_adf445abfe1b77fa63f89e315ccc2f7f2}\label{main_8cpp_adf445abfe1b77fa63f89e315ccc2f7f2} 
+\index{main.cpp@{main.cpp}!BACKWARD@{BACKWARD}}
+\index{BACKWARD@{BACKWARD}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{BACKWARD}{BACKWARD}}
+{\footnotesize\ttfamily \#define BACKWARD~1}
+
+\Hypertarget{main_8cpp_a171ef18ea7b584f85234640a918da857}\label{main_8cpp_a171ef18ea7b584f85234640a918da857} 
+\index{main.cpp@{main.cpp}!DEBOUNCE@{DEBOUNCE}}
+\index{DEBOUNCE@{DEBOUNCE}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{DEBOUNCE}{DEBOUNCE}}
+{\footnotesize\ttfamily \#define DEBOUNCE~40}
+
+\Hypertarget{main_8cpp_aabf9c516001d8e5c7c9e593e5a25d249}\label{main_8cpp_aabf9c516001d8e5c7c9e593e5a25d249} 
+\index{main.cpp@{main.cpp}!DERECHA@{DERECHA}}
+\index{DERECHA@{DERECHA}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{DERECHA}{DERECHA}}
+{\footnotesize\ttfamily \#define DERECHA~1}
+
+\Hypertarget{main_8cpp_a8e41f4e5e50b46d026c7e8fa9bfe115e}\label{main_8cpp_a8e41f4e5e50b46d026c7e8fa9bfe115e} 
+\index{main.cpp@{main.cpp}!DISTANCEINTERVAL@{DISTANCEINTERVAL}}
+\index{DISTANCEINTERVAL@{DISTANCEINTERVAL}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{DISTANCEINTERVAL}{DISTANCEINTERVAL}}
+{\footnotesize\ttfamily \#define DISTANCEINTERVAL~300}
+
+\Hypertarget{main_8cpp_a36c893e6d98bad8a13b23b47e8105839}\label{main_8cpp_a36c893e6d98bad8a13b23b47e8105839} 
+\index{main.cpp@{main.cpp}!DODGEDISTANCE@{DODGEDISTANCE}}
+\index{DODGEDISTANCE@{DODGEDISTANCE}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{DODGEDISTANCE}{DODGEDISTANCE}}
+{\footnotesize\ttfamily \#define DODGEDISTANCE~10}
+
+\Hypertarget{main_8cpp_a11c338e14b4700b1c18d86859596d5f3}\label{main_8cpp_a11c338e14b4700b1c18d86859596d5f3} 
+\index{main.cpp@{main.cpp}!ENERGYSTOP@{ENERGYSTOP}}
+\index{ENERGYSTOP@{ENERGYSTOP}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{ENERGYSTOP}{ENERGYSTOP}}
+{\footnotesize\ttfamily \#define ENERGYSTOP~3}
+
+\Hypertarget{main_8cpp_a6ddfdda7a062d10cff4a72b76b44aeb8}\label{main_8cpp_a6ddfdda7a062d10cff4a72b76b44aeb8} 
+\index{main.cpp@{main.cpp}!FORWARD@{FORWARD}}
+\index{FORWARD@{FORWARD}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{FORWARD}{FORWARD}}
+{\footnotesize\ttfamily \#define FORWARD~2}
+
+\Hypertarget{main_8cpp_a28e20ac7d375b70e5e06a17df6a08969}\label{main_8cpp_a28e20ac7d375b70e5e06a17df6a08969} 
+\index{main.cpp@{main.cpp}!GENERALTIME@{GENERALTIME}}
+\index{GENERALTIME@{GENERALTIME}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{GENERALTIME}{GENERALTIME}}
+{\footnotesize\ttfamily \#define GENERALTIME~10}
+
+\Hypertarget{main_8cpp_aafd00751d8b1042ebaedb0ed0817a4d6}\label{main_8cpp_aafd00751d8b1042ebaedb0ed0817a4d6} 
+\index{main.cpp@{main.cpp}!HEARBEATIME@{HEARBEATIME}}
+\index{HEARBEATIME@{HEARBEATIME}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{HEARBEATIME}{HEARBEATIME}}
+{\footnotesize\ttfamily \#define HEARBEATIME~100}
+
+\Hypertarget{main_8cpp_ab39fec97d85960796efedec442f38004}\label{main_8cpp_ab39fec97d85960796efedec442f38004} 
+\index{main.cpp@{main.cpp}!INTERVAL@{INTERVAL}}
+\index{INTERVAL@{INTERVAL}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{INTERVAL}{INTERVAL}}
+{\footnotesize\ttfamily \#define INTERVAL~1000}
+
+\Hypertarget{main_8cpp_a094789b253ce3d376a7f6361f81e8597}\label{main_8cpp_a094789b253ce3d376a7f6361f81e8597} 
+\index{main.cpp@{main.cpp}!INTERVALO@{INTERVALO}}
+\index{INTERVALO@{INTERVALO}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{INTERVALO}{INTERVALO}}
+{\footnotesize\ttfamily \#define INTERVALO~10}
+
+\Hypertarget{main_8cpp_acc990f73f64e16e01e5ff3bc7af46ed7}\label{main_8cpp_acc990f73f64e16e01e5ff3bc7af46ed7} 
+\index{main.cpp@{main.cpp}!ISCOMAND@{ISCOMAND}}
+\index{ISCOMAND@{ISCOMAND}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{ISCOMAND}{ISCOMAND}}
+{\footnotesize\ttfamily \#define ISCOMAND~flags.\+bits.\+bit0}
+
+\Hypertarget{main_8cpp_ad9ef6961fb41b000be06f50ff545f55d}\label{main_8cpp_ad9ef6961fb41b000be06f50ff545f55d} 
+\index{main.cpp@{main.cpp}!IZQUIERDA@{IZQUIERDA}}
+\index{IZQUIERDA@{IZQUIERDA}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{IZQUIERDA}{IZQUIERDA}}
+{\footnotesize\ttfamily \#define IZQUIERDA~0}
+
+\Hypertarget{main_8cpp_a5977928b042d0a4b2ce93baa979e5f5c}\label{main_8cpp_a5977928b042d0a4b2ce93baa979e5f5c} 
+\index{main.cpp@{main.cpp}!LIMIT@{LIMIT}}
+\index{LIMIT@{LIMIT}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{LIMIT}{LIMIT}}
+{\footnotesize\ttfamily \#define LIMIT~0x0F}
+
+\Hypertarget{main_8cpp_a0c1b4831727321b9c1be7c33d07bc340}\label{main_8cpp_a0c1b4831727321b9c1be7c33d07bc340} 
+\index{main.cpp@{main.cpp}!LOOKTIME@{LOOKTIME}}
+\index{LOOKTIME@{LOOKTIME}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{LOOKTIME}{LOOKTIME}}
+{\footnotesize\ttfamily \#define LOOKTIME~600}
+
+\Hypertarget{main_8cpp_ae7520c5477c11965aabeedc033c9862b}\label{main_8cpp_ae7520c5477c11965aabeedc033c9862b} 
+\index{main.cpp@{main.cpp}!MASK@{MASK}}
+\index{MASK@{MASK}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{MASK}{MASK}}
+{\footnotesize\ttfamily \#define MASK~0x01}
+
+\Hypertarget{main_8cpp_a010fa716ced1170c05d8fc9da46a5d34}\label{main_8cpp_a010fa716ced1170c05d8fc9da46a5d34} 
+\index{main.cpp@{main.cpp}!MAXDISTANCE@{MAXDISTANCE}}
+\index{MAXDISTANCE@{MAXDISTANCE}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{MAXDISTANCE}{MAXDISTANCE}}
+{\footnotesize\ttfamily \#define MAXDISTANCE}
+
+\Hypertarget{main_8cpp_a2d1edde91ea515b363277f4bbdc3244d}\label{main_8cpp_a2d1edde91ea515b363277f4bbdc3244d} 
+\index{main.cpp@{main.cpp}!MAXPATH@{MAXPATH}}
+\index{MAXPATH@{MAXPATH}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{MAXPATH}{MAXPATH}}
+{\footnotesize\ttfamily \#define MAXPATH~4}
+
+\Hypertarget{main_8cpp_a7e49c0004749dd2461e791b4c4a97895}\label{main_8cpp_a7e49c0004749dd2461e791b4c4a97895} 
+\index{main.cpp@{main.cpp}!MAXSPEED@{MAXSPEED}}
+\index{MAXSPEED@{MAXSPEED}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{MAXSPEED}{MAXSPEED}}
+{\footnotesize\ttfamily \#define MAXSPEED~12000}
+
+\Hypertarget{main_8cpp_a77dc5a273c087fcc5b448f7ad6af11ce}\label{main_8cpp_a77dc5a273c087fcc5b448f7ad6af11ce} 
+\index{main.cpp@{main.cpp}!MEDIRDISTANCIA@{MEDIRDISTANCIA}}
+\index{MEDIRDISTANCIA@{MEDIRDISTANCIA}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{MEDIRDISTANCIA}{MEDIRDISTANCIA}}
+{\footnotesize\ttfamily \#define MEDIRDISTANCIA~flags.\+bits.\+bit3}
+
+\Hypertarget{main_8cpp_ab6c86c5960d93ea465707e8751c00674}\label{main_8cpp_ab6c86c5960d93ea465707e8751c00674} 
+\index{main.cpp@{main.cpp}!MEDSPEED@{MEDSPEED}}
+\index{MEDSPEED@{MEDSPEED}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{MEDSPEED}{MEDSPEED}}
+{\footnotesize\ttfamily \#define MEDSPEED~7000}
+
+\Hypertarget{main_8cpp_a4c825b295fb8546e6b1b35a53960b793}\label{main_8cpp_a4c825b295fb8546e6b1b35a53960b793} 
+\index{main.cpp@{main.cpp}!MIDDLESERVO@{MIDDLESERVO}}
+\index{MIDDLESERVO@{MIDDLESERVO}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{MIDDLESERVO}{MIDDLESERVO}}
+{\footnotesize\ttfamily \#define MIDDLESERVO~1500}
+
+\Hypertarget{main_8cpp_a4c9c6fbd3c82a159d524a6390e5300a6}\label{main_8cpp_a4c9c6fbd3c82a159d524a6390e5300a6} 
+\index{main.cpp@{main.cpp}!MINMOVEDISTANCE@{MINMOVEDISTANCE}}
+\index{MINMOVEDISTANCE@{MINMOVEDISTANCE}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{MINMOVEDISTANCE}{MINMOVEDISTANCE}}
+{\footnotesize\ttfamily \#define MINMOVEDISTANCE~9}
+
+\Hypertarget{main_8cpp_a5521c82effd93707c3a8f7420ba5881c}\label{main_8cpp_a5521c82effd93707c3a8f7420ba5881c} 
+\index{main.cpp@{main.cpp}!MINSPEED@{MINSPEED}}
+\index{MINSPEED@{MINSPEED}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{MINSPEED}{MINSPEED}}
+{\footnotesize\ttfamily \#define MINSPEED~5000}
+
+\Hypertarget{main_8cpp_a1bc023d8cf3bb829616a4d6c85a30f67}\label{main_8cpp_a1bc023d8cf3bb829616a4d6c85a30f67} 
+\index{main.cpp@{main.cpp}!MOTORTIME@{MOTORTIME}}
+\index{MOTORTIME@{MOTORTIME}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{MOTORTIME}{MOTORTIME}}
+{\footnotesize\ttfamily \#define MOTORTIME~200}
+
+\Hypertarget{main_8cpp_af6418866b9c8f49ad00dbd40efb5c62c}\label{main_8cpp_af6418866b9c8f49ad00dbd40efb5c62c} 
+\index{main.cpp@{main.cpp}!NOSPEED@{NOSPEED}}
+\index{NOSPEED@{NOSPEED}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{NOSPEED}{NOSPEED}}
+{\footnotesize\ttfamily \#define NOSPEED~0}
+
+\Hypertarget{main_8cpp_a81a205bd2c6e38ff47725346a7765d78}\label{main_8cpp_a81a205bd2c6e38ff47725346a7765d78} 
+\index{main.cpp@{main.cpp}!NUMBUTTONS@{NUMBUTTONS}}
+\index{NUMBUTTONS@{NUMBUTTONS}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{NUMBUTTONS}{NUMBUTTONS}}
+{\footnotesize\ttfamily \#define NUMBUTTONS~1}
+
+\Hypertarget{main_8cpp_abdc7e6385c5d586f9d10968791630268}\label{main_8cpp_abdc7e6385c5d586f9d10968791630268} 
+\index{main.cpp@{main.cpp}!REFDISTANCE@{REFDISTANCE}}
+\index{REFDISTANCE@{REFDISTANCE}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{REFDISTANCE}{REFDISTANCE}}
+{\footnotesize\ttfamily \#define REFDISTANCE~20}
+
+\Hypertarget{main_8cpp_a67f9ea6fec6e4af709ba74256cc0e1e0}\label{main_8cpp_a67f9ea6fec6e4af709ba74256cc0e1e0} 
+\index{main.cpp@{main.cpp}!RESETFLAGS@{RESETFLAGS}}
+\index{RESETFLAGS@{RESETFLAGS}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{RESETFLAGS}{RESETFLAGS}}
+{\footnotesize\ttfamily \#define RESETFLAGS~flags.\+bytes}
+
+\Hypertarget{main_8cpp_a4a941b75a2cf56698a1e769d8214fd50}\label{main_8cpp_a4a941b75a2cf56698a1e769d8214fd50} 
+\index{main.cpp@{main.cpp}!RXBUFSIZE@{RXBUFSIZE}}
+\index{RXBUFSIZE@{RXBUFSIZE}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{RXBUFSIZE}{RXBUFSIZE}}
+{\footnotesize\ttfamily \#define RXBUFSIZE~256}
+
+\Hypertarget{main_8cpp_a362930fedbc2755a9ee8ab49c54c3ada}\label{main_8cpp_a362930fedbc2755a9ee8ab49c54c3ada} 
+\index{main.cpp@{main.cpp}!SERIE@{SERIE}}
+\index{SERIE@{SERIE}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{SERIE}{SERIE}}
+{\footnotesize\ttfamily \#define SERIE~0}
+
+\Hypertarget{main_8cpp_a0872d3a34671295065b38aedd62f7eb3}\label{main_8cpp_a0872d3a34671295065b38aedd62f7eb3} 
+\index{main.cpp@{main.cpp}!SERVODIRECT@{SERVODIRECT}}
+\index{SERVODIRECT@{SERVODIRECT}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{SERVODIRECT}{SERVODIRECT}}
+{\footnotesize\ttfamily \#define SERVODIRECT~flags.\+bits.\+bit2}
+
+\Hypertarget{main_8cpp_afafc3d3e2d702a1931e8a681a2f79629}\label{main_8cpp_afafc3d3e2d702a1931e8a681a2f79629} 
+\index{main.cpp@{main.cpp}!SERVOMOVING@{SERVOMOVING}}
+\index{SERVOMOVING@{SERVOMOVING}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{SERVOMOVING}{SERVOMOVING}}
+{\footnotesize\ttfamily \#define SERVOMOVING~flags.\+bits.\+bit1}
+
+\Hypertarget{main_8cpp_a82cfa836f77d3a997bdfc083b4b90f41}\label{main_8cpp_a82cfa836f77d3a997bdfc083b4b90f41} 
+\index{main.cpp@{main.cpp}!SERVOTIME@{SERVOTIME}}
+\index{SERVOTIME@{SERVOTIME}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{SERVOTIME}{SERVOTIME}}
+{\footnotesize\ttfamily \#define SERVOTIME~500}
+
+\Hypertarget{main_8cpp_ad4e1a3c6ee938895320d47786ee61f73}\label{main_8cpp_ad4e1a3c6ee938895320d47786ee61f73} 
+\index{main.cpp@{main.cpp}!SPEEDERROR@{SPEEDERROR}}
+\index{SPEEDERROR@{SPEEDERROR}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{SPEEDERROR}{SPEEDERROR}}
+{\footnotesize\ttfamily \#define SPEEDERROR~1000}
+
+\Hypertarget{main_8cpp_ae19b6bb2940d2fbe0a79852b070eeafd}\label{main_8cpp_ae19b6bb2940d2fbe0a79852b070eeafd} 
+\index{main.cpp@{main.cpp}!STOP@{STOP}}
+\index{STOP@{STOP}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{STOP}{STOP}}
+{\footnotesize\ttfamily \#define STOP~0}
+
+\Hypertarget{main_8cpp_a68f19c90ab1da05d928e40069ff5abd5}\label{main_8cpp_a68f19c90ab1da05d928e40069ff5abd5} 
+\index{main.cpp@{main.cpp}!TURNSPEED@{TURNSPEED}}
+\index{TURNSPEED@{TURNSPEED}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{TURNSPEED}{TURNSPEED}}
+{\footnotesize\ttfamily \#define TURNSPEED~6000}
+
+\Hypertarget{main_8cpp_a9a01f28179d1f97c65ac28919f6f1cdb}\label{main_8cpp_a9a01f28179d1f97c65ac28919f6f1cdb} 
+\index{main.cpp@{main.cpp}!TXBUFSIZE@{TXBUFSIZE}}
+\index{TXBUFSIZE@{TXBUFSIZE}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{TXBUFSIZE}{TXBUFSIZE}}
+{\footnotesize\ttfamily \#define TXBUFSIZE~256}
+
+\Hypertarget{main_8cpp_a9788212d5807360b8a9317e9982677f6}\label{main_8cpp_a9788212d5807360b8a9317e9982677f6} 
+\index{main.cpp@{main.cpp}!WAIT1000MS@{WAIT1000MS}}
+\index{WAIT1000MS@{WAIT1000MS}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{WAIT1000MS}{WAIT1000MS}}
+{\footnotesize\ttfamily \#define WAIT1000\+MS~1000}
+
+\Hypertarget{main_8cpp_a46d67cee3f4ab9e09815cb5f3e5494f6}\label{main_8cpp_a46d67cee3f4ab9e09815cb5f3e5494f6} 
+\index{main.cpp@{main.cpp}!WAIT100MS@{WAIT100MS}}
+\index{WAIT100MS@{WAIT100MS}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{WAIT100MS}{WAIT100MS}}
+{\footnotesize\ttfamily \#define WAIT100\+MS~100}
+
+\Hypertarget{main_8cpp_ae669258b332077dc4a2cbcb4cc21b08c}\label{main_8cpp_ae669258b332077dc4a2cbcb4cc21b08c} 
+\index{main.cpp@{main.cpp}!WAIT1250MS@{WAIT1250MS}}
+\index{WAIT1250MS@{WAIT1250MS}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{WAIT1250MS}{WAIT1250MS}}
+{\footnotesize\ttfamily \#define WAIT1250\+MS~1250}
+
+\Hypertarget{main_8cpp_a61dbd9cca0ba99a6fdb39944754ae52b}\label{main_8cpp_a61dbd9cca0ba99a6fdb39944754ae52b} 
+\index{main.cpp@{main.cpp}!WAIT1500MS@{WAIT1500MS}}
+\index{WAIT1500MS@{WAIT1500MS}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{WAIT1500MS}{WAIT1500MS}}
+{\footnotesize\ttfamily \#define WAIT1500\+MS~1500}
+
+\Hypertarget{main_8cpp_a5c5e2c93c64f8b3e3771d27288339840}\label{main_8cpp_a5c5e2c93c64f8b3e3771d27288339840} 
+\index{main.cpp@{main.cpp}!WAIT150MS@{WAIT150MS}}
+\index{WAIT150MS@{WAIT150MS}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{WAIT150MS}{WAIT150MS}}
+{\footnotesize\ttfamily \#define WAIT150\+MS~150}
+
+\Hypertarget{main_8cpp_aba9966e88c33fe9eafb4740595c99933}\label{main_8cpp_aba9966e88c33fe9eafb4740595c99933} 
+\index{main.cpp@{main.cpp}!WAIT2000MS@{WAIT2000MS}}
+\index{WAIT2000MS@{WAIT2000MS}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{WAIT2000MS}{WAIT2000MS}}
+{\footnotesize\ttfamily \#define WAIT2000\+MS~2000}
+
+\Hypertarget{main_8cpp_ae13b0e5297e2b0fb5df0dd6ed045c1fa}\label{main_8cpp_ae13b0e5297e2b0fb5df0dd6ed045c1fa} 
+\index{main.cpp@{main.cpp}!WAIT200MS@{WAIT200MS}}
+\index{WAIT200MS@{WAIT200MS}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{WAIT200MS}{WAIT200MS}}
+{\footnotesize\ttfamily \#define WAIT200\+MS~200}
+
+\Hypertarget{main_8cpp_ace9c0d3dcb958d5bea72c9a1ff4600f5}\label{main_8cpp_ace9c0d3dcb958d5bea72c9a1ff4600f5} 
+\index{main.cpp@{main.cpp}!WAIT250MS@{WAIT250MS}}
+\index{WAIT250MS@{WAIT250MS}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{WAIT250MS}{WAIT250MS}}
+{\footnotesize\ttfamily \#define WAIT250\+MS~250}
+
+\Hypertarget{main_8cpp_ad385945388a28061dcd0dda17b712b1c}\label{main_8cpp_ad385945388a28061dcd0dda17b712b1c} 
+\index{main.cpp@{main.cpp}!WAIT3000MS@{WAIT3000MS}}
+\index{WAIT3000MS@{WAIT3000MS}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{WAIT3000MS}{WAIT3000MS}}
+{\footnotesize\ttfamily \#define WAIT3000\+MS~3000}
+
+\Hypertarget{main_8cpp_ad45a45700017938733cc68c0c93fe491}\label{main_8cpp_ad45a45700017938733cc68c0c93fe491} 
+\index{main.cpp@{main.cpp}!WAIT300MS@{WAIT300MS}}
+\index{WAIT300MS@{WAIT300MS}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{WAIT300MS}{WAIT300MS}}
+{\footnotesize\ttfamily \#define WAIT300\+MS~300}
+
+\Hypertarget{main_8cpp_a22f8181ab844f80b6d91d167bf34cada}\label{main_8cpp_a22f8181ab844f80b6d91d167bf34cada} 
+\index{main.cpp@{main.cpp}!WAIT4000MS@{WAIT4000MS}}
+\index{WAIT4000MS@{WAIT4000MS}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{WAIT4000MS}{WAIT4000MS}}
+{\footnotesize\ttfamily \#define WAIT4000\+MS~4000}
+
+\Hypertarget{main_8cpp_aa4aecee1dd77c10908dd09205decb163}\label{main_8cpp_aa4aecee1dd77c10908dd09205decb163} 
+\index{main.cpp@{main.cpp}!WAIT400MS@{WAIT400MS}}
+\index{WAIT400MS@{WAIT400MS}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{WAIT400MS}{WAIT400MS}}
+{\footnotesize\ttfamily \#define WAIT400\+MS~400}
+
+\Hypertarget{main_8cpp_a076a343d697d1c57ae16a5da47ba1663}\label{main_8cpp_a076a343d697d1c57ae16a5da47ba1663} 
+\index{main.cpp@{main.cpp}!WAIT5000MS@{WAIT5000MS}}
+\index{WAIT5000MS@{WAIT5000MS}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{WAIT5000MS}{WAIT5000MS}}
+{\footnotesize\ttfamily \#define WAIT5000\+MS~5000}
+
+\Hypertarget{main_8cpp_a1bf5427687f6a392b723b0da2fdfec60}\label{main_8cpp_a1bf5427687f6a392b723b0da2fdfec60} 
+\index{main.cpp@{main.cpp}!WAIT500MS@{WAIT500MS}}
+\index{WAIT500MS@{WAIT500MS}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{WAIT500MS}{WAIT500MS}}
+{\footnotesize\ttfamily \#define WAIT500\+MS~500}
+
+\Hypertarget{main_8cpp_abac921d1b119cc4db21ab1222e51580e}\label{main_8cpp_abac921d1b119cc4db21ab1222e51580e} 
+\index{main.cpp@{main.cpp}!WAIT750MS@{WAIT750MS}}
+\index{WAIT750MS@{WAIT750MS}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{WAIT750MS}{WAIT750MS}}
+{\footnotesize\ttfamily \#define WAIT750\+MS~750}
+
+\Hypertarget{main_8cpp_a14ed8168071c3bb8602b38ecb1b28178}\label{main_8cpp_a14ed8168071c3bb8602b38ecb1b28178} 
+\index{main.cpp@{main.cpp}!WIFI@{WIFI}}
+\index{WIFI@{WIFI}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{WIFI}{WIFI}}
+{\footnotesize\ttfamily \#define WIFI~1}
+
+
+
+\doxysubsection{Typedef Documentation}
+\Hypertarget{main_8cpp_a0376438b3b667f21047260723c1aa492}\label{main_8cpp_a0376438b3b667f21047260723c1aa492} 
+\index{main.cpp@{main.cpp}!ptrFunc@{ptrFunc}}
+\index{ptrFunc@{ptrFunc}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{ptrFunc}{ptrFunc}}
+{\footnotesize\ttfamily typedef void(\texorpdfstring{$\ast$}{*} ptr\+Func) (void \texorpdfstring{$\ast$}{*}param)}
+
+
+
+Tipo de datos de puntero a función, sirve para declarar los distintos callbacks.-\/. 
+
+
+
+\doxysubsection{Enumeration Type Documentation}
+\Hypertarget{main_8cpp_a6de6f3d8e74aa6ec71bf5cb6bae49e98}\label{main_8cpp_a6de6f3d8e74aa6ec71bf5cb6bae49e98} 
+\index{main.cpp@{main.cpp}!\_eButtonState@{\_eButtonState}}
+\index{\_eButtonState@{\_eButtonState}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{\_eButtonState}{\_eButtonState}}
+{\footnotesize\ttfamily enum \mbox{\hyperlink{main_8cpp_a6de6f3d8e74aa6ec71bf5cb6bae49e98}{\+\_\+e\+Button\+State}}}
+
+\begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{BUTTON\_DOWN@{BUTTON\_DOWN}!main.cpp@{main.cpp}}\index{main.cpp@{main.cpp}!BUTTON\_DOWN@{BUTTON\_DOWN}}}\Hypertarget{main_8cpp_a6de6f3d8e74aa6ec71bf5cb6bae49e98a0c7746cfbcac16484b2266e6f51e5e0b}\label{main_8cpp_a6de6f3d8e74aa6ec71bf5cb6bae49e98a0c7746cfbcac16484b2266e6f51e5e0b} 
+BUTTON\+\_\+\+DOWN&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{BUTTON\_UP@{BUTTON\_UP}!main.cpp@{main.cpp}}\index{main.cpp@{main.cpp}!BUTTON\_UP@{BUTTON\_UP}}}\Hypertarget{main_8cpp_a6de6f3d8e74aa6ec71bf5cb6bae49e98a37666936297216dce293b0aa31c474b8}\label{main_8cpp_a6de6f3d8e74aa6ec71bf5cb6bae49e98a37666936297216dce293b0aa31c474b8} 
+BUTTON\+\_\+\+UP&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{BUTTON\_RISING@{BUTTON\_RISING}!main.cpp@{main.cpp}}\index{main.cpp@{main.cpp}!BUTTON\_RISING@{BUTTON\_RISING}}}\Hypertarget{main_8cpp_a6de6f3d8e74aa6ec71bf5cb6bae49e98a5783aad8af274c748e903acf713c430f}\label{main_8cpp_a6de6f3d8e74aa6ec71bf5cb6bae49e98a5783aad8af274c748e903acf713c430f} 
+BUTTON\+\_\+\+RISING&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{BUTTON\_FALLING@{BUTTON\_FALLING}!main.cpp@{main.cpp}}\index{main.cpp@{main.cpp}!BUTTON\_FALLING@{BUTTON\_FALLING}}}\Hypertarget{main_8cpp_a6de6f3d8e74aa6ec71bf5cb6bae49e98a4c5560be280ccf3e4ef5a385a6dd62dc}\label{main_8cpp_a6de6f3d8e74aa6ec71bf5cb6bae49e98a4c5560be280ccf3e4ef5a385a6dd62dc} 
+BUTTON\+\_\+\+FALLING&\\
+\hline
+
+\end{DoxyEnumFields}
+\Hypertarget{main_8cpp_ae01c58988e4d37977423a5aab26ab5fa}\label{main_8cpp_ae01c58988e4d37977423a5aab26ab5fa} 
+\index{main.cpp@{main.cpp}!\_eEvent@{\_eEvent}}
+\index{\_eEvent@{\_eEvent}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{\_eEvent}{\_eEvent}}
+{\footnotesize\ttfamily enum \mbox{\hyperlink{main_8cpp_ae01c58988e4d37977423a5aab26ab5fa}{\+\_\+e\+Event}}}
+
+
+
+Enumeracion de los estados de los diferentes estados de los botones, como tengo una configuracion Pull\+Down los coloqué de tal forma que me quede el valor de NOT\+\_\+\+PRESSED = 0 y PRESSED = 1. 
+
+\begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{PRESSED@{PRESSED}!main.cpp@{main.cpp}}\index{main.cpp@{main.cpp}!PRESSED@{PRESSED}}}\Hypertarget{main_8cpp_ae01c58988e4d37977423a5aab26ab5faa5ef9a100ac8b4b8d6dec477c377b7901}\label{main_8cpp_ae01c58988e4d37977423a5aab26ab5faa5ef9a100ac8b4b8d6dec477c377b7901} 
+PRESSED&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{NOT\_PRESSED@{NOT\_PRESSED}!main.cpp@{main.cpp}}\index{main.cpp@{main.cpp}!NOT\_PRESSED@{NOT\_PRESSED}}}\Hypertarget{main_8cpp_ae01c58988e4d37977423a5aab26ab5faacdb8b9a398ffbd729218a27d00d8fa45}\label{main_8cpp_ae01c58988e4d37977423a5aab26ab5faacdb8b9a398ffbd729218a27d00d8fa45} 
+NOT\+\_\+\+PRESSED&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{NO\_EVENT@{NO\_EVENT}!main.cpp@{main.cpp}}\index{main.cpp@{main.cpp}!NO\_EVENT@{NO\_EVENT}}}\Hypertarget{main_8cpp_ae01c58988e4d37977423a5aab26ab5faa5856f037cd70ecf6fca11999c11a4a0d}\label{main_8cpp_ae01c58988e4d37977423a5aab26ab5faa5856f037cd70ecf6fca11999c11a4a0d} 
+NO\+\_\+\+EVENT&\\
+\hline
+
+\end{DoxyEnumFields}
+
+
+\doxysubsection{Function Documentation}
+\Hypertarget{main_8cpp_a2b44749324294e85c1fab65f10b23eb3}\label{main_8cpp_a2b44749324294e85c1fab65f10b23eb3} 
+\index{main.cpp@{main.cpp}!aliveAutoTask@{aliveAutoTask}}
+\index{aliveAutoTask@{aliveAutoTask}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{aliveAutoTask()}{aliveAutoTask()}}
+{\footnotesize\ttfamily void alive\+Auto\+Task (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct__delay__t}{\+\_\+delay\+\_\+t}} \texorpdfstring{$\ast$}{*}}]{alive\+Auto\+Time }\end{DoxyParamCaption})}
+
+
+
+Envía de manera automática el alive. 
+
+\Hypertarget{main_8cpp_a71d583cb847a59aaade24df4b91a619b}\label{main_8cpp_a71d583cb847a59aaade24df4b91a619b} 
+\index{main.cpp@{main.cpp}!autoConnectWifi@{autoConnectWifi}}
+\index{autoConnectWifi@{autoConnectWifi}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{autoConnectWifi()}{autoConnectWifi()}}
+{\footnotesize\ttfamily void auto\+Connect\+Wifi (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Función para realizar la autoconexión de los datos de \doxylink{class_wifi}{Wifi}. 
+
+\Hypertarget{main_8cpp_a7c64ed939a23ec89885afe621fbdeee7}\label{main_8cpp_a7c64ed939a23ec89885afe621fbdeee7} 
+\index{main.cpp@{main.cpp}!BUTTON@{BUTTON}}
+\index{BUTTON@{BUTTON}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{BUTTON()}{BUTTON()}}
+{\footnotesize\ttfamily Digital\+In BUTTON (\begin{DoxyParamCaption}\item[{PA\+\_\+4}]{ }\end{DoxyParamCaption})}
+
+\Hypertarget{main_8cpp_ace03eb1887659f8e407567425af18dc1}\label{main_8cpp_ace03eb1887659f8e407567425af18dc1} 
+\index{main.cpp@{main.cpp}!buttonTask@{buttonTask}}
+\index{buttonTask@{buttonTask}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{buttonTask()}{buttonTask()}}
+{\footnotesize\ttfamily void button\+Task (\begin{DoxyParamCaption}\item[{void \texorpdfstring{$\ast$}{*}}]{param }\end{DoxyParamCaption})}
+
+\Hypertarget{main_8cpp_ad7fa38c7b10737f09337331126ecaa62}\label{main_8cpp_ad7fa38c7b10737f09337331126ecaa62} 
+\index{main.cpp@{main.cpp}!decodeCommand@{decodeCommand}}
+\index{decodeCommand@{decodeCommand}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{decodeCommand()}{decodeCommand()}}
+{\footnotesize\ttfamily void decode\+Command (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct__s_rx}{\+\_\+s\+Rx}} \texorpdfstring{$\ast$}{*}}]{data\+Rx,  }\item[{\mbox{\hyperlink{struct__s_tx}{\+\_\+s\+Tx}} \texorpdfstring{$\ast$}{*}}]{data\+Tx }\end{DoxyParamCaption})}
+
+
+
+Decodifica el comando recibido en la transmisión y ejecuita las tareas asociadas a dicho comando. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em data\+Rx} & Estructura para la recepción de datos \\
+\hline
+{\em data\+Tx} & Estructura para la trasnmisión de datos \\
+\hline
+\end{DoxyParams}
+\Hypertarget{main_8cpp_aa282717f921443ed16532d7cd26c0070}\label{main_8cpp_aa282717f921443ed16532d7cd26c0070} 
+\index{main.cpp@{main.cpp}!decodeHeader@{decodeHeader}}
+\index{decodeHeader@{decodeHeader}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{decodeHeader()}{decodeHeader()}}
+{\footnotesize\ttfamily void decode\+Header (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct__s_rx}{\+\_\+s\+Rx}} \texorpdfstring{$\ast$}{*}}]{data\+Rx }\end{DoxyParamCaption})}
+
+
+
+Decodifica la trama recibida. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em data\+Rx} & Estructura para la recepción de datos \\
+\hline
+\end{DoxyParams}
+\Hypertarget{main_8cpp_ae7aa3dc0dfd4247aad0802a921e2fc07}\label{main_8cpp_ae7aa3dc0dfd4247aad0802a921e2fc07} 
+\index{main.cpp@{main.cpp}!dirMLeft@{dirMLeft}}
+\index{dirMLeft@{dirMLeft}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{dirMLeft()}{dirMLeft()}}
+{\footnotesize\ttfamily Bus\+Out dir\+MLeft (\begin{DoxyParamCaption}\item[{PB\+\_\+6}]{,  }\item[{PB\+\_\+7}]{ }\end{DoxyParamCaption})}
+
+
+
+Pines para determinara la dirección de giro del motor. 
+
+\Hypertarget{main_8cpp_adb32c2ec2c970df4d53fb44ee981d5ce}\label{main_8cpp_adb32c2ec2c970df4d53fb44ee981d5ce} 
+\index{main.cpp@{main.cpp}!dirMRight@{dirMRight}}
+\index{dirMRight@{dirMRight}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{dirMRight()}{dirMRight()}}
+{\footnotesize\ttfamily Bus\+Out dir\+MRight (\begin{DoxyParamCaption}\item[{PB\+\_\+14}]{,  }\item[{PB\+\_\+15}]{ }\end{DoxyParamCaption})}
+
+
+
+Pines para determinara la dirección de giro del motor. 
+
+\Hypertarget{main_8cpp_a3565ff182f3313a11716bf5a99740315}\label{main_8cpp_a3565ff182f3313a11716bf5a99740315} 
+\index{main.cpp@{main.cpp}!distanceInitMeasurement@{distanceInitMeasurement}}
+\index{distanceInitMeasurement@{distanceInitMeasurement}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{distanceInitMeasurement()}{distanceInitMeasurement()}}
+{\footnotesize\ttfamily void distance\+Init\+Measurement (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+toma el valor inicial del Timer para medir distancia una vez que se detecta el evento RISE del pin de eco 
+
+\Hypertarget{main_8cpp_a10d698b5127b3e4cfd727f4de3e3a428}\label{main_8cpp_a10d698b5127b3e4cfd727f4de3e3a428} 
+\index{main.cpp@{main.cpp}!distanceMeasurement@{distanceMeasurement}}
+\index{distanceMeasurement@{distanceMeasurement}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{distanceMeasurement()}{distanceMeasurement()}}
+{\footnotesize\ttfamily void distance\+Measurement (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+Completa la medición una vez que se recibió el pulso de regreso en el pin de eco. 
+
+\Hypertarget{main_8cpp_a5d19b6dbb73493c2f5ba7dc252e31b07}\label{main_8cpp_a5d19b6dbb73493c2f5ba7dc252e31b07} 
+\index{main.cpp@{main.cpp}!do100ms@{do100ms}}
+\index{do100ms@{do100ms}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{do100ms()}{do100ms()}}
+{\footnotesize\ttfamily void do100ms (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Función encargada de medir la distancia. 
+
+\Hypertarget{main_8cpp_ae590204d6a496688e08b6f1b537a1567}\label{main_8cpp_ae590204d6a496688e08b6f1b537a1567} 
+\index{main.cpp@{main.cpp}!doTimeout@{doTimeout}}
+\index{doTimeout@{doTimeout}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{doTimeout()}{doTimeout()}}
+{\footnotesize\ttfamily void do\+Timeout (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Función encargada de calcular el tiempo. 
+
+\Hypertarget{main_8cpp_a2f7522c197fb11f3b236a125c62e0f5b}\label{main_8cpp_a2f7522c197fb11f3b236a125c62e0f5b} 
+\index{main.cpp@{main.cpp}!getByteFromRx@{getByteFromRx}}
+\index{getByteFromRx@{getByteFromRx}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{getByteFromRx()}{getByteFromRx()}}
+{\footnotesize\ttfamily uint8\+\_\+t get\+Byte\+From\+Rx (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct__s_rx}{\+\_\+s\+Rx}} \texorpdfstring{$\ast$}{*}}]{data\+Rx,  }\item[{uint8\+\_\+t}]{ini\+Pos,  }\item[{uint8\+\_\+t}]{final\+Pos }\end{DoxyParamCaption})}
+
+\Hypertarget{main_8cpp_af00a64932f3de7c9b39931b9ef63e6cd}\label{main_8cpp_af00a64932f3de7c9b39931b9ef63e6cd} 
+\index{main.cpp@{main.cpp}!hearbeatTask@{hearbeatTask}}
+\index{hearbeatTask@{hearbeatTask}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{hearbeatTask()}{hearbeatTask()}}
+{\footnotesize\ttfamily void hearbeat\+Task (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct__delay__t}{\+\_\+delay\+\_\+t}} \texorpdfstring{$\ast$}{*}}]{time\+Heartbeat,  }\item[{uint8\+\_\+t}]{index }\end{DoxyParamCaption})}
+
+
+
+Hearbeat, indica el funcionamiento del sistema. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em time\+Heartbeat} & Variable para el intervalo de tiempo \\
+\hline
+{\em mask} & Secuencia de encendido/apagado del led de Hearbeat \\
+\hline
+\end{DoxyParams}
+\Hypertarget{main_8cpp_ae87cfd08d3fe6bf68d277bae4d1e22b9}\label{main_8cpp_ae87cfd08d3fe6bf68d277bae4d1e22b9} 
+\index{main.cpp@{main.cpp}!HEARTBEAT@{HEARTBEAT}}
+\index{HEARTBEAT@{HEARTBEAT}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{HEARTBEAT()}{HEARTBEAT()}}
+{\footnotesize\ttfamily Digital\+Out HEARTBEAT (\begin{DoxyParamCaption}\item[{PC\+\_\+13}]{ }\end{DoxyParamCaption})}
+
+
+
+Led de Hearbeat. 
+
+\Hypertarget{main_8cpp_a2a6dd707114f32ed2177060e7af6eb8b}\label{main_8cpp_a2a6dd707114f32ed2177060e7af6eb8b} 
+\index{main.cpp@{main.cpp}!hecho@{hecho}}
+\index{hecho@{hecho}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{hecho()}{hecho()}}
+{\footnotesize\ttfamily Interrupt\+In hecho (\begin{DoxyParamCaption}\item[{PB\+\_\+12}]{ }\end{DoxyParamCaption})}
+
+
+
+pin de eco del sensor Ultrasonico definido como interrupción 
+
+\Hypertarget{main_8cpp_a70f38f5cca810521c9adfd11ff84f370}\label{main_8cpp_a70f38f5cca810521c9adfd11ff84f370} 
+\index{main.cpp@{main.cpp}!irCenter@{irCenter}}
+\index{irCenter@{irCenter}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{irCenter()}{irCenter()}}
+{\footnotesize\ttfamily Analog\+In ir\+Center (\begin{DoxyParamCaption}\item[{PA\+\_\+1}]{ }\end{DoxyParamCaption})}
+
+
+
+Sensor infrarrojo para detección de linea. 
+
+\Hypertarget{main_8cpp_ac3a3ad7565eac99447930a95d0b00bc7}\label{main_8cpp_ac3a3ad7565eac99447930a95d0b00bc7} 
+\index{main.cpp@{main.cpp}!irLeft@{irLeft}}
+\index{irLeft@{irLeft}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{irLeft()}{irLeft()}}
+{\footnotesize\ttfamily Analog\+In ir\+Left (\begin{DoxyParamCaption}\item[{PA\+\_\+0}]{ }\end{DoxyParamCaption})}
+
+
+
+Sensor infrarrojo para detección de linea. 
+
+\Hypertarget{main_8cpp_ad4e2cc3a28cce7d577029ac2d65259f6}\label{main_8cpp_ad4e2cc3a28cce7d577029ac2d65259f6} 
+\index{main.cpp@{main.cpp}!irRight@{irRight}}
+\index{irRight@{irRight}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{irRight()}{irRight()}}
+{\footnotesize\ttfamily Analog\+In ir\+Right (\begin{DoxyParamCaption}\item[{PA\+\_\+2}]{ }\end{DoxyParamCaption})}
+
+
+
+Sensor infrarrojo para detección de linea. 
+
+\Hypertarget{main_8cpp_adaa2bc0beb72843e9b01f374c272fc0d}\label{main_8cpp_adaa2bc0beb72843e9b01f374c272fc0d} 
+\index{main.cpp@{main.cpp}!irSensorsTask@{irSensorsTask}}
+\index{irSensorsTask@{irSensorsTask}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{irSensorsTask()}{irSensorsTask()}}
+{\footnotesize\ttfamily void ir\+Sensors\+Task (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Rutina para hacer la medición de los sensores IR. 
+
+\Hypertarget{main_8cpp_afca87e593733b3acab3f03f5897084b4}\label{main_8cpp_afca87e593733b3acab3f03f5897084b4} 
+\index{main.cpp@{main.cpp}!lineFollower@{lineFollower}}
+\index{lineFollower@{lineFollower}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{lineFollower()}{lineFollower()}}
+{\footnotesize\ttfamily void line\+Follower (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Función utilizada en el modo de seguir linea. 
+
+\Hypertarget{main_8cpp_ae66f6b31b5ad750f1fe042a706a4e3d4}\label{main_8cpp_ae66f6b31b5ad750f1fe042a706a4e3d4} 
+\index{main.cpp@{main.cpp}!main@{main}}
+\index{main@{main}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{main()}{main()}}
+{\footnotesize\ttfamily int main (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\Hypertarget{main_8cpp_ac7541b23502ab2f3b5f747f9800d95d1}\label{main_8cpp_ac7541b23502ab2f3b5f747f9800d95d1} 
+\index{main.cpp@{main.cpp}!move@{move}}
+\index{move@{move}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{move()}{move()}}
+{\footnotesize\ttfamily void move (\begin{DoxyParamCaption}\item[{uint32\+\_\+t}]{left\+Speed,  }\item[{uint32\+\_\+t}]{right\+Speed,  }\item[{uint8\+\_\+t}]{left\+Motor,  }\item[{uint8\+\_\+t}]{right\+Motor }\end{DoxyParamCaption})}
+
+
+
+Función encargada de mover hacia adelante el robot. 
+
+\Hypertarget{main_8cpp_a8a5ff82af1375f7feef806ecac31b651}\label{main_8cpp_a8a5ff82af1375f7feef806ecac31b651} 
+\index{main.cpp@{main.cpp}!myWifi@{myWifi}}
+\index{myWifi@{myWifi}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{myWifi()}{myWifi()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_wifi}{Wifi}} my\+Wifi (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{main_8cpp_a1c64290c63fa8ef289c76e99cdcad3f6}{wifi\+Buff\+Rx}}}]{,  }\item[{\&wifi\+Rx.}]{indexW,  }\item[{\mbox{\hyperlink{main_8cpp_a4a941b75a2cf56698a1e769d8214fd50}{RXBUFSIZE}}}]{ }\end{DoxyParamCaption})}
+
+
+
+Instanciación de la clase \doxylink{class_wifi}{Wifi}, le paso como parametros el buffer de recepción, el indice de escritura para el buffer de recepción y el tamaño del buffer de recepción. 
+
+\Hypertarget{main_8cpp_acdb2ea2d16809ce07ced180e0d09f646}\label{main_8cpp_acdb2ea2d16809ce07ced180e0d09f646} 
+\index{main.cpp@{main.cpp}!onRxData@{onRxData}}
+\index{onRxData@{onRxData}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{onRxData()}{onRxData()}}
+{\footnotesize\ttfamily void on\+Rx\+Data (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Recepción de datos por el puerto serie. 
+
+\Hypertarget{main_8cpp_a9f1c202c0f0835ceb16ab66b94c095bc}\label{main_8cpp_a9f1c202c0f0835ceb16ab66b94c095bc} 
+\index{main.cpp@{main.cpp}!PC@{PC}}
+\index{PC@{PC}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{PC()}{PC()}}
+{\footnotesize\ttfamily Raw\+Serial PC (\begin{DoxyParamCaption}\item[{PA\+\_\+9}]{,  }\item[{PA\+\_\+10}]{ }\end{DoxyParamCaption})}
+
+
+
+Configuración del puerto serie, la velocidad (115200) tiene que ser la misma en QT. 
+
+\Hypertarget{main_8cpp_a7f55bf2732dc4bf9e13459e2b043d6a9}\label{main_8cpp_a7f55bf2732dc4bf9e13459e2b043d6a9} 
+\index{main.cpp@{main.cpp}!putByteOnTx@{putByteOnTx}}
+\index{putByteOnTx@{putByteOnTx}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{putByteOnTx()}{putByteOnTx()}}
+{\footnotesize\ttfamily uint8\+\_\+t put\+Byte\+On\+Tx (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct__s_tx}{\+\_\+s\+Tx}} \texorpdfstring{$\ast$}{*}}]{data\+Tx,  }\item[{uint8\+\_\+t}]{byte }\end{DoxyParamCaption})}
+
+
+
+Agrega un byte al buffer de transmisión. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em data\+Tx} & Estructura para la trasnmisión de datos \\
+\hline
+{\em byte} & El elemento que se quiere agregar \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+uint8\+\_\+t devuelve el Checksum del dato agregado al buffer de trasnmisión 
+\end{DoxyReturn}
+\Hypertarget{main_8cpp_acdbf6aea2092310f8a273c5722d0f90a}\label{main_8cpp_acdbf6aea2092310f8a273c5722d0f90a} 
+\index{main.cpp@{main.cpp}!putHeaderOnTx@{putHeaderOnTx}}
+\index{putHeaderOnTx@{putHeaderOnTx}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{putHeaderOnTx()}{putHeaderOnTx()}}
+{\footnotesize\ttfamily uint8\+\_\+t put\+Header\+On\+Tx (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct__s_tx}{\+\_\+s\+Tx}} \texorpdfstring{$\ast$}{*}}]{data\+Tx,  }\item[{\mbox{\hyperlink{util_8h_a914da92242d04381391fee2bb1c936df}{\+\_\+e\+Cmd}}}]{ID,  }\item[{uint8\+\_\+t}]{frame\+Length }\end{DoxyParamCaption})}
+
+
+
+Pone el encabezado del protocolo, el ID y la cantidad de bytes a enviar. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em data\+Tx} & Estructura para la trasnmisión de datos \\
+\hline
+{\em ID} & Identificación del comando que se envía \\
+\hline
+{\em frame\+Length} & Longitud de la trama del comando \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+uint8\+\_\+t devuelve el Checksum de los datos agregados al buffer de trasnmisión 
+\end{DoxyReturn}
+\Hypertarget{main_8cpp_a65c975cdd96edceb02eeed35611e519b}\label{main_8cpp_a65c975cdd96edceb02eeed35611e519b} 
+\index{main.cpp@{main.cpp}!putStrOntx@{putStrOntx}}
+\index{putStrOntx@{putStrOntx}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{putStrOntx()}{putStrOntx()}}
+{\footnotesize\ttfamily uint8\+\_\+t put\+Str\+Ontx (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct__s_tx}{\+\_\+s\+Tx}} \texorpdfstring{$\ast$}{*}}]{data\+Tx,  }\item[{const char \texorpdfstring{$\ast$}{*}}]{str }\end{DoxyParamCaption})}
+
+
+
+Agrega un String al buffer de transmisión. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em data\+Tx} & Estructura para la trasnmisión de datos \\
+\hline
+{\em str} & String a agregar \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+uint8\+\_\+t devuelve el Checksum del dato agregado al buffer de trasnmisión 
+\end{DoxyReturn}
+\Hypertarget{main_8cpp_a30028319b556f0a3da7af07f4f861afb}\label{main_8cpp_a30028319b556f0a3da7af07f4f861afb} 
+\index{main.cpp@{main.cpp}!rotate@{rotate}}
+\index{rotate@{rotate}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{rotate()}{rotate()}}
+{\footnotesize\ttfamily void rotate (\begin{DoxyParamCaption}\item[{uint8\+\_\+t}]{rotation\+Angle,  }\item[{uint8\+\_\+t}]{direction }\end{DoxyParamCaption})}
+
+\Hypertarget{main_8cpp_a94abb7948548cc6c145107220ab99614}\label{main_8cpp_a94abb7948548cc6c145107220ab99614} 
+\index{main.cpp@{main.cpp}!serialTask@{serialTask}}
+\index{serialTask@{serialTask}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{serialTask()}{serialTask()}}
+{\footnotesize\ttfamily void serial\+Task (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct__s_rx}{\+\_\+s\+Rx}} \texorpdfstring{$\ast$}{*}}]{data\+Rx,  }\item[{\mbox{\hyperlink{struct__s_tx}{\+\_\+s\+Tx}} \texorpdfstring{$\ast$}{*}}]{data\+Tx,  }\item[{uint8\+\_\+t}]{source }\end{DoxyParamCaption})}
+
+
+
+Ejecuta las tareas del puerto serie Decodificación/trasnmisión. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em data\+Rx} & Estructura de datos de la recepción \\
+\hline
+{\em data\+Tx} & Estructura de datos de la trasnmisión \\
+\hline
+{\em source} & Identifica la fuente desde donde se enviaron los datos \\
+\hline
+\end{DoxyParams}
+\Hypertarget{main_8cpp_a38f73a0c8fd57e3e6b59211796832cce}\label{main_8cpp_a38f73a0c8fd57e3e6b59211796832cce} 
+\index{main.cpp@{main.cpp}!servo@{servo}}
+\index{servo@{servo}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{servo()}{servo()}}
+{\footnotesize\ttfamily Pwm\+Out servo (\begin{DoxyParamCaption}\item[{PA\+\_\+8}]{ }\end{DoxyParamCaption})}
+
+
+
+Pin del Servo debe ser PWM para poder modular el ancho del pulso. 
+
+\Hypertarget{main_8cpp_ac37fa54eaa0bb188435fb98ec9360216}\label{main_8cpp_ac37fa54eaa0bb188435fb98ec9360216} 
+\index{main.cpp@{main.cpp}!servoTask@{servoTask}}
+\index{servoTask@{servoTask}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{servoTask()}{servoTask()}}
+{\footnotesize\ttfamily void servo\+Task (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct__delay__t}{\+\_\+delay\+\_\+t}} \texorpdfstring{$\ast$}{*}}]{servo\+Time,  }\item[{uint32\+\_\+t \texorpdfstring{$\ast$}{*}}]{interval\+Servo }\end{DoxyParamCaption})}
+
+
+
+Rutina para realizar la verificación de mocimiento del servo en caso de que no se mueva envia la respuesta automática a la PC. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em servo\+Time} & almacena el tiempo del timer \\
+\hline
+{\em interval\+Servo} & posee el tiempo del ointervalo para responder en función del ángulo a mover \\
+\hline
+\end{DoxyParams}
+\Hypertarget{main_8cpp_a86a2fd5808d14ce920efb8d1c13cebbf}\label{main_8cpp_a86a2fd5808d14ce920efb8d1c13cebbf} 
+\index{main.cpp@{main.cpp}!shortestMazePath@{shortestMazePath}}
+\index{shortestMazePath@{shortestMazePath}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{shortestMazePath()}{shortestMazePath()}}
+{\footnotesize\ttfamily void shortest\+Maze\+Path (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\Hypertarget{main_8cpp_a8a9e1565f012413c30f77d9a78a1750e}\label{main_8cpp_a8a9e1565f012413c30f77d9a78a1750e} 
+\index{main.cpp@{main.cpp}!speedCountLeft@{speedCountLeft}}
+\index{speedCountLeft@{speedCountLeft}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{speedCountLeft()}{speedCountLeft()}}
+{\footnotesize\ttfamily void speed\+Count\+Left (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+Función del Sensor de Horquilla Izquierdo cuenta los pulsos del sensor para medir velocidad luego. 
+
+\Hypertarget{main_8cpp_a1dd9ea2d51194048d0e8757c5310b14c}\label{main_8cpp_a1dd9ea2d51194048d0e8757c5310b14c} 
+\index{main.cpp@{main.cpp}!speedCountRight@{speedCountRight}}
+\index{speedCountRight@{speedCountRight}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{speedCountRight()}{speedCountRight()}}
+{\footnotesize\ttfamily void speed\+Count\+Right (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+Función del Sensor de Horquilla Derecho cuenta los pulsos del sensor para medir velocidad luego. 
+
+\Hypertarget{main_8cpp_a4e1851c275ea4fc89e208a21efa104fe}\label{main_8cpp_a4e1851c275ea4fc89e208a21efa104fe} 
+\index{main.cpp@{main.cpp}!speedLeft@{speedLeft}}
+\index{speedLeft@{speedLeft}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{speedLeft()}{speedLeft()}}
+{\footnotesize\ttfamily Interrupt\+In speed\+Left (\begin{DoxyParamCaption}\item[{PB\+\_\+9}]{ }\end{DoxyParamCaption})}
+
+
+
+Sensor de Horquilla para medir velocidad. 
+
+\Hypertarget{main_8cpp_af989a6796f7aa734edd66e61b7bc7124}\label{main_8cpp_af989a6796f7aa734edd66e61b7bc7124} 
+\index{main.cpp@{main.cpp}!speedMLeft@{speedMLeft}}
+\index{speedMLeft@{speedMLeft}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{speedMLeft()}{speedMLeft()}}
+{\footnotesize\ttfamily Pwm\+Out speed\+MLeft (\begin{DoxyParamCaption}\item[{PB\+\_\+0}]{ }\end{DoxyParamCaption})}
+
+
+
+Pin de habilitación del giro del motor, se usa para controlar velocidad del mismo. 
+
+\Hypertarget{main_8cpp_aae57516084be289038d768f1d326c7b8}\label{main_8cpp_aae57516084be289038d768f1d326c7b8} 
+\index{main.cpp@{main.cpp}!speedMRight@{speedMRight}}
+\index{speedMRight@{speedMRight}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{speedMRight()}{speedMRight()}}
+{\footnotesize\ttfamily Pwm\+Out speed\+MRight (\begin{DoxyParamCaption}\item[{PB\+\_\+1}]{ }\end{DoxyParamCaption})}
+
+
+
+Pin de habilitación del giro del motor, se usa para controlar velocidad del mismo. 
+
+\Hypertarget{main_8cpp_aef9c56a0e0480c467c3cad5136f2ea18}\label{main_8cpp_aef9c56a0e0480c467c3cad5136f2ea18} 
+\index{main.cpp@{main.cpp}!speedRight@{speedRight}}
+\index{speedRight@{speedRight}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{speedRight()}{speedRight()}}
+{\footnotesize\ttfamily Interrupt\+In speed\+Right (\begin{DoxyParamCaption}\item[{PB\+\_\+8}]{ }\end{DoxyParamCaption})}
+
+
+
+Sensor de Horquilla para medir velocidad. 
+
+\Hypertarget{main_8cpp_a1b2fac58b9992cd16cf031b0675c39ed}\label{main_8cpp_a1b2fac58b9992cd16cf031b0675c39ed} 
+\index{main.cpp@{main.cpp}!speedTask@{speedTask}}
+\index{speedTask@{speedTask}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{speedTask()}{speedTask()}}
+{\footnotesize\ttfamily void speed\+Task (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Rutina para medir la velocidad. 
+
+\Hypertarget{main_8cpp_a6521e08544f1c5c607c5df57f98ad995}\label{main_8cpp_a6521e08544f1c5c607c5df57f98ad995} 
+\index{main.cpp@{main.cpp}!startButton@{startButton}}
+\index{startButton@{startButton}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{startButton()}{startButton()}}
+{\footnotesize\ttfamily void start\+Button (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct__s_button}{\+\_\+s\+Button}} \texorpdfstring{$\ast$}{*}}]{button,  }\item[{\mbox{\hyperlink{main_8cpp_a0376438b3b667f21047260723c1aa492}{ptr\+Func}}}]{button\+Func }\end{DoxyParamCaption})}
+
+
+
+Función con la cual inicializamos los botones. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em \doxylink{struct__s_button}{\+\_\+s\+Button}} & Estructura con los datos del boton \\
+\hline
+{\em button\+Function} & Puntero a funcion \\
+\hline
+\end{DoxyParams}
+\Hypertarget{main_8cpp_a78582976c1ee31e6b98fb88bdd66f5ea}\label{main_8cpp_a78582976c1ee31e6b98fb88bdd66f5ea} 
+\index{main.cpp@{main.cpp}!trigger@{trigger}}
+\index{trigger@{trigger}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{trigger()}{trigger()}}
+{\footnotesize\ttfamily Digital\+Out trigger (\begin{DoxyParamCaption}\item[{PB\+\_\+13}]{ }\end{DoxyParamCaption})}
+
+
+
+Salida para el trigger del sensor Ultrasonico. 
+
+\Hypertarget{main_8cpp_af7c4f477f9b957326bbb08d6ca119ac0}\label{main_8cpp_af7c4f477f9b957326bbb08d6ca119ac0} 
+\index{main.cpp@{main.cpp}!updateMefTask@{updateMefTask}}
+\index{updateMefTask@{updateMefTask}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{updateMefTask()}{updateMefTask()}}
+{\footnotesize\ttfamily uint8\+\_\+t update\+Mef\+Task (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct__s_button}{\+\_\+s\+Button}} \texorpdfstring{$\ast$}{*}}]{button }\end{DoxyParamCaption})}
+
+
+
+Función utilizada para actualizar la MEF de los botones. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em \doxylink{struct__s_button}{\+\_\+s\+Button}} & Estructura con los datos \\
+\hline
+\end{DoxyParams}
+
+
+\doxysubsection{Variable Documentation}
+\Hypertarget{main_8cpp_a0bb61d401d998bd243027ee23c2473ef}\label{main_8cpp_a0bb61d401d998bd243027ee23c2473ef} 
+\index{main.cpp@{main.cpp}!blackValue@{blackValue}}
+\index{blackValue@{blackValue}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{blackValue}{blackValue}}
+{\footnotesize\ttfamily uint16\+\_\+t black\+Value = 6000}
+
+\Hypertarget{main_8cpp_a3938a2e3de3d39004a3ba25c1ce1cba2}\label{main_8cpp_a3938a2e3de3d39004a3ba25c1ce1cba2} 
+\index{main.cpp@{main.cpp}!buffRx@{buffRx}}
+\index{buffRx@{buffRx}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{buffRx}{buffRx}}
+{\footnotesize\ttfamily volatile uint8\+\_\+t buff\+Rx\mbox{[}\mbox{\hyperlink{main_8cpp_a4a941b75a2cf56698a1e769d8214fd50}{RXBUFSIZE}}\mbox{]}}
+
+\Hypertarget{main_8cpp_a412d852176feff57e1f64c12a8a9ab17}\label{main_8cpp_a412d852176feff57e1f64c12a8a9ab17} 
+\index{main.cpp@{main.cpp}!buffTx@{buffTx}}
+\index{buffTx@{buffTx}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{buffTx}{buffTx}}
+{\footnotesize\ttfamily uint8\+\_\+t buff\+Tx\mbox{[}\mbox{\hyperlink{main_8cpp_a9a01f28179d1f97c65ac28919f6f1cdb}{TXBUFSIZE}}\mbox{]}}
+
+\Hypertarget{main_8cpp_ae413024ea83cd4e63d5ba75d6e8b7324}\label{main_8cpp_ae413024ea83cd4e63d5ba75d6e8b7324} 
+\index{main.cpp@{main.cpp}!carModes@{carModes}}
+\index{carModes@{carModes}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{carModes}{carModes}}
+{\footnotesize\ttfamily \mbox{\hyperlink{util_8h_a8aa339381659acb72b9870810f7cd5e6}{\+\_\+e\+Modes}} car\+Modes}
+
+\Hypertarget{main_8cpp_a45bdcf434ef1a24c7985e05ecbe00f95}\label{main_8cpp_a45bdcf434ef1a24c7985e05ecbe00f95} 
+\index{main.cpp@{main.cpp}!countLeftValue@{countLeftValue}}
+\index{countLeftValue@{countLeftValue}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{countLeftValue}{countLeftValue}}
+{\footnotesize\ttfamily volatile uint32\+\_\+t count\+Left\+Value}
+
+\Hypertarget{main_8cpp_a52827aed49d73ef9773d30238dac8994}\label{main_8cpp_a52827aed49d73ef9773d30238dac8994} 
+\index{main.cpp@{main.cpp}!countRightValue@{countRightValue}}
+\index{countRightValue@{countRightValue}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{countRightValue}{countRightValue}}
+{\footnotesize\ttfamily volatile uint32\+\_\+t count\+Right\+Value}
+
+\Hypertarget{main_8cpp_ac71af7b0d7b1859abcd32d7d15aed788}\label{main_8cpp_ac71af7b0d7b1859abcd32d7d15aed788} 
+\index{main.cpp@{main.cpp}!currPath@{currPath}}
+\index{currPath@{currPath}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{currPath}{currPath}}
+{\footnotesize\ttfamily uint8\+\_\+t curr\+Path = 0}
+
+\Hypertarget{main_8cpp_a4d4ec2522161a614a170a9335410f786}\label{main_8cpp_a4d4ec2522161a614a170a9335410f786} 
+\index{main.cpp@{main.cpp}!dataRx@{dataRx}}
+\index{dataRx@{dataRx}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{dataRx}{dataRx}}
+{\footnotesize\ttfamily volatile \mbox{\hyperlink{struct__s_rx}{\+\_\+s\+Rx}} data\+Rx}
+
+\Hypertarget{main_8cpp_ab1e6e441c1ec0ab28da489fedb930af4}\label{main_8cpp_ab1e6e441c1ec0ab28da489fedb930af4} 
+\index{main.cpp@{main.cpp}!dataTx@{dataTx}}
+\index{dataTx@{dataTx}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{dataTx}{dataTx}}
+{\footnotesize\ttfamily \mbox{\hyperlink{struct__s_tx}{\+\_\+s\+Tx}} data\+Tx}
+
+\Hypertarget{main_8cpp_af41e3d477d9907cd26aee1e5fa1fdbd3}\label{main_8cpp_af41e3d477d9907cd26aee1e5fa1fdbd3} 
+\index{main.cpp@{main.cpp}!distanceTimer@{distanceTimer}}
+\index{distanceTimer@{distanceTimer}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{distanceTimer}{distanceTimer}}
+{\footnotesize\ttfamily Timer distance\+Timer}
+
+\Hypertarget{main_8cpp_a15a6df333169722a8b5fd8760bda1b6d}\label{main_8cpp_a15a6df333169722a8b5fd8760bda1b6d} 
+\index{main.cpp@{main.cpp}!distanceValue@{distanceValue}}
+\index{distanceValue@{distanceValue}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{distanceValue}{distanceValue}}
+{\footnotesize\ttfamily volatile int32\+\_\+t distance\+Value}
+
+\Hypertarget{main_8cpp_a9674cba0a0743495ebab9fd737cf38d9}\label{main_8cpp_a9674cba0a0743495ebab9fd737cf38d9} 
+\index{main.cpp@{main.cpp}!finalValue@{finalValue}}
+\index{finalValue@{finalValue}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{finalValue}{finalValue}}
+{\footnotesize\ttfamily volatile int32\+\_\+t final\+Value}
+
+\Hypertarget{main_8cpp_a8fa95672b43d8980cd9a4cf6d4e6c176}\label{main_8cpp_a8fa95672b43d8980cd9a4cf6d4e6c176} 
+\index{main.cpp@{main.cpp}!firmware@{firmware}}
+\index{firmware@{firmware}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{firmware}{firmware}}
+{\footnotesize\ttfamily const char firmware\mbox{[}$\,$\mbox{]} = \"{}EX100923v01\textbackslash{}n\"{}}
+
+\Hypertarget{main_8cpp_a782c3a13008e3facf282121efc237349}\label{main_8cpp_a782c3a13008e3facf282121efc237349} 
+\index{main.cpp@{main.cpp}!flags@{flags}}
+\index{flags@{flags}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{flags}{flags}}
+{\footnotesize\ttfamily \mbox{\hyperlink{union__u_flag}{\+\_\+u\+Flag}} flags}
+
+\Hypertarget{main_8cpp_a0c5fdfef96c88db1e51405d171c36e15}\label{main_8cpp_a0c5fdfef96c88db1e51405d171c36e15} 
+\index{main.cpp@{main.cpp}!generalTime@{generalTime}}
+\index{generalTime@{generalTime}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{generalTime}{generalTime}}
+{\footnotesize\ttfamily \mbox{\hyperlink{struct__delay__t}{\+\_\+delay\+\_\+t}} general\+Time}
+
+\Hypertarget{main_8cpp_abfca7b5f980acbf56d538cd773edf5ed}\label{main_8cpp_abfca7b5f980acbf56d538cd773edf5ed} 
+\index{main.cpp@{main.cpp}!globalIndex@{globalIndex}}
+\index{globalIndex@{globalIndex}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{globalIndex}{globalIndex}}
+{\footnotesize\ttfamily uint8\+\_\+t global\+Index}
+
+\Hypertarget{main_8cpp_a3a2054dcb04c9c220c584021c8153e13}\label{main_8cpp_a3a2054dcb04c9c220c584021c8153e13} 
+\index{main.cpp@{main.cpp}!heartBeatIndex@{heartBeatIndex}}
+\index{heartBeatIndex@{heartBeatIndex}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{heartBeatIndex}{heartBeatIndex}}
+{\footnotesize\ttfamily uint8\+\_\+t heart\+Beat\+Index = 0}
+
+\Hypertarget{main_8cpp_aa8714e52b7faf9cd0bec6e009005e7c1}\label{main_8cpp_aa8714e52b7faf9cd0bec6e009005e7c1} 
+\index{main.cpp@{main.cpp}!heartBeatMask@{heartBeatMask}}
+\index{heartBeatMask@{heartBeatMask}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{heartBeatMask}{heartBeatMask}}
+{\footnotesize\ttfamily uint32\+\_\+t heart\+Beat\+Mask\mbox{[}$\,$\mbox{]} = \{0x55555555, 0x1, 0x2010080, 0x5F, 0x5, 0x28140\+A00, 0x15F, 0x15, 0x2\+A150\+A08, 0x55F\}}
+
+\Hypertarget{main_8cpp_a1d346b76bea8c5967478058458188111}\label{main_8cpp_a1d346b76bea8c5967478058458188111} 
+\index{main.cpp@{main.cpp}!index2@{index2}}
+\index{index2@{index2}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{index2}{index2}}
+{\footnotesize\ttfamily uint8\+\_\+t index2}
+
+\Hypertarget{main_8cpp_a286088ffc63e62600aefd793107ad74f}\label{main_8cpp_a286088ffc63e62600aefd793107ad74f} 
+\index{main.cpp@{main.cpp}!initialValue@{initialValue}}
+\index{initialValue@{initialValue}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{initialValue}{initialValue}}
+{\footnotesize\ttfamily volatile int32\+\_\+t initial\+Value}
+
+\Hypertarget{main_8cpp_a97bd1945a06658ccd3dff8f2df5916e6}\label{main_8cpp_a97bd1945a06658ccd3dff8f2df5916e6} 
+\index{main.cpp@{main.cpp}!irMask@{irMask}}
+\index{irMask@{irMask}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{irMask}{irMask}}
+{\footnotesize\ttfamily const uint8\+\_\+t ir\+Mask = 0x01}
+
+\Hypertarget{main_8cpp_a35701778b31002207180af8bdb5815c0}\label{main_8cpp_a35701778b31002207180af8bdb5815c0} 
+\index{main.cpp@{main.cpp}!irSensor@{irSensor}}
+\index{irSensor@{irSensor}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{irSensor}{irSensor}}
+{\footnotesize\ttfamily \mbox{\hyperlink{struct__s_sensor}{\+\_\+s\+Sensor}} ir\+Sensor\mbox{[}3\mbox{]}}
+
+\Hypertarget{main_8cpp_a7447694c31aeb1c87ca696aa261b6192}\label{main_8cpp_a7447694c31aeb1c87ca696aa261b6192} 
+\index{main.cpp@{main.cpp}!irSensorValue@{irSensorValue}}
+\index{irSensorValue@{irSensorValue}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{irSensorValue}{irSensorValue}}
+{\footnotesize\ttfamily uint8\+\_\+t ir\+Sensor\+Value = 0}
+
+\Hypertarget{main_8cpp_a96983f6c12f4ee6192732269f06855d3}\label{main_8cpp_a96983f6c12f4ee6192732269f06855d3} 
+\index{main.cpp@{main.cpp}!lastIrValue@{lastIrValue}}
+\index{lastIrValue@{lastIrValue}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{lastIrValue}{lastIrValue}}
+{\footnotesize\ttfamily uint8\+\_\+t last\+Ir\+Value}
+
+\Hypertarget{main_8cpp_af3d4c2e59db880e1eda97844d32cfd29}\label{main_8cpp_af3d4c2e59db880e1eda97844d32cfd29} 
+\index{main.cpp@{main.cpp}!lineSearch@{lineSearch}}
+\index{lineSearch@{lineSearch}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{lineSearch}{lineSearch}}
+{\footnotesize\ttfamily \mbox{\hyperlink{util_8h_ab1d9ce3e6d9a3bee55dc28735fc0ec3c}{\+\_\+e\+Line\+Search}} line\+Search}
+
+\Hypertarget{main_8cpp_ab1f39edcf25736dd9c19c5fbfc1468d2}\label{main_8cpp_ab1f39edcf25736dd9c19c5fbfc1468d2} 
+\index{main.cpp@{main.cpp}!lntFstPath@{lntFstPath}}
+\index{lntFstPath@{lntFstPath}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{lntFstPath}{lntFstPath}}
+{\footnotesize\ttfamily int16\+\_\+t lnt\+Fst\+Path = 0}
+
+\Hypertarget{main_8cpp_abf5f6124c29f5e29b5adeb7b40fef2d8}\label{main_8cpp_abf5f6124c29f5e29b5adeb7b40fef2d8} 
+\index{main.cpp@{main.cpp}!lntFthPath@{lntFthPath}}
+\index{lntFthPath@{lntFthPath}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{lntFthPath}{lntFthPath}}
+{\footnotesize\ttfamily int16\+\_\+t lnt\+Fth\+Path = 0}
+
+\Hypertarget{main_8cpp_a0c956d9327006b0ac0a9b6b2b78a5f6f}\label{main_8cpp_a0c956d9327006b0ac0a9b6b2b78a5f6f} 
+\index{main.cpp@{main.cpp}!lntSndPath@{lntSndPath}}
+\index{lntSndPath@{lntSndPath}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{lntSndPath}{lntSndPath}}
+{\footnotesize\ttfamily int16\+\_\+t lnt\+Snd\+Path = 0}
+
+\Hypertarget{main_8cpp_a3b4502ae6b6d38b6628381f59914a057}\label{main_8cpp_a3b4502ae6b6d38b6628381f59914a057} 
+\index{main.cpp@{main.cpp}!lntTrdPath@{lntTrdPath}}
+\index{lntTrdPath@{lntTrdPath}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{lntTrdPath}{lntTrdPath}}
+{\footnotesize\ttfamily int16\+\_\+t lnt\+Trd\+Path = 0}
+
+\Hypertarget{main_8cpp_ac060d71a83716e59490cf2df7fbc7229}\label{main_8cpp_ac060d71a83716e59490cf2df7fbc7229} 
+\index{main.cpp@{main.cpp}!maxMsServo@{maxMsServo}}
+\index{maxMsServo@{maxMsServo}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{maxMsServo}{maxMsServo}}
+{\footnotesize\ttfamily uint16\+\_\+t max\+Ms\+Servo = 2500}
+
+\Hypertarget{main_8cpp_ace75f046d465efef90e97f16ae484ec4}\label{main_8cpp_ace75f046d465efef90e97f16ae484ec4} 
+\index{main.cpp@{main.cpp}!mazeModes@{mazeModes}}
+\index{mazeModes@{mazeModes}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{mazeModes}{mazeModes}}
+{\footnotesize\ttfamily \mbox{\hyperlink{util_8h_a67ee812ef52af4b90a3d804b8503dd7a}{\+\_\+e\+Maze\+Path\+Modes}} maze\+Modes}
+
+\Hypertarget{main_8cpp_a1a97da69479a44c68341e695527aab84}\label{main_8cpp_a1a97da69479a44c68341e695527aab84} 
+\index{main.cpp@{main.cpp}!minMsServo@{minMsServo}}
+\index{minMsServo@{minMsServo}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{minMsServo}{minMsServo}}
+{\footnotesize\ttfamily uint16\+\_\+t min\+Ms\+Servo = 700}
+
+\Hypertarget{main_8cpp_a7b31cfc2b23a3973c0105c93a6af5347}\label{main_8cpp_a7b31cfc2b23a3973c0105c93a6af5347} 
+\index{main.cpp@{main.cpp}!miServo@{miServo}}
+\index{miServo@{miServo}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{miServo}{miServo}}
+{\footnotesize\ttfamily \mbox{\hyperlink{struct__s_servo}{\+\_\+s\+Servo}} mi\+Servo}
+
+\Hypertarget{main_8cpp_a6c517626a5de24d333f9671785d73dcc}\label{main_8cpp_a6c517626a5de24d333f9671785d73dcc} 
+\index{main.cpp@{main.cpp}!msServo@{msServo}}
+\index{msServo@{msServo}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{msServo}{msServo}}
+{\footnotesize\ttfamily uint16\+\_\+t ms\+Servo = \mbox{\hyperlink{main_8cpp_a4c825b295fb8546e6b1b35a53960b793}{MIDDLESERVO}}}
+
+\Hypertarget{main_8cpp_a9302c1c2690bc887350bb43f224c9593}\label{main_8cpp_a9302c1c2690bc887350bb43f224c9593} 
+\index{main.cpp@{main.cpp}!myButton@{myButton}}
+\index{myButton@{myButton}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{myButton}{myButton}}
+{\footnotesize\ttfamily \mbox{\hyperlink{struct__s_button}{\+\_\+s\+Button}} my\+Button\mbox{[}\mbox{\hyperlink{main_8cpp_a81a205bd2c6e38ff47725346a7765d78}{NUMBUTTONS}}\mbox{]}}
+
+\Hypertarget{main_8cpp_af77e822e69e7b3a5fd88f55ff7de59bc}\label{main_8cpp_af77e822e69e7b3a5fd88f55ff7de59bc} 
+\index{main.cpp@{main.cpp}!myTimer@{myTimer}}
+\index{myTimer@{myTimer}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{myTimer}{myTimer}}
+{\footnotesize\ttfamily Timer my\+Timer}
+
+\Hypertarget{main_8cpp_a39c2d03db7e338ae85b2dc9d6fdc408d}\label{main_8cpp_a39c2d03db7e338ae85b2dc9d6fdc408d} 
+\index{main.cpp@{main.cpp}!myWifiData@{myWifiData}}
+\index{myWifiData@{myWifiData}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{myWifiData}{myWifiData}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structwifi_data}{wifi\+Data}} my\+Wifi\+Data}
+
+\Hypertarget{main_8cpp_a33b0fd683103c948f1c73feec08961d6}\label{main_8cpp_a33b0fd683103c948f1c73feec08961d6} 
+\index{main.cpp@{main.cpp}!myWord@{myWord}}
+\index{myWord@{myWord}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{myWord}{myWord}}
+{\footnotesize\ttfamily \mbox{\hyperlink{union__u_word}{\+\_\+u\+Word}} my\+Word}
+
+\Hypertarget{main_8cpp_a33246117c51000c7e25408bad9b60258}\label{main_8cpp_a33246117c51000c7e25408bad9b60258} 
+\index{main.cpp@{main.cpp}!outLineModes@{outLineModes}}
+\index{outLineModes@{outLineModes}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{outLineModes}{outLineModes}}
+{\footnotesize\ttfamily \mbox{\hyperlink{util_8h_a7b275bae688445c3a96ef2f791094cf6}{\+\_\+e\+Out\+Line}} out\+Line\+Modes}
+
+\Hypertarget{main_8cpp_a622bb26ba9b04c995a9894e6f82667d7}\label{main_8cpp_a622bb26ba9b04c995a9894e6f82667d7} 
+\index{main.cpp@{main.cpp}!pathLevel@{pathLevel}}
+\index{pathLevel@{pathLevel}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{pathLevel}{pathLevel}}
+{\footnotesize\ttfamily uint8\+\_\+t path\+Level = 0}
+
+\Hypertarget{main_8cpp_a8d5d8db5d4f133d795c9be0f024c41ad}\label{main_8cpp_a8d5d8db5d4f133d795c9be0f024c41ad} 
+\index{main.cpp@{main.cpp}!speedleftValue@{speedleftValue}}
+\index{speedleftValue@{speedleftValue}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{speedleftValue}{speedleftValue}}
+{\footnotesize\ttfamily uint32\+\_\+t speedleft\+Value}
+
+\Hypertarget{main_8cpp_af968eb8272e50c4c2ab1cd7c69479ea8}\label{main_8cpp_af968eb8272e50c4c2ab1cd7c69479ea8} 
+\index{main.cpp@{main.cpp}!speedRightValue@{speedRightValue}}
+\index{speedRightValue@{speedRightValue}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{speedRightValue}{speedRightValue}}
+{\footnotesize\ttfamily uint32\+\_\+t speed\+Right\+Value}
+
+\Hypertarget{main_8cpp_a38210f5c571ee4fd248205c7c6cc852d}\label{main_8cpp_a38210f5c571ee4fd248205c7c6cc852d} 
+\index{main.cpp@{main.cpp}!srchPathModes@{srchPathModes}}
+\index{srchPathModes@{srchPathModes}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{srchPathModes}{srchPathModes}}
+{\footnotesize\ttfamily \mbox{\hyperlink{util_8h_abe45d6cf774a72f7ec73e05ac3f062d2}{\+\_\+e\+Searching\+Path}} srch\+Path\+Modes}
+
+\Hypertarget{main_8cpp_a31ca9239cbc0c1fbc4b88ff322748219}\label{main_8cpp_a31ca9239cbc0c1fbc4b88ff322748219} 
+\index{main.cpp@{main.cpp}!timeFollowLine@{timeFollowLine}}
+\index{timeFollowLine@{timeFollowLine}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{timeFollowLine}{timeFollowLine}}
+{\footnotesize\ttfamily int32\+\_\+t time\+Follow\+Line = 0}
+
+\Hypertarget{main_8cpp_a440c29026a39b8cfeb20ed55e332e135}\label{main_8cpp_a440c29026a39b8cfeb20ed55e332e135} 
+\index{main.cpp@{main.cpp}!timerGral@{timerGral}}
+\index{timerGral@{timerGral}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{timerGral}{timerGral}}
+{\footnotesize\ttfamily Ticker timer\+Gral}
+
+\Hypertarget{main_8cpp_a877e24229452650298bfb6d563ac29b5}\label{main_8cpp_a877e24229452650298bfb6d563ac29b5} 
+\index{main.cpp@{main.cpp}!timeSpeed@{timeSpeed}}
+\index{timeSpeed@{timeSpeed}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{timeSpeed}{timeSpeed}}
+{\footnotesize\ttfamily int32\+\_\+t time\+Speed =0}
+
+\Hypertarget{main_8cpp_ae5752d2eaa00afedc08af90d81263950}\label{main_8cpp_ae5752d2eaa00afedc08af90d81263950} 
+\index{main.cpp@{main.cpp}!timeToDebounce@{timeToDebounce}}
+\index{timeToDebounce@{timeToDebounce}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{timeToDebounce}{timeToDebounce}}
+{\footnotesize\ttfamily int32\+\_\+t time\+To\+Debounce = 0}
+
+\Hypertarget{main_8cpp_a1c555cb8040292c74149cb8ce975f8aa}\label{main_8cpp_a1c555cb8040292c74149cb8ce975f8aa} 
+\index{main.cpp@{main.cpp}!triggerTimer@{triggerTimer}}
+\index{triggerTimer@{triggerTimer}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{triggerTimer}{triggerTimer}}
+{\footnotesize\ttfamily Timeout trigger\+Timer}
+
+\Hypertarget{main_8cpp_a62546c6144654ad4888c0fc659b651b5}\label{main_8cpp_a62546c6144654ad4888c0fc659b651b5} 
+\index{main.cpp@{main.cpp}!whiteValue@{whiteValue}}
+\index{whiteValue@{whiteValue}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{whiteValue}{whiteValue}}
+{\footnotesize\ttfamily uint16\+\_\+t white\+Value = 10000}
+
+\Hypertarget{main_8cpp_a1c64290c63fa8ef289c76e99cdcad3f6}\label{main_8cpp_a1c64290c63fa8ef289c76e99cdcad3f6} 
+\index{main.cpp@{main.cpp}!wifiBuffRx@{wifiBuffRx}}
+\index{wifiBuffRx@{wifiBuffRx}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{wifiBuffRx}{wifiBuffRx}}
+{\footnotesize\ttfamily uint8\+\_\+t wifi\+Buff\+Rx\mbox{[}\mbox{\hyperlink{main_8cpp_a4a941b75a2cf56698a1e769d8214fd50}{RXBUFSIZE}}\mbox{]}}
+
+\Hypertarget{main_8cpp_a4b2b807dfdeecfa0723ac9b594e4a1dd}\label{main_8cpp_a4b2b807dfdeecfa0723ac9b594e4a1dd} 
+\index{main.cpp@{main.cpp}!wifiBuffTx@{wifiBuffTx}}
+\index{wifiBuffTx@{wifiBuffTx}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{wifiBuffTx}{wifiBuffTx}}
+{\footnotesize\ttfamily uint8\+\_\+t wifi\+Buff\+Tx\mbox{[}\mbox{\hyperlink{main_8cpp_a9a01f28179d1f97c65ac28919f6f1cdb}{TXBUFSIZE}}\mbox{]}}
+
+\Hypertarget{main_8cpp_aa3f5b52a1d07bae0f52fe61eb2d1faed}\label{main_8cpp_aa3f5b52a1d07bae0f52fe61eb2d1faed} 
+\index{main.cpp@{main.cpp}!wifiRx@{wifiRx}}
+\index{wifiRx@{wifiRx}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{wifiRx}{wifiRx}}
+{\footnotesize\ttfamily \mbox{\hyperlink{struct__s_rx}{\+\_\+s\+Rx}} wifi\+Rx}
+
+\Hypertarget{main_8cpp_a493d6d70a7c95487c848936a716dd7ef}\label{main_8cpp_a493d6d70a7c95487c848936a716dd7ef} 
+\index{main.cpp@{main.cpp}!wifiTx@{wifiTx}}
+\index{wifiTx@{wifiTx}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{wifiTx}{wifiTx}}
+{\footnotesize\ttfamily \mbox{\hyperlink{struct__s_tx}{\+\_\+s\+Tx}} wifi\+Tx}
+
